@@ -28,7 +28,7 @@ const Header = ({ active, homePath = "" }) => {
         <div className="flex items-center justify-between h-[78px]">
           {/* Logo mark */}
           <a href={logoHref} onClick={(e) => homePath ? null : click(e, "inicio")} className="flex items-center gap-2 group">
-            <img src="logo.jpeg" alt="Psicología Libros" className="w-11 h-11 object-contain" />
+            <img src="logosinfondo.png" alt="Psicología Libros" className="w-11 h-11 object-contain" />
             <div className="leading-tight">
               <div className="font-display text-pl-coal text-[20px] tracking-tight">Psicología Libros</div>
               <div className="text-[10px] tracking-[0.28em] uppercase text-pl-gold-dk -mt-0.5">Librería especializada</div>
@@ -110,10 +110,10 @@ const Header = ({ active, homePath = "" }) => {
   );
 };
 
-// === Logo imagen real ===
+// === Logo imagen sin fondo ===
 const LogoSVG = ({ size = 280 }) => (
   <img
-    src="logo.jpeg"
+    src="logosinfondo.png"
     alt="Psicología Libros"
     width={size}
     height={size}
@@ -123,43 +123,142 @@ const LogoSVG = ({ size = 280 }) => (
 
 // === Hero ===
 const Hero = () => (
-  <section id="inicio" className="paper-bg relative min-h-screen flex flex-col items-center justify-center pt-[78px] overflow-hidden">
+  <section id="inicio" className="paper-bg relative min-h-screen flex items-center pt-[78px] overflow-hidden">
     {/* Ambient blobs */}
     <div className="absolute inset-0 pointer-events-none select-none">
-      <div className="absolute top-1/4 left-1/5 w-[420px] h-[420px] bg-pl-gold/6 rounded-full blur-[80px]" />
-      <div className="absolute bottom-1/4 right-1/5 w-[320px] h-[320px] bg-pl-red/4  rounded-full blur-[80px]" />
+      <div className="absolute top-1/3 left-1/4 w-[520px] h-[520px] bg-pl-gold/6 rounded-full blur-[100px]" />
+      <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-pl-red/4 rounded-full blur-[100px]" />
     </div>
 
-    {/* Decorative corner lines */}
-    <div className="absolute top-24 left-10 w-px h-32 bg-pl-gold/30 hidden lg:block" />
-    <div className="absolute top-24 right-10 w-32 h-px bg-pl-gold/30 hidden lg:block" />
-    <div className="absolute bottom-16 left-10 w-20 h-px bg-pl-gold/30 hidden lg:block" />
-    <div className="absolute bottom-16 right-10 w-px h-20 bg-pl-gold/30 hidden lg:block" />
+    {/* Corner decorations */}
+    <div className="absolute top-24 left-10 w-px h-24 bg-pl-gold/25 hidden lg:block" />
+    <div className="absolute top-24 left-10 w-16 h-px bg-pl-gold/25 hidden lg:block" />
+    <div className="absolute bottom-16 right-10 w-px h-24 bg-pl-gold/25 hidden lg:block" />
+    <div className="absolute bottom-16 right-10 w-16 h-px bg-pl-gold/25 hidden lg:block" />
 
-    {/* Logo + CTA */}
-    <div className="relative flex flex-col items-center text-center px-6 max-w-xl mx-auto"
-         style={{ animation: "logoReveal 0.95s cubic-bezier(0.2,0.8,0.2,1) both" }}>
+    <div className="max-w-7xl mx-auto px-6 lg:px-10 w-full py-16 lg:py-20">
+      <div className="grid lg:grid-cols-2 gap-10 lg:gap-20 items-center">
 
-      {/* Logo with float + glow */}
-      <div style={{ animation: "logoFloat 6s ease-in-out infinite, glowPulse 4s ease-in-out infinite" }}>
-        <LogoSVG size={300} />
-      </div>
+        {/* ── Columna izquierda: Logo ── */}
+        <div className="flex flex-col items-center lg:items-start"
+             style={{ animation: "logoReveal 0.95s cubic-bezier(0.2,0.8,0.2,1) both" }}>
 
-      {/* Buttons */}
-      <div className="mt-10 flex flex-wrap justify-center gap-4"
-           style={{ animation: "fadeSlideIn 0.8s 0.6s both" }}>
-        <a href="catalogo.html"
-           className="inline-flex items-center gap-2 px-8 py-4 bg-pl-coal text-pl-ivory text-[14px] tracking-wide hover:bg-black transition-colors">
-          Ver catálogo <IconArrow size={15} />
-        </a>
-        <a href={waLink("Hola, quiero consultar el catálogo de Psicología Libros.")}
-           target="_blank" rel="noreferrer"
-           className="inline-flex items-center gap-2 px-8 py-4 bg-pl-red text-white text-[14px] tracking-wide hover:bg-pl-red-dk transition-colors">
-          <IconWhatsapp size={16} /> WhatsApp
-        </a>
+          <div style={{ animation: "logoFloat 6s ease-in-out infinite, glowPulse 4s ease-in-out infinite" }}>
+            <img src="logosinfondo.png" alt="Psicología Libros"
+                 style={{ width: 340, height: 340, objectFit: "contain" }} />
+          </div>
+
+          <div className="mt-8 flex flex-wrap justify-center lg:justify-start gap-4"
+               style={{ animation: "fadeSlideIn 0.8s 0.55s both" }}>
+            <a href="catalogo.html"
+               className="inline-flex items-center gap-2 px-8 py-4 bg-pl-coal text-pl-ivory text-[14px] tracking-wide hover:bg-black transition-colors">
+              Ver catálogo <IconArrow size={15} />
+            </a>
+            <a href={waLink("Hola, quiero consultar el catálogo de Psicología Libros.")}
+               target="_blank" rel="noreferrer"
+               className="inline-flex items-center gap-2 px-8 py-4 bg-pl-red text-white text-[14px] tracking-wide hover:bg-pl-red-dk transition-colors">
+              <IconWhatsapp size={16} /> WhatsApp
+            </a>
+          </div>
+        </div>
+
+        {/* ── Columna derecha: vitrina de libros ── */}
+        <div className="relative" style={{ animation: "fadeSlideIn 0.9s 0.35s both" }}>
+          <div className="bg-pl-white p-8 shadow-card-hv border border-pl-coal/6 relative">
+            {/* Gold corner accent */}
+            <div className="absolute top-0 right-0 w-20 h-px bg-pl-gold" />
+            <div className="absolute top-0 right-0 w-px h-20 bg-pl-gold" />
+            <div className="absolute bottom-0 left-0 w-12 h-px bg-pl-gold/40" />
+
+            {/* Eyebrow */}
+            <div className="eyebrow mb-6">Catálogo especializado</div>
+
+            {/* Libros en abanico */}
+            <div className="relative h-[220px] flex items-end justify-center">
+              {/* Libro trasero izquierdo */}
+              <div className="absolute" style={{ left: "10%", bottom: 0, transform: "rotate(-10deg)", zIndex: 1 }}>
+                <div className="typo-cover i w-[100px] h-[150px] shadow-card">
+                  <div className="frame" />
+                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-1.5 px-3 text-center">
+                    <span className="text-[9px] tracking-[0.2em] uppercase" style={{color:"#5b4a22",opacity:0.55}}>P·L</span>
+                    <span className="font-display text-[12px] leading-snug" style={{color:"#2b2418"}}>Trauma<br/>&amp; duelo</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Libro trasero derecho */}
+              <div className="absolute" style={{ right: "10%", bottom: 0, transform: "rotate(10deg)", zIndex: 1 }}>
+                <div className="typo-cover r w-[100px] h-[150px] shadow-card">
+                  <div className="frame" />
+                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-1.5 px-3 text-center">
+                    <span className="text-[9px] tracking-[0.2em] uppercase text-pl-gold opacity-55">P·L</span>
+                    <span className="font-display text-[12px] leading-snug text-pl-ivory">Salud<br/>mental</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Libro central (frente) */}
+              <div className="relative" style={{ zIndex: 3 }}>
+                <div className="typo-cover w-[115px] h-[172px] shadow-card-hv" style={{ animation: "logoFloat 5s ease-in-out infinite" }}>
+                  <div className="frame" />
+                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 px-3 text-center">
+                    <span className="text-[9px] tracking-[0.22em] uppercase text-pl-gold opacity-60">P·L</span>
+                    <span className="font-display text-[15px] leading-snug text-pl-ivory">La mente<br/>humana</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Libro detrás centro-izquierda */}
+              <div className="absolute" style={{ left: "28%", bottom: 0, transform: "rotate(-4deg)", zIndex: 2 }}>
+                <div className="typo-cover b w-[100px] h-[152px] shadow-card">
+                  <div className="frame" />
+                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-1.5 px-3 text-center">
+                    <span className="text-[9px] tracking-[0.2em] uppercase text-pl-gold opacity-55">P·L</span>
+                    <span className="font-display text-[12px] leading-snug text-pl-ivory">Neuro-<br/>psicología</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Libro detrás centro-derecha */}
+              <div className="absolute" style={{ right: "28%", bottom: 0, transform: "rotate(4deg)", zIndex: 2 }}>
+                <div className="typo-cover g w-[100px] h-[152px] shadow-card">
+                  <div className="frame" />
+                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-1.5 px-3 text-center">
+                    <span className="text-[9px] tracking-[0.2em] uppercase text-pl-gold opacity-55">P·L</span>
+                    <span className="font-display text-[12px] leading-snug text-pl-ivory">Mind-<br/>fulness</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Stats */}
+            <div className="mt-8 pt-6 border-t border-pl-coal/8 grid grid-cols-3 text-center">
+              <div>
+                <div className="font-display text-pl-coal text-[30px] tracking-tight leading-none">+1.000</div>
+                <div className="text-[10px] tracking-[0.22em] uppercase text-pl-gray mt-1.5">Títulos</div>
+              </div>
+              <div className="border-x border-pl-coal/8">
+                <div className="font-display text-pl-coal text-[30px] tracking-tight leading-none">12</div>
+                <div className="text-[10px] tracking-[0.22em] uppercase text-pl-gray mt-1.5">Categorías</div>
+              </div>
+              <div>
+                <div className="font-display text-pl-coal text-[30px] tracking-tight leading-none">100%</div>
+                <div className="text-[10px] tracking-[0.22em] uppercase text-pl-gray mt-1.5">Especializado</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Quote panel superpuesto */}
+          <div className="absolute -bottom-5 -left-5 bg-pl-coal text-pl-ivory p-5 max-w-[190px] shadow-card-hv hidden lg:block"
+               style={{ animation: "fadeSlideIn 1.1s 0.7s both" }}>
+            <span className="font-display text-pl-gold text-[28px] leading-none">"</span>
+            <p className="font-display italic text-[13px] leading-snug mt-0.5">Sabiduría en cada página</p>
+            <div className="mt-3 text-[9px] tracking-[0.28em] uppercase text-pl-gold">Psicología Libros</div>
+          </div>
+        </div>
+
       </div>
     </div>
-
   </section>
 );
 
@@ -618,7 +717,7 @@ const Footer = () => (
       <div className="grid md:grid-cols-12 gap-10">
         <div className="md:col-span-5">
           <div className="flex items-center gap-3">
-            <img src="logo.jpeg" alt="Psicología Libros" className="w-12 h-12 object-contain rounded-full bg-white" />
+            <img src="logosinfondo.png" alt="Psicología Libros" className="w-12 h-12 object-contain" />
             <div>
               <div className="font-display text-pl-ivory text-[22px] tracking-tight">Psicología Libros</div>
               <div className="text-[10px] tracking-[0.28em] uppercase text-pl-gold">Librería especializada</div>
