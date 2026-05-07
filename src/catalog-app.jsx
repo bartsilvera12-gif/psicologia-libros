@@ -297,32 +297,7 @@ const CatalogPage = () => {
                   </div>
                 </div>
 
-                {/* Grid de categorías */}
-                <div className="bg-pl-white border border-pl-coal/8 p-5 shadow-card">
-                  <div className="text-[10px] tracking-[0.22em] uppercase text-pl-gold-dk font-medium mb-3">Explorar por área</div>
-                  <div className="grid grid-cols-2 gap-1.5">
-                    {(window.CATEGORIES || []).map(cat => {
-                      const I = cat.Icon;
-                      const active = selected.includes(cat.id);
-                      return (
-                        <button
-                          key={cat.id}
-                          onClick={() => toggleCat(cat.id)}
-                          className={`flex items-center gap-2 px-2.5 py-2 border text-left transition-all
-                            ${active
-                              ? "border-pl-coal bg-pl-coal text-pl-ivory"
-                              : "border-pl-coal/10 text-pl-gray hover:border-pl-coal/30 hover:text-pl-coal hover:bg-pl-ivory/60"
-                            }`}
-                        >
-                          {I && <span className={`shrink-0 ${active ? "text-pl-gold" : "text-pl-coal/25"}`}><I size={11} /></span>}
-                          <span className="truncate text-[11px] leading-tight">{cat.name}</span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* CTA WhatsApp */}
+{/* CTA WhatsApp */}
                 <a href={waLink("Hola, busco un libro de psicología en el catálogo.")}
                    target="_blank" rel="noreferrer"
                    className="flex items-center gap-3 px-4 py-3.5 bg-pl-coal text-pl-ivory border border-pl-coal hover:bg-black transition-colors">
