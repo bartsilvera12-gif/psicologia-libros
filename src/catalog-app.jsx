@@ -142,7 +142,7 @@ const CatalogPage = () => {
 
       <main className="pt-[78px]">
         {/* ── Hero compacto ── */}
-        <div className="hero-texture border-b border-pl-coal/8 py-8 lg:py-10 relative overflow-hidden">
+        <div className="hero-texture border-b border-pl-coal/8 py-8 lg:py-10 relative">
           {/* Decoración de fondo */}
           <div className="absolute inset-0 pointer-events-none select-none overflow-hidden">
             <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-pl-gold/10 rounded-full blur-[100px]" />
