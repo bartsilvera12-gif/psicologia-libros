@@ -142,8 +142,22 @@ const CatalogPage = () => {
 
       <main className="pt-[78px]">
         {/* ── Hero compacto ── */}
-        <div className="hero-texture border-b border-pl-coal/8 py-8 lg:py-10">
-          <div className="max-w-7xl mx-auto px-6 lg:px-10">
+        <div className="hero-texture border-b border-pl-coal/8 py-8 lg:py-10 relative overflow-hidden">
+          {/* Decoración de fondo */}
+          <div className="absolute inset-0 pointer-events-none select-none overflow-hidden">
+            <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-pl-gold/10 rounded-full blur-[100px]" />
+            <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-pl-red/5 rounded-full blur-[100px]" />
+            <div className="absolute inset-0 flex items-center">
+              <span className="font-display italic text-[18vw] leading-none text-pl-gold/[0.06] whitespace-nowrap tracking-widest select-none pl-8">
+                Catálogo
+              </span>
+            </div>
+            <div className="absolute top-0 left-0 w-7 h-7 border-t border-l border-pl-gold/30 mt-4 ml-6 hidden lg:block" />
+            <div className="absolute top-0 right-0 w-7 h-7 border-t border-r border-pl-gold/30 mt-4 mr-6 hidden lg:block" />
+            <div className="absolute bottom-0 left-0 w-7 h-7 border-b border-l border-pl-gold/30 mb-4 ml-6 hidden lg:block" />
+            <div className="absolute bottom-0 right-0 w-7 h-7 border-b border-r border-pl-gold/30 mb-4 mr-6 hidden lg:block" />
+          </div>
+          <div className="max-w-7xl mx-auto px-6 lg:px-10 relative">
 
             {/* Breadcrumb */}
             <div className="flex items-center gap-2 mb-5">
