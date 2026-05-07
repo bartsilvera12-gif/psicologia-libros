@@ -1,0 +1,8 @@
+{
+  "name": "psicologia-libros",
+  "version": "1.0.0",
+  "description": "Librería especializada en psicología y salud mental",
+  "scripts": {
+    "build": "echo 'Sitio estático - sin build'"
+  }
+}
