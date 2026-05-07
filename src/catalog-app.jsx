@@ -142,7 +142,7 @@ const CatalogPage = () => {
 
       <main className="pt-[78px]">
         {/* ── Hero compacto ── */}
-        <div className="paper-bg border-b border-pl-coal/8 py-8 lg:py-10">
+        <div className="hero-texture border-b border-pl-coal/8 py-8 lg:py-10">
           <div className="max-w-7xl mx-auto px-6 lg:px-10">
 
             {/* Breadcrumb */}

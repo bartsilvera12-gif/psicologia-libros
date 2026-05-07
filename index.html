@@ -57,6 +57,17 @@
         radial-gradient(circle at 80% 90%, rgba(215,25,32,0.04), transparent 40%);
     }
 
+    /* Hero richer texture */
+    .hero-texture {
+      background-color: #F8F4EA;
+      background-image:
+        radial-gradient(circle at 18% 12%, rgba(201,162,74,0.10), transparent 38%),
+        radial-gradient(circle at 82% 85%, rgba(215,25,32,0.06), transparent 38%),
+        radial-gradient(circle at 60% 40%, rgba(201,162,74,0.04), transparent 30%),
+        url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='1' cy='1' r='1' fill='%23C9A24A' fill-opacity='0.07'/%3E%3C/svg%3E");
+      background-size: auto, auto, auto, 40px 40px;
+    }
+
     /* Gold rule */
     .gold-rule {
       height: 1px;
@@ -191,6 +202,17 @@
 
     /* Category pill active */
     .cat-pill-active { background: #111111; color: #F8F4EA; }
+
+    /* Hero book hover — lift & scale */
+    .hero-book {
+      transition: transform 0.38s cubic-bezier(0.2, 0.7, 0.2, 1),
+                  box-shadow 0.38s cubic-bezier(0.2, 0.7, 0.2, 1);
+      cursor: default;
+    }
+    .hero-book:hover {
+      transform: translateY(-16px) scale(1.06) !important;
+      box-shadow: 0 28px 50px -14px rgba(17,17,17,0.35) !important;
+    }
   </style>
 
   <!-- LocalBusiness / BookStore JSON-LD -->

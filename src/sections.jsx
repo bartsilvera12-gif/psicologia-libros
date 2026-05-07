@@ -123,7 +123,7 @@ const LogoSVG = ({ size = 280 }) => (
 
 // === Hero ===
 const Hero = () => (
-  <section id="inicio" className="paper-bg relative min-h-screen flex items-center pt-[78px] overflow-hidden">
+  <section id="inicio" className="hero-texture relative min-h-screen flex items-center pt-[78px] overflow-hidden">
     {/* Ambient blobs */}
     <div className="absolute inset-0 pointer-events-none select-none">
       <div className="absolute top-1/3 left-1/4 w-[520px] h-[520px] bg-pl-gold/6 rounded-full blur-[100px]" />
@@ -145,7 +145,7 @@ const Hero = () => (
 
           <div style={{ animation: "logoFloat 6s ease-in-out infinite, glowPulse 4s ease-in-out infinite" }}>
             <img src="logosinfondo.png" alt="Psicología Libros"
-                 style={{ width: 340, height: 340, objectFit: "contain" }} />
+                 style={{ width: 340, height: 340, objectFit: "contain", mixBlendMode: "multiply" }} />
           </div>
 
           <div className="mt-8 flex flex-wrap justify-center lg:justify-start gap-4"
@@ -177,7 +177,7 @@ const Hero = () => (
             <div className="relative h-[220px] flex items-end justify-center">
               {/* Libro trasero izquierdo */}
               <div className="absolute" style={{ left: "10%", bottom: 0, transform: "rotate(-10deg)", zIndex: 1 }}>
-                <div className="typo-cover i w-[100px] h-[150px] shadow-card">
+                <div className="hero-book typo-cover i w-[100px] h-[150px] shadow-card">
                   <div className="frame" />
                   <div className="absolute inset-0 flex flex-col items-center justify-center gap-1.5 px-3 text-center">
                     <span className="text-[9px] tracking-[0.2em] uppercase" style={{color:"#5b4a22",opacity:0.55}}>P·L</span>
@@ -188,7 +188,7 @@ const Hero = () => (
 
               {/* Libro trasero derecho */}
               <div className="absolute" style={{ right: "10%", bottom: 0, transform: "rotate(10deg)", zIndex: 1 }}>
-                <div className="typo-cover r w-[100px] h-[150px] shadow-card">
+                <div className="hero-book typo-cover r w-[100px] h-[150px] shadow-card">
                   <div className="frame" />
                   <div className="absolute inset-0 flex flex-col items-center justify-center gap-1.5 px-3 text-center">
                     <span className="text-[9px] tracking-[0.2em] uppercase text-pl-gold opacity-55">P·L</span>
@@ -199,7 +199,7 @@ const Hero = () => (
 
               {/* Libro central (frente) */}
               <div className="relative" style={{ zIndex: 3 }}>
-                <div className="typo-cover w-[115px] h-[172px] shadow-card-hv" style={{ animation: "logoFloat 5s ease-in-out infinite" }}>
+                <div className="hero-book typo-cover w-[115px] h-[172px] shadow-card-hv" style={{ animation: "logoFloat 5s ease-in-out infinite" }}>
                   <div className="frame" />
                   <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 px-3 text-center">
                     <span className="text-[9px] tracking-[0.22em] uppercase text-pl-gold opacity-60">P·L</span>
@@ -210,7 +210,7 @@ const Hero = () => (
 
               {/* Libro detrás centro-izquierda */}
               <div className="absolute" style={{ left: "28%", bottom: 0, transform: "rotate(-4deg)", zIndex: 2 }}>
-                <div className="typo-cover b w-[100px] h-[152px] shadow-card">
+                <div className="hero-book typo-cover b w-[100px] h-[152px] shadow-card">
                   <div className="frame" />
                   <div className="absolute inset-0 flex flex-col items-center justify-center gap-1.5 px-3 text-center">
                     <span className="text-[9px] tracking-[0.2em] uppercase text-pl-gold opacity-55">P·L</span>
@@ -221,7 +221,7 @@ const Hero = () => (
 
               {/* Libro detrás centro-derecha */}
               <div className="absolute" style={{ right: "28%", bottom: 0, transform: "rotate(4deg)", zIndex: 2 }}>
-                <div className="typo-cover g w-[100px] h-[152px] shadow-card">
+                <div className="hero-book typo-cover g w-[100px] h-[152px] shadow-card">
                   <div className="frame" />
                   <div className="absolute inset-0 flex flex-col items-center justify-center gap-1.5 px-3 text-center">
                     <span className="text-[9px] tracking-[0.2em] uppercase text-pl-gold opacity-55">P·L</span>
