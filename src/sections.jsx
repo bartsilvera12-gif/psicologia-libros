@@ -62,38 +62,32 @@ const Header = ({ active, homePath = "" }) => {
               </a>
 
               {catOpen && (
-                <div className="absolute top-full left-1/2 -translate-x-1/2 w-[560px] bg-pl-white border border-pl-coal/10 shadow-card-hv z-50"
-                     style={{ animation: "fadeSlideIn 0.18s ease both" }}>
-                  {/* Header del panel */}
-                  <div className="px-6 py-4 border-b border-pl-coal/8 flex items-center justify-between">
-                    <span className="text-[10px] tracking-[0.28em] uppercase text-pl-gold-dk font-medium">Explorar por categoría</span>
-                    <a href="catalogo.html" className="text-[11px] text-pl-gray hover:text-pl-red transition-colors">
-                      Ver todo →
-                    </a>
+                <div className="fixed left-0 right-0 bg-pl-white border-b border-pl-coal/10 shadow-card-hv z-40"
+                     style={{ top: 78, animation: "fadeSlideIn 0.2s ease both" }}>
+                  <div className="max-w-7xl mx-auto px-6 lg:px-10 py-6">
+                    <div className="flex items-center justify-between mb-5">
+                      <span className="text-[10px] tracking-[0.28em] uppercase text-pl-gold-dk font-medium">Explorar por categoría</span>
+                      <a href="catalogo.html" className="inline-flex items-center gap-1.5 text-[11px] tracking-[0.15em] uppercase text-pl-coal hover:text-pl-red transition-colors font-medium">
+                        Ver catálogo completo <IconArrow size={10} />
+                      </a>
+                    </div>
+                    <div className="grid grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-1">
+                      {(window.CATEGORIES || []).map(cat => {
+                        const I = cat.Icon;
+                        return (
+                          <a key={cat.id}
+                             href={`catalogo.html?cat=${cat.id}`}
+                             className="flex items-center gap-2.5 px-3 py-3 hover:bg-pl-ivory transition-colors group">
+                            <span className="shrink-0 w-7 h-7 border border-pl-coal/12 flex items-center justify-center text-pl-coal/40 group-hover:border-pl-gold/60 group-hover:text-pl-gold-dk transition-colors">
+                              {I ? <I size={13} /> : <span className="text-[10px]">{cat.name[0]}</span>}
+                            </span>
+                            <span className="text-[12px] text-pl-gray group-hover:text-pl-coal transition-colors leading-tight">{cat.name}</span>
+                          </a>
+                        );
+                      })}
+                    </div>
                   </div>
-                  {/* Grid de categorías */}
-                  <div className="grid grid-cols-2 gap-0 p-3">
-                    {(window.CATEGORIES || []).map(cat => {
-                      const I = cat.Icon;
-                      return (
-                        <a key={cat.id}
-                           href={`catalogo.html?cat=${cat.id}`}
-                           className="flex items-center gap-3 px-3 py-2.5 hover:bg-pl-ivory transition-colors group">
-                          <span className="shrink-0 w-7 h-7 border border-pl-coal/12 flex items-center justify-center text-pl-coal/40 group-hover:border-pl-gold/60 group-hover:text-pl-gold-dk transition-colors">
-                            {I ? <I size={13} /> : <span className="text-[10px]">{cat.name[0]}</span>}
-                          </span>
-                          <span className="text-[13px] text-pl-gray group-hover:text-pl-coal transition-colors leading-snug">{cat.name}</span>
-                        </a>
-                      );
-                    })}
-                  </div>
-                  {/* Footer */}
-                  <div className="border-t border-pl-coal/8 px-6 py-3">
-                    <a href="catalogo.html"
-                       className="inline-flex items-center gap-2 text-[12px] tracking-[0.15em] uppercase text-pl-coal font-medium hover:text-pl-gold-dk transition-colors">
-                      Ver catálogo completo <IconArrow size={11} />
-                    </a>
-                  </div>
+                  <div className="h-px bg-pl-gold/30" />
                 </div>
               )}
             </div>
