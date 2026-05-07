@@ -3,6 +3,8 @@
 const Header = ({ active, homePath = "" }) => {
   const [scrolled, setScrolled] = React.useState(false);
   const [open, setOpen]         = React.useState(false);
+  const [catOpen, setCatOpen]   = React.useState(false);
+  const catTimer = React.useRef(null);
 
   React.useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -46,11 +48,55 @@ const Header = ({ active, homePath = "" }) => {
                 {active === n.id && <span className="absolute -bottom-0.5 left-0 right-0 h-px bg-pl-gold" />}
               </a>
             ))}
-            {/* Catálogo al lado de Inicio */}
-            <a href="catalogo.html"
-               className={`text-[13px] tracking-wide transition-colors relative py-2 ${homePath === "" && window.location.pathname.includes("catalogo") ? "text-pl-red" : "text-pl-coal hover:text-pl-red"}`}>
-              Catálogo
-            </a>
+            {/* Catálogo con mega-dropdown */}
+            <div className="relative"
+                 onMouseEnter={() => { clearTimeout(catTimer.current); setCatOpen(true); }}
+                 onMouseLeave={() => { catTimer.current = setTimeout(() => setCatOpen(false), 150); }}>
+              <a href="catalogo.html"
+                 className={`inline-flex items-center gap-1 text-[13px] tracking-wide transition-colors relative py-2 ${window.location.pathname.includes("catalogo") ? "text-pl-red" : "text-pl-coal hover:text-pl-red"}`}>
+                Catálogo
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="none" style={{ marginTop: 1, transition: "transform 0.2s", transform: catOpen ? "rotate(180deg)" : "rotate(0deg)" }}>
+                  <path d="M2 3.5l3 3 3-3" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+                {window.location.pathname.includes("catalogo") && <span className="absolute -bottom-0.5 left-0 right-0 h-px bg-pl-gold" />}
+              </a>
+
+              {catOpen && (
+                <div className="absolute top-full left-1/2 -translate-x-1/2 w-[560px] bg-pl-white border border-pl-coal/10 shadow-card-hv z-50"
+                     style={{ animation: "fadeSlideIn 0.18s ease both" }}>
+                  {/* Header del panel */}
+                  <div className="px-6 py-4 border-b border-pl-coal/8 flex items-center justify-between">
+                    <span className="text-[10px] tracking-[0.28em] uppercase text-pl-gold-dk font-medium">Explorar por categoría</span>
+                    <a href="catalogo.html" className="text-[11px] text-pl-gray hover:text-pl-red transition-colors">
+                      Ver todo →
+                    </a>
+                  </div>
+                  {/* Grid de categorías */}
+                  <div className="grid grid-cols-2 gap-0 p-3">
+                    {(window.CATEGORIES || []).map(cat => {
+                      const I = cat.Icon;
+                      return (
+                        <a key={cat.id}
+                           href={`catalogo.html?cat=${cat.id}`}
+                           className="flex items-center gap-3 px-3 py-2.5 hover:bg-pl-ivory transition-colors group">
+                          <span className="shrink-0 w-7 h-7 border border-pl-coal/12 flex items-center justify-center text-pl-coal/40 group-hover:border-pl-gold/60 group-hover:text-pl-gold-dk transition-colors">
+                            {I ? <I size={13} /> : <span className="text-[10px]">{cat.name[0]}</span>}
+                          </span>
+                          <span className="text-[13px] text-pl-gray group-hover:text-pl-coal transition-colors leading-snug">{cat.name}</span>
+                        </a>
+                      );
+                    })}
+                  </div>
+                  {/* Footer */}
+                  <div className="border-t border-pl-coal/8 px-6 py-3">
+                    <a href="catalogo.html"
+                       className="inline-flex items-center gap-2 text-[12px] tracking-[0.15em] uppercase text-pl-coal font-medium hover:text-pl-gold-dk transition-colors">
+                      Ver catálogo completo <IconArrow size={11} />
+                    </a>
+                  </div>
+                </div>
+              )}
+            </div>
             {/* Resto del nav */}
             {NAV.filter(n => n.id !== "inicio").map(n => (
               <a key={n.id} href={homePath ? `${homePath}#${n.id}` : `#${n.id}`}
