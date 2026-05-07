@@ -1,70 +1,82 @@
-// === Multi-select dropdown de categorías ===
-const CategoryMultiSelect = ({ selected, onToggle, onClear }) => {
-  const [open, setOpen] = React.useState(false);
+// === Panel dropdown de categorías ===
+const CategoryPanel = ({ selected, onToggle, onClear, anchorRef, onClose }) => {
   const ref = React.useRef(null);
 
   React.useEffect(() => {
-    const handler = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    const handler = (e) => {
+      if (
+        ref.current && !ref.current.contains(e.target) &&
+        anchorRef.current && !anchorRef.current.contains(e.target)
+      ) onClose();
+    };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  const label = selected.length === 0
-    ? "Todas las categorías"
-    : selected.length === 1
-      ? (window.CATEGORIES || []).find(c => c.id === selected[0])?.name || selected[0]
-      : `${selected.length} categorías seleccionadas`;
-
   return (
-    <div className="relative shrink-0" ref={ref}>
-      {/* Trigger */}
-      <button
-        onClick={() => setOpen(o => !o)}
-        className={`flex items-center gap-3 min-w-[230px] px-5 py-4 bg-pl-white border text-[14px] text-pl-coal shadow-card hover:border-pl-gold focus:outline-none transition-colors ${open ? "border-pl-gold" : "border-pl-coal/15"}`}
-      >
-        <span className="flex-1 text-left truncate">{label}</span>
+    <div
+      ref={ref}
+      className="absolute top-[calc(100%+8px)] left-0 w-[340px] bg-pl-white border border-pl-coal/12 shadow-card-hv z-50"
+      style={{ animation: "fadeSlideIn 0.18s ease both" }}
+    >
+      {/* Header del panel */}
+      <div className="flex items-center justify-between px-5 py-3.5 border-b border-pl-coal/8">
+        <span className="text-[11px] tracking-[0.22em] uppercase text-pl-gold-dk font-medium">Filtrar por categoría</span>
         {selected.length > 0 && (
-          <span className="shrink-0 inline-flex items-center justify-center w-5 h-5 rounded-full bg-pl-red text-white text-[10px] font-bold">
-            {selected.length}
-          </span>
-        )}
-        <span className={`shrink-0 transition-transform duration-200 ${open ? "rotate-180" : ""}`}>
-          <IconChevron size={14} />
-        </span>
-      </button>
-
-      {/* Dropdown */}
-      {open && (
-        <div className="absolute top-[calc(100%+4px)] left-0 min-w-[260px] bg-pl-white border border-pl-coal/15 shadow-card-hv z-50 py-2"
-             style={{ animation: "fadeSlideIn 0.18s ease both" }}>
-          {/* Todas */}
-          <button
-            onClick={() => { onClear(); setOpen(false); }}
-            className={`w-full text-left px-4 py-3 text-[13px] flex items-center gap-3 hover:bg-pl-ivory transition-colors ${selected.length === 0 ? "text-pl-coal font-medium" : "text-pl-gray"}`}
-          >
-            <span className={`w-4 h-4 border-2 flex items-center justify-center shrink-0 transition-colors ${selected.length === 0 ? "border-pl-coal bg-pl-coal" : "border-pl-coal/25"}`}>
-              {selected.length === 0 && <span className="text-white" style={{fontSize:9, lineHeight:1}}>✓</span>}
-            </span>
-            Todas las categorías
+          <button onClick={() => { onClear(); onClose(); }} className="text-[11px] text-pl-gray hover:text-pl-red transition-colors underline underline-offset-2">
+            Quitar todos
           </button>
-          <div className="h-px bg-pl-coal/8 mx-4 my-1" />
-          {(window.CATEGORIES || []).map(cat => {
-            const active = selected.includes(cat.id);
-            return (
-              <button
-                key={cat.id}
-                onClick={() => onToggle(cat.id)}
-                className={`w-full text-left px-4 py-3 text-[13px] flex items-center gap-3 hover:bg-pl-ivory transition-colors ${active ? "text-pl-coal" : "text-pl-gray"}`}
-              >
-                <span className={`w-4 h-4 border-2 flex items-center justify-center shrink-0 transition-colors ${active ? "border-pl-gold bg-pl-gold" : "border-pl-coal/25"}`}>
-                  {active && <span className="text-white" style={{fontSize:9, lineHeight:1}}>✓</span>}
-                </span>
+        )}
+      </div>
+
+      {/* Lista */}
+      <div className="py-2 max-h-[380px] overflow-y-auto">
+        {(window.CATEGORIES || []).map(cat => {
+          const active = selected.includes(cat.id);
+          const I = cat.Icon;
+          return (
+            <button
+              key={cat.id}
+              onClick={() => onToggle(cat.id)}
+              className={`w-full text-left px-5 py-3 flex items-center gap-3.5 transition-colors group
+                ${active ? "bg-pl-gold/8 hover:bg-pl-gold/12" : "hover:bg-pl-ivory"}`}
+            >
+              {/* Icono categoría */}
+              <span className={`shrink-0 w-8 h-8 border flex items-center justify-center transition-colors
+                ${active ? "border-pl-gold bg-pl-gold text-white" : "border-pl-coal/15 text-pl-coal/40 group-hover:border-pl-gold/60 group-hover:text-pl-coal/70"}`}>
+                {I ? <I size={15} /> : <span className="text-[10px]">{cat.name[0]}</span>}
+              </span>
+
+              {/* Nombre */}
+              <span className={`flex-1 text-[13px] leading-tight transition-colors ${active ? "text-pl-coal font-medium" : "text-pl-gray"}`}>
                 {cat.name}
-              </button>
-            );
-          })}
-        </div>
-      )}
+              </span>
+
+              {/* Check */}
+              {active && (
+                <span className="shrink-0 w-4 h-4 bg-pl-gold flex items-center justify-center">
+                  <span className="text-white" style={{ fontSize: 9 }}>✓</span>
+                </span>
+              )}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Footer */}
+      <div className="px-5 py-3 border-t border-pl-coal/8 flex items-center justify-between">
+        <span className="text-[12px] text-pl-gray">
+          {selected.length === 0
+            ? "Todas las categorías activas"
+            : `${selected.length} categoría${selected.length > 1 ? "s" : ""} seleccionada${selected.length > 1 ? "s" : ""}`}
+        </span>
+        <button
+          onClick={onClose}
+          className="text-[11px] tracking-[0.15em] uppercase text-pl-coal font-medium hover:text-pl-gold-dk transition-colors"
+        >
+          Aplicar
+        </button>
+      </div>
     </div>
   );
 };
@@ -72,9 +84,10 @@ const CategoryMultiSelect = ({ selected, onToggle, onClear }) => {
 // === Página de catálogo ===
 const CatalogPage = () => {
   const [ready,    setReady]    = React.useState(false);
-  // selected: array de ids de categorías. [] = todas
   const [selected, setSelected] = React.useState([]);
   const [query,    setQuery]    = React.useState("");
+  const [panelOpen, setPanelOpen] = React.useState(false);
+  const addBtnRef = React.useRef(null);
 
   React.useEffect(() => {
     window.__sbLoadPLData().finally(() => {
@@ -85,7 +98,6 @@ const CatalogPage = () => {
     });
   }, []);
 
-  // Sincroniza URL con los filtros activos
   React.useEffect(() => {
     if (!ready) return;
     const url = new URL(window.location.href);
@@ -99,13 +111,11 @@ const CatalogPage = () => {
 
   const toggleCat = (id) => {
     setSelected(prev => prev.includes(id) ? prev.filter(s => s !== id) : [...prev, id]);
-    setQuery("");
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const clearAll = () => { setSelected([]); setQuery(""); };
+  const clearAll = () => { setSelected([]); setQuery(""); setPanelOpen(false); };
 
-  // Filtrado con soporte multi-categoría
   const filtered = React.useMemo(() => {
     if (!ready) return [];
     const q = query.trim().toLowerCase();
@@ -126,7 +136,6 @@ const CatalogPage = () => {
       .filter(s => s.books.length > 0);
   }, [showSections, ready]);
 
-  // Loading
   if (!ready) {
     return (
       <div className="min-h-screen paper-bg flex items-center justify-center">
@@ -174,7 +183,7 @@ const CatalogPage = () => {
             </div>
 
             {/* Título */}
-            <div className="max-w-2xl mb-8">
+            <div className="max-w-2xl mb-10">
               <div className="eyebrow mb-4">Catálogo completo</div>
               <h1 className="font-display text-pl-coal text-[42px] sm:text-5xl lg:text-[56px] leading-[1.05] tracking-tight">
                 {catLabel
@@ -186,55 +195,103 @@ const CatalogPage = () => {
               </p>
             </div>
 
-            {/* Buscador + selector multi-categoría + limpiar */}
-            <div className="flex flex-col sm:flex-row gap-3 max-w-3xl">
-              {/* Search */}
-              <div className="flex-1 flex items-center gap-3 bg-pl-white border border-pl-coal/15 px-5 py-4 shadow-card focus-within:border-pl-gold transition-colors">
-                <IconSearch size={18} />
+            {/* ── Barra de búsqueda + filtros ── */}
+            <div className="max-w-4xl">
+
+              {/* Fila 1: búsqueda */}
+              <div className="flex items-center gap-3 bg-pl-white border border-pl-coal/15 px-5 py-4 shadow-card focus-within:border-pl-gold transition-colors">
+                <IconSearch size={18} className="shrink-0 text-pl-coal/40" />
                 <input
                   value={query}
                   onChange={e => setQuery(e.target.value)}
                   placeholder="Buscar por título, autor o tema…"
-                  className="flex-1 bg-transparent outline-none text-[15px] placeholder:text-pl-gray/60"
+                  className="flex-1 bg-transparent outline-none text-[15px] placeholder:text-pl-gray/50"
                 />
                 {query && (
-                  <button onClick={() => setQuery("")} className="text-pl-gray hover:text-pl-coal shrink-0">
+                  <button onClick={() => setQuery("")} className="text-pl-gray hover:text-pl-coal shrink-0 transition-colors">
                     <IconClose size={16} />
                   </button>
                 )}
               </div>
 
-              {/* Multi-select */}
-              <CategoryMultiSelect
-                selected={selected}
-                onToggle={toggleCat}
-                onClear={clearAll}
-              />
+              {/* Fila 2: chips acumulados + botón agregar */}
+              <div className="relative mt-2.5">
+                <div className="flex items-center flex-wrap gap-2 min-h-[44px]">
 
-              {/* Limpiar filtros */}
-              {(selected.length > 0 || query) && (
-                <button
-                  onClick={clearAll}
-                  className="shrink-0 flex items-center gap-2 px-5 py-4 border border-pl-coal/15 bg-pl-white text-[13px] text-pl-gray hover:text-pl-red hover:border-pl-red/30 shadow-card transition-colors whitespace-nowrap"
-                >
-                  <IconClose size={13} /> Limpiar
-                </button>
-              )}
-            </div>
+                  {/* Botón "Agregar categoría" */}
+                  <button
+                    ref={addBtnRef}
+                    onClick={() => setPanelOpen(o => !o)}
+                    className={`inline-flex items-center gap-2 px-4 py-2.5 border text-[12px] tracking-[0.12em] uppercase font-medium transition-colors
+                      ${panelOpen
+                        ? "border-pl-gold bg-pl-gold text-white"
+                        : "border-pl-coal/20 bg-pl-white text-pl-coal hover:border-pl-gold hover:text-pl-gold-dk"
+                      }`}
+                  >
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                      <path d="M6 1v10M1 6h10" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/>
+                    </svg>
+                    Categoría
+                    {selected.length > 0 && (
+                      <span className={`inline-flex items-center justify-center w-5 h-5 rounded-full text-[10px] font-bold
+                        ${panelOpen ? "bg-white text-pl-gold-dk" : "bg-pl-red text-white"}`}>
+                        {selected.length}
+                      </span>
+                    )}
+                  </button>
 
-            {/* Chips de categorías activas */}
-            {selected.length > 0 && (
-              <div className="mt-4 flex flex-wrap gap-2">
-                {selected.map(id => (
-                  <span key={id} className="inline-flex items-center gap-2 px-3 py-1.5 bg-pl-gold/10 border border-pl-gold/40 text-pl-gold-dk text-[12px]">
-                    {catName(id)}
-                    <button onClick={() => toggleCat(id)} className="hover:text-pl-red transition-colors" aria-label="Quitar">
+                  {/* Divisor si hay chips */}
+                  {selected.length > 0 && (
+                    <span className="w-px h-5 bg-pl-coal/12 shrink-0" />
+                  )}
+
+                  {/* Chips de categorías activas */}
+                  {selected.map(id => {
+                    const cat = (window.CATEGORIES || []).find(c => c.id === id);
+                    const I = cat?.Icon;
+                    return (
+                      <span
+                        key={id}
+                        className="inline-flex items-center gap-2 pl-2.5 pr-2 py-2 bg-pl-coal text-pl-ivory text-[12px] font-medium border border-pl-coal"
+                        style={{ animation: "fadeSlideIn 0.2s ease both" }}
+                      >
+                        {I && <I size={12} />}
+                        {catName(id)}
+                        <button
+                          onClick={() => toggleCat(id)}
+                          className="shrink-0 w-4 h-4 flex items-center justify-center hover:bg-white/15 rounded-sm transition-colors"
+                          aria-label="Quitar"
+                        >
+                          <IconClose size={9} />
+                        </button>
+                      </span>
+                    );
+                  })}
+
+                  {/* Limpiar todo */}
+                  {(selected.length > 0 || query) && (
+                    <button
+                      onClick={clearAll}
+                      className="inline-flex items-center gap-1.5 px-3 py-2 text-[12px] text-pl-gray hover:text-pl-red transition-colors"
+                    >
                       <IconClose size={11} />
+                      Limpiar todo
                     </button>
-                  </span>
-                ))}
+                  )}
+                </div>
+
+                {/* Panel de categorías */}
+                {panelOpen && (
+                  <CategoryPanel
+                    selected={selected}
+                    onToggle={toggleCat}
+                    onClear={clearAll}
+                    anchorRef={addBtnRef}
+                    onClose={() => setPanelOpen(false)}
+                  />
+                )}
               </div>
-            )}
+            </div>
           </div>
         </div>
 
@@ -269,7 +326,7 @@ const CatalogPage = () => {
                           <p className="text-pl-gray text-[13px] mt-0.5">{sec.desc}</p>
                         </div>
                       </div>
-                      <button onClick={() => toggleCat(sec.id)}
+                      <button onClick={() => { toggleCat(sec.id); window.scrollTo({ top: 0, behavior: "smooth" }); }}
                               className="shrink-0 inline-flex items-center gap-2 text-[11px] tracking-[0.22em] uppercase text-pl-gold-dk hover:text-pl-red transition-colors ml-4">
                         Ver todos ({sec.books.length}) <IconArrow size={12} />
                       </button>
@@ -279,7 +336,7 @@ const CatalogPage = () => {
                     </div>
                     {sec.books.length > 4 && (
                       <div className="mt-6 text-center">
-                        <button onClick={() => toggleCat(sec.id)}
+                        <button onClick={() => { toggleCat(sec.id); window.scrollTo({ top: 0, behavior: "smooth" }); }}
                                 className="inline-flex items-center gap-2 px-6 py-3 border border-pl-coal/15 text-[13px] text-pl-coal hover:border-pl-gold hover:text-pl-gold-dk transition-colors">
                           Ver los {sec.books.length} libros de {sec.name} <IconArrow size={13} />
                         </button>
