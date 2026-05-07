@@ -124,17 +124,44 @@ const LogoSVG = ({ size = 280 }) => (
 // === Hero ===
 const Hero = () => (
   <section id="inicio" className="hero-texture relative min-h-screen flex items-center pt-[78px] overflow-hidden">
-    {/* Ambient blobs */}
-    <div className="absolute inset-0 pointer-events-none select-none">
-      <div className="absolute top-1/3 left-1/4 w-[520px] h-[520px] bg-pl-gold/6 rounded-full blur-[100px]" />
-      <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-pl-red/4 rounded-full blur-[100px]" />
-    </div>
+    {/* ── Fondo decorativo ── */}
+    <div className="absolute inset-0 pointer-events-none select-none overflow-hidden">
+      {/* Blobs de color */}
+      <div className="absolute top-1/4 left-0 w-[600px] h-[600px] bg-pl-gold/10 rounded-full blur-[120px]" />
+      <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-pl-red/6 rounded-full blur-[120px]" />
+      <div className="absolute top-1/2 right-0 w-[350px] h-[350px] bg-pl-gold/8 rounded-full blur-[80px]" />
 
-    {/* Corner decorations */}
-    <div className="absolute top-24 left-10 w-px h-24 bg-pl-gold/25 hidden lg:block" />
-    <div className="absolute top-24 left-10 w-16 h-px bg-pl-gold/25 hidden lg:block" />
-    <div className="absolute bottom-16 right-10 w-px h-24 bg-pl-gold/25 hidden lg:block" />
-    <div className="absolute bottom-16 right-10 w-16 h-px bg-pl-gold/25 hidden lg:block" />
+      {/* Watermark — texto enorme detrás */}
+      <div className="absolute inset-0 flex items-center justify-center">
+        <span className="font-display text-[22vw] leading-none font-bold text-pl-coal/[0.03] whitespace-nowrap tracking-tight select-none">
+          PSICOLOGÍA
+        </span>
+      </div>
+
+      {/* Líneas horizontales decorativas */}
+      <div className="absolute top-[38%] left-0 right-0 h-px bg-pl-gold/12" />
+      <div className="absolute top-[62%] left-0 right-0 h-px bg-pl-gold/8" />
+
+      {/* Marca de registro — esquina superior izquierda */}
+      <div className="absolute top-[88px] left-10 hidden lg:block">
+        <div className="w-8 h-8 border-t border-l border-pl-gold/35" />
+      </div>
+      {/* Esquina superior derecha */}
+      <div className="absolute top-[88px] right-10 hidden lg:block">
+        <div className="w-8 h-8 border-t border-r border-pl-gold/35" />
+      </div>
+      {/* Esquina inferior izquierda */}
+      <div className="absolute bottom-8 left-10 hidden lg:block">
+        <div className="w-8 h-8 border-b border-l border-pl-gold/35" />
+      </div>
+      {/* Esquina inferior derecha */}
+      <div className="absolute bottom-8 right-10 hidden lg:block">
+        <div className="w-8 h-8 border-b border-r border-pl-gold/35" />
+      </div>
+
+      {/* Línea vertical decorativa centro */}
+      <div className="absolute top-[12%] bottom-[12%] left-1/2 w-px bg-gradient-to-b from-transparent via-pl-gold/15 to-transparent hidden lg:block" />
+    </div>
 
     <div className="max-w-7xl mx-auto px-6 lg:px-10 w-full py-16 lg:py-20">
       <div className="grid lg:grid-cols-2 gap-10 lg:gap-20 items-center">
