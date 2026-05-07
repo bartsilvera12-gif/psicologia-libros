@@ -177,7 +177,7 @@ const Hero = () => (
           <div style={{ animation: "logoFloat 6s ease-in-out infinite, glowPulse 4s ease-in-out infinite" }}>
             <div style={{ width: 340, height: 340, borderRadius: "50%", overflow: "hidden", flexShrink: 0 }}>
               <img src="logosinfondo.png" alt="Psicología Libros"
-                   style={{ width: "109%", height: "109%", objectFit: "cover", display: "block", marginLeft: "-4.5%", marginTop: "-4.5%" }} />
+                   style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", transform: "scale(1.14)", transformOrigin: "center center" }} />
             </div>
           </div>
 
