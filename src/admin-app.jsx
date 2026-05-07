@@ -698,23 +698,42 @@ const AdminFAQs = ({ faqs, onRefresh, onToast }) => {
         <Btn variant="primary" onClick={()=>setModal("add")}><IcoPlus /> Nueva FAQ</Btn>
       </div>
 
-      <div className="bg-white border border-gray-200">
-        {faqs.length === 0 && <div className="px-6 py-12 text-center text-gray-400 text-[13px]">Sin FAQs cargadas</div>}
-        {faqs.map((f, i) => (
-          <div key={f.id||i} className="border-b border-gray-50 last:border-0 px-6 py-4 table-row">
-            <div className="flex items-start justify-between gap-4">
-              <div className="flex-1 min-w-0">
-                <div className="text-[13px] font-medium text-pl-coal mb-1">{f.q||f.question}</div>
-                <div className="text-[12px] text-gray-400 line-clamp-2">{f.a||f.answer}</div>
-              </div>
-              <div className="flex items-center gap-1 shrink-0">
-                <button onClick={()=>setModal(f)} className="p-1.5 text-gray-400 hover:text-pl-coal transition-colors"><IcoEdit /></button>
-                <button onClick={()=>setConfirm(f)} className="p-1.5 text-gray-400 hover:text-pl-red transition-colors"><IcoTrash /></button>
+      {faqs.length === 0 ? (
+        <div className="bg-white border border-gray-200 px-6 py-16 text-center">
+          <div className="text-gray-300 text-[40px] mb-3">?</div>
+          <div className="text-[13px] text-gray-400">No hay preguntas frecuentes cargadas</div>
+          <button onClick={()=>setModal("add")} className="mt-4 text-[12px] text-pl-gold-dk hover:underline">Agregar la primera</button>
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {faqs.map((f, i) => (
+            <div key={f.id||i} className="bg-white border border-gray-200 hover:border-gray-300 transition-colors">
+              <div className="flex items-start gap-4 px-6 py-5">
+                {/* Número */}
+                <div className="shrink-0 w-7 h-7 border border-pl-gold/40 flex items-center justify-center text-[11px] font-medium text-pl-gold-dk mt-0.5">
+                  {i + 1}
+                </div>
+                {/* Contenido */}
+                <div className="flex-1 min-w-0">
+                  <div className="text-[14px] font-semibold text-pl-coal mb-2 leading-snug">{f.q||f.question}</div>
+                  <div className="text-[13px] text-gray-500 leading-relaxed">{f.a||f.answer}</div>
+                </div>
+                {/* Acciones */}
+                <div className="flex items-center gap-1 shrink-0 pt-0.5">
+                  <button onClick={()=>setModal(f)}
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[11px] border border-gray-200 text-gray-500 hover:border-pl-coal hover:text-pl-coal transition-colors">
+                    <IcoEdit /> Editar
+                  </button>
+                  <button onClick={()=>setConfirm(f)}
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[11px] border border-gray-200 text-gray-400 hover:border-pl-red hover:text-pl-red transition-colors">
+                    <IcoTrash /> Eliminar
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
 
       {modal && (
         <Modal title={modal==="add"?"Nueva FAQ":"Editar FAQ"} onClose={()=>setModal(null)}>
