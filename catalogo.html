@@ -49,17 +49,23 @@
     }
     .font-display { font-family: 'Cormorant Garamond', Georgia, serif; }
     .hero-texture {
-      background-color: #F8F4EA;
+      background-color: #EDE7D9;
       background-image:
-        radial-gradient(circle at 15% 15%, rgba(201,162,74,0.14), transparent 36%),
-        radial-gradient(circle at 85% 80%, rgba(215,25,32,0.08), transparent 36%),
-        radial-gradient(circle at 70% 20%, rgba(201,162,74,0.07), transparent 28%),
+        radial-gradient(ellipse at 15% 20%, rgba(201,162,74,0.22), transparent 42%),
+        radial-gradient(ellipse at 85% 75%, rgba(215,25,32,0.10), transparent 40%),
+        repeating-linear-gradient(
+          -45deg,
+          transparent 0px,
+          transparent 14px,
+          rgba(166,131,53,0.09) 14px,
+          rgba(166,131,53,0.09) 15px
+        ),
         repeating-linear-gradient(
           45deg,
-          rgba(201,162,74,0.055) 0px,
-          rgba(201,162,74,0.055) 1px,
-          transparent 1px,
-          transparent 18px
+          transparent 0px,
+          transparent 14px,
+          rgba(166,131,53,0.06) 14px,
+          rgba(166,131,53,0.06) 15px
         );
     }
     .paper-bg {

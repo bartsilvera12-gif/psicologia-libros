@@ -28,7 +28,7 @@ const Header = ({ active, homePath = "" }) => {
         <div className="flex items-center justify-between h-[78px]">
           {/* Logo mark */}
           <a href={logoHref} onClick={(e) => homePath ? null : click(e, "inicio")} className="flex items-center gap-2 group">
-            <img src="logosinfondo.png" alt="Psicología Libros" className="w-11 h-11 object-contain" />
+            <img src="logosinfondo.png" alt="Psicología Libros" className="w-11 h-11 object-cover rounded-full" />
             <div className="leading-tight">
               <div className="font-display text-pl-coal text-[20px] tracking-tight">Psicología Libros</div>
               <div className="text-[10px] tracking-[0.28em] uppercase text-pl-gold-dk -mt-0.5">Librería especializada</div>
@@ -145,7 +145,7 @@ const Hero = () => (
 
           <div style={{ animation: "logoFloat 6s ease-in-out infinite, glowPulse 4s ease-in-out infinite" }}>
             <img src="logosinfondo.png" alt="Psicología Libros"
-                 style={{ width: 340, height: 340, objectFit: "contain", mixBlendMode: "multiply" }} />
+                 style={{ width: 340, height: 340, objectFit: "cover", borderRadius: "50%" }} />
           </div>
 
           <div className="mt-8 flex flex-wrap justify-center lg:justify-start gap-4"
@@ -717,7 +717,7 @@ const Footer = () => (
       <div className="grid md:grid-cols-12 gap-10">
         <div className="md:col-span-5">
           <div className="flex items-center gap-3">
-            <img src="logosinfondo.png" alt="Psicología Libros" className="w-12 h-12 object-contain" />
+            <img src="logosinfondo.png" alt="Psicología Libros" className="w-12 h-12 object-cover rounded-full" />
             <div>
               <div className="font-display text-pl-ivory text-[22px] tracking-tight">Psicología Libros</div>
               <div className="text-[10px] tracking-[0.28em] uppercase text-pl-gold">Librería especializada</div>
