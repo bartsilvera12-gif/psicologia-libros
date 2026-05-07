@@ -16,11 +16,10 @@ const CategoryPanel = ({ selected, onToggle, onClear, anchorRef, onClose }) => {
   return (
     <div
       ref={ref}
-      className="absolute top-[calc(100%+8px)] left-0 w-[340px] bg-pl-white border border-pl-coal/12 shadow-card-hv z-50"
+      className="absolute top-[calc(100%+6px)] left-0 w-[320px] bg-pl-white border border-pl-coal/12 shadow-card-hv z-50"
       style={{ animation: "fadeSlideIn 0.18s ease both" }}
     >
-      {/* Header del panel */}
-      <div className="flex items-center justify-between px-5 py-3.5 border-b border-pl-coal/8">
+      <div className="flex items-center justify-between px-5 py-3 border-b border-pl-coal/8">
         <span className="text-[11px] tracking-[0.22em] uppercase text-pl-gold-dk font-medium">Filtrar por categoría</span>
         {selected.length > 0 && (
           <button onClick={() => { onClear(); onClose(); }} className="text-[11px] text-pl-gray hover:text-pl-red transition-colors underline underline-offset-2">
@@ -28,9 +27,7 @@ const CategoryPanel = ({ selected, onToggle, onClear, anchorRef, onClose }) => {
           </button>
         )}
       </div>
-
-      {/* Lista */}
-      <div className="py-2 max-h-[380px] overflow-y-auto">
+      <div className="py-1.5 max-h-[340px] overflow-y-auto">
         {(window.CATEGORIES || []).map(cat => {
           const active = selected.includes(cat.id);
           const I = cat.Icon;
@@ -38,21 +35,16 @@ const CategoryPanel = ({ selected, onToggle, onClear, anchorRef, onClose }) => {
             <button
               key={cat.id}
               onClick={() => onToggle(cat.id)}
-              className={`w-full text-left px-5 py-3 flex items-center gap-3.5 transition-colors group
+              className={`w-full text-left px-4 py-2.5 flex items-center gap-3 transition-colors group
                 ${active ? "bg-pl-gold/8 hover:bg-pl-gold/12" : "hover:bg-pl-ivory"}`}
             >
-              {/* Icono categoría */}
-              <span className={`shrink-0 w-8 h-8 border flex items-center justify-center transition-colors
+              <span className={`shrink-0 w-7 h-7 border flex items-center justify-center transition-colors
                 ${active ? "border-pl-gold bg-pl-gold text-white" : "border-pl-coal/15 text-pl-coal/40 group-hover:border-pl-gold/60 group-hover:text-pl-coal/70"}`}>
-                {I ? <I size={15} /> : <span className="text-[10px]">{cat.name[0]}</span>}
+                {I ? <I size={13} /> : <span className="text-[10px]">{cat.name[0]}</span>}
               </span>
-
-              {/* Nombre */}
-              <span className={`flex-1 text-[13px] leading-tight transition-colors ${active ? "text-pl-coal font-medium" : "text-pl-gray"}`}>
+              <span className={`flex-1 text-[13px] transition-colors ${active ? "text-pl-coal font-medium" : "text-pl-gray"}`}>
                 {cat.name}
               </span>
-
-              {/* Check */}
               {active && (
                 <span className="shrink-0 w-4 h-4 bg-pl-gold flex items-center justify-center">
                   <span className="text-white" style={{ fontSize: 9 }}>✓</span>
@@ -62,18 +54,11 @@ const CategoryPanel = ({ selected, onToggle, onClear, anchorRef, onClose }) => {
           );
         })}
       </div>
-
-      {/* Footer */}
-      <div className="px-5 py-3 border-t border-pl-coal/8 flex items-center justify-between">
+      <div className="px-5 py-2.5 border-t border-pl-coal/8 flex items-center justify-between">
         <span className="text-[12px] text-pl-gray">
-          {selected.length === 0
-            ? "Todas las categorías activas"
-            : `${selected.length} categoría${selected.length > 1 ? "s" : ""} seleccionada${selected.length > 1 ? "s" : ""}`}
+          {selected.length === 0 ? "Todas activas" : `${selected.length} seleccionada${selected.length > 1 ? "s" : ""}`}
         </span>
-        <button
-          onClick={onClose}
-          className="text-[11px] tracking-[0.15em] uppercase text-pl-coal font-medium hover:text-pl-gold-dk transition-colors"
-        >
+        <button onClick={onClose} className="text-[11px] tracking-[0.15em] uppercase text-pl-coal font-medium hover:text-pl-gold-dk transition-colors">
           Aplicar
         </button>
       </div>
@@ -83,9 +68,9 @@ const CategoryPanel = ({ selected, onToggle, onClear, anchorRef, onClose }) => {
 
 // === Página de catálogo ===
 const CatalogPage = () => {
-  const [ready,    setReady]    = React.useState(false);
-  const [selected, setSelected] = React.useState([]);
-  const [query,    setQuery]    = React.useState("");
+  const [ready,     setReady]     = React.useState(false);
+  const [selected,  setSelected]  = React.useState([]);
+  const [query,     setQuery]     = React.useState("");
   const [panelOpen, setPanelOpen] = React.useState(false);
   const addBtnRef = React.useRef(null);
 
@@ -101,18 +86,14 @@ const CatalogPage = () => {
   React.useEffect(() => {
     if (!ready) return;
     const url = new URL(window.location.href);
-    if (selected.length === 0) {
-      url.searchParams.delete("cat");
-    } else {
-      url.searchParams.set("cat", selected.join(","));
-    }
+    if (selected.length === 0) url.searchParams.delete("cat");
+    else url.searchParams.set("cat", selected.join(","));
     window.history.replaceState(null, "", url.toString());
   }, [selected, ready]);
 
-  const toggleCat = (id) => {
+  // Sin scroll-to-top al cambiar filtros
+  const toggleCat = (id) =>
     setSelected(prev => prev.includes(id) ? prev.filter(s => s !== id) : [...prev, id]);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
 
   const clearAll = () => { setSelected([]); setQuery(""); setPanelOpen(false); };
 
@@ -122,8 +103,7 @@ const CatalogPage = () => {
     return (window.BOOKS || []).filter(b => {
       if (selected.length > 0 && !selected.includes(b.category)) return false;
       if (!q) return true;
-      return [b.title, b.author, b.description, catName(b.category)]
-        .some(s => s.toLowerCase().includes(q));
+      return [b.title, b.author, b.description, catName(b.category)].some(s => s.toLowerCase().includes(q));
     });
   }, [ready, query, selected]);
 
@@ -161,144 +141,160 @@ const CatalogPage = () => {
       <Header active="" homePath="index.html" />
 
       <main className="pt-[78px]">
-        {/* Hero del catálogo */}
-        <div className="paper-bg border-b border-pl-coal/8 py-12 lg:py-16">
+        {/* ── Hero compacto ── */}
+        <div className="paper-bg border-b border-pl-coal/8 py-8 lg:py-10">
           <div className="max-w-7xl mx-auto px-6 lg:px-10">
+
             {/* Breadcrumb */}
-            <div className="flex items-center gap-2 mb-6">
-              <a href="index.html" className="inline-flex items-center gap-1.5 text-[12px] tracking-[0.18em] uppercase text-pl-gray hover:text-pl-red transition-colors">
-                <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
+            <div className="flex items-center gap-2 mb-5">
+              <a href="index.html" className="inline-flex items-center gap-1.5 text-[11px] tracking-[0.18em] uppercase text-pl-gray hover:text-pl-red transition-colors">
+                <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
                   <path d="M9 2L4 7l5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
                 Inicio
               </a>
-              <span className="text-pl-coal/30 text-[12px]">/</span>
-              <span className="text-[12px] tracking-[0.18em] uppercase text-pl-coal">Catálogo</span>
+              <span className="text-pl-coal/30 text-[11px]">/</span>
+              <span className="text-[11px] tracking-[0.18em] uppercase text-pl-coal">Catálogo</span>
               {catLabel && (
                 <>
-                  <span className="text-pl-coal/30 text-[12px]">/</span>
-                  <span className="text-[12px] tracking-[0.18em] uppercase text-pl-red">{catLabel.name}</span>
+                  <span className="text-pl-coal/30 text-[11px]">/</span>
+                  <span className="text-[11px] tracking-[0.18em] uppercase text-pl-red">{catLabel.name}</span>
                 </>
               )}
             </div>
 
-            {/* Título */}
-            <div className="max-w-2xl mb-10">
-              <div className="eyebrow mb-4">Catálogo completo</div>
-              <h1 className="font-display text-pl-coal text-[42px] sm:text-5xl lg:text-[56px] leading-[1.05] tracking-tight">
-                {catLabel
-                  ? <>{catLabel.name.split(" ")[0]} <em className="font-normal italic text-pl-red">{catLabel.name.split(" ").slice(1).join(" ")}</em></>
-                  : <>Todos los <em className="font-normal italic text-pl-red">libros</em></>}
-              </h1>
-              <p className="mt-4 text-pl-gray text-[16px] leading-relaxed">
-                {catLabel ? catLabel.desc : "Más de 1.000 libros organizados por área temática."}
-              </p>
-            </div>
+            {/* Layout 2 columnas */}
+            <div className="grid lg:grid-cols-[1fr_340px] gap-8 lg:gap-12 items-start">
 
-            {/* ── Barra de búsqueda + filtros ── */}
-            <div className="max-w-4xl">
+              {/* Columna izquierda: título + búsqueda + chips */}
+              <div>
+                <div className="eyebrow mb-3">Catálogo completo</div>
+                <h1 className="font-display text-pl-coal text-[36px] sm:text-[44px] leading-[1.05] tracking-tight mb-1">
+                  {catLabel
+                    ? <>{catLabel.name.split(" ")[0]} <em className="font-normal italic text-pl-red">{catLabel.name.split(" ").slice(1).join(" ")}</em></>
+                    : <>Todos los <em className="font-normal italic text-pl-red">libros</em></>}
+                </h1>
+                <p className="text-pl-gray text-[14px] mb-6">
+                  {catLabel ? catLabel.desc : "Más de 1.000 libros organizados por área temática."}
+                </p>
 
-              {/* Fila 1: búsqueda */}
-              <div className="flex items-center gap-3 bg-pl-white border border-pl-coal/15 px-5 py-4 shadow-card focus-within:border-pl-gold transition-colors">
-                <IconSearch size={18} className="shrink-0 text-pl-coal/40" />
-                <input
-                  value={query}
-                  onChange={e => setQuery(e.target.value)}
-                  placeholder="Buscar por título, autor o tema…"
-                  className="flex-1 bg-transparent outline-none text-[15px] placeholder:text-pl-gray/50"
-                />
-                {query && (
-                  <button onClick={() => setQuery("")} className="text-pl-gray hover:text-pl-coal shrink-0 transition-colors">
-                    <IconClose size={16} />
-                  </button>
-                )}
-              </div>
-
-              {/* Fila 2: chips acumulados + botón agregar */}
-              <div className="relative mt-2.5">
-                <div className="flex items-center flex-wrap gap-2 min-h-[44px]">
-
-                  {/* Botón "Agregar categoría" */}
-                  <button
-                    ref={addBtnRef}
-                    onClick={() => setPanelOpen(o => !o)}
-                    className={`inline-flex items-center gap-2 px-4 py-2.5 border text-[12px] tracking-[0.12em] uppercase font-medium transition-colors
-                      ${panelOpen
-                        ? "border-pl-gold bg-pl-gold text-white"
-                        : "border-pl-coal/20 bg-pl-white text-pl-coal hover:border-pl-gold hover:text-pl-gold-dk"
-                      }`}
-                  >
-                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                      <path d="M6 1v10M1 6h10" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/>
-                    </svg>
-                    Categoría
-                    {selected.length > 0 && (
-                      <span className={`inline-flex items-center justify-center w-5 h-5 rounded-full text-[10px] font-bold
-                        ${panelOpen ? "bg-white text-pl-gold-dk" : "bg-pl-red text-white"}`}>
-                        {selected.length}
-                      </span>
-                    )}
-                  </button>
-
-                  {/* Divisor si hay chips */}
-                  {selected.length > 0 && (
-                    <span className="w-px h-5 bg-pl-coal/12 shrink-0" />
-                  )}
-
-                  {/* Chips de categorías activas */}
-                  {selected.map(id => {
-                    const cat = (window.CATEGORIES || []).find(c => c.id === id);
-                    const I = cat?.Icon;
-                    return (
-                      <span
-                        key={id}
-                        className="inline-flex items-center gap-2 pl-2.5 pr-2 py-2 bg-pl-coal text-pl-ivory text-[12px] font-medium border border-pl-coal"
-                        style={{ animation: "fadeSlideIn 0.2s ease both" }}
-                      >
-                        {I && <I size={12} />}
-                        {catName(id)}
-                        <button
-                          onClick={() => toggleCat(id)}
-                          className="shrink-0 w-4 h-4 flex items-center justify-center hover:bg-white/15 rounded-sm transition-colors"
-                          aria-label="Quitar"
-                        >
-                          <IconClose size={9} />
-                        </button>
-                      </span>
-                    );
-                  })}
-
-                  {/* Limpiar todo */}
-                  {(selected.length > 0 || query) && (
-                    <button
-                      onClick={clearAll}
-                      className="inline-flex items-center gap-1.5 px-3 py-2 text-[12px] text-pl-gray hover:text-pl-red transition-colors"
-                    >
-                      <IconClose size={11} />
-                      Limpiar todo
+                {/* Buscador */}
+                <div className="flex items-center gap-3 bg-pl-white border border-pl-coal/15 px-4 py-3.5 shadow-card focus-within:border-pl-gold transition-colors">
+                  <IconSearch size={17} />
+                  <input
+                    value={query}
+                    onChange={e => setQuery(e.target.value)}
+                    placeholder="Buscar por título, autor o tema…"
+                    className="flex-1 bg-transparent outline-none text-[14px] placeholder:text-pl-gray/50"
+                  />
+                  {query && (
+                    <button onClick={() => setQuery("")} className="text-pl-gray hover:text-pl-coal shrink-0 transition-colors">
+                      <IconClose size={15} />
                     </button>
                   )}
                 </div>
 
-                {/* Panel de categorías */}
-                {panelOpen && (
-                  <CategoryPanel
-                    selected={selected}
-                    onToggle={toggleCat}
-                    onClear={clearAll}
-                    anchorRef={addBtnRef}
-                    onClose={() => setPanelOpen(false)}
-                  />
-                )}
+                {/* Chips + botón agregar */}
+                <div className="relative mt-2">
+                  <div className="flex items-center flex-wrap gap-2 min-h-[38px]">
+                    <button
+                      ref={addBtnRef}
+                      onClick={() => setPanelOpen(o => !o)}
+                      className={`inline-flex items-center gap-2 px-3.5 py-2 border text-[11px] tracking-[0.12em] uppercase font-medium transition-colors
+                        ${panelOpen
+                          ? "border-pl-gold bg-pl-gold text-white"
+                          : "border-pl-coal/20 bg-pl-white text-pl-coal hover:border-pl-gold hover:text-pl-gold-dk"
+                        }`}
+                    >
+                      <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
+                        <path d="M6 1v10M1 6h10" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/>
+                      </svg>
+                      Categoría
+                      {selected.length > 0 && (
+                        <span className={`inline-flex items-center justify-center w-4 h-4 rounded-full text-[9px] font-bold
+                          ${panelOpen ? "bg-white text-pl-gold-dk" : "bg-pl-red text-white"}`}>
+                          {selected.length}
+                        </span>
+                      )}
+                    </button>
+
+                    {selected.length > 0 && <span className="w-px h-4 bg-pl-coal/12 shrink-0" />}
+
+                    {selected.map(id => {
+                      const cat = (window.CATEGORIES || []).find(c => c.id === id);
+                      const I = cat?.Icon;
+                      return (
+                        <span
+                          key={id}
+                          className="inline-flex items-center gap-1.5 pl-2.5 pr-1.5 py-1.5 bg-pl-coal text-pl-ivory text-[11px] font-medium"
+                          style={{ animation: "fadeSlideIn 0.2s ease both" }}
+                        >
+                          {I && <I size={11} />}
+                          {catName(id)}
+                          <button
+                            onClick={() => toggleCat(id)}
+                            className="shrink-0 w-3.5 h-3.5 flex items-center justify-center hover:bg-white/15 transition-colors"
+                            aria-label="Quitar"
+                          >
+                            <IconClose size={8} />
+                          </button>
+                        </span>
+                      );
+                    })}
+
+                    {(selected.length > 0 || query) && (
+                      <button onClick={clearAll} className="inline-flex items-center gap-1 px-2 py-1.5 text-[11px] text-pl-gray hover:text-pl-red transition-colors">
+                        <IconClose size={10} /> Limpiar todo
+                      </button>
+                    )}
+                  </div>
+
+                  {panelOpen && (
+                    <CategoryPanel
+                      selected={selected}
+                      onToggle={toggleCat}
+                      onClear={clearAll}
+                      anchorRef={addBtnRef}
+                      onClose={() => setPanelOpen(false)}
+                    />
+                  )}
+                </div>
               </div>
+
+              {/* Columna derecha: grid rápido de categorías */}
+              <div className="hidden lg:block">
+                <div className="text-[10px] tracking-[0.22em] uppercase text-pl-gold-dk font-medium mb-3">
+                  Explorar por categoría
+                </div>
+                <div className="grid grid-cols-2 gap-1.5">
+                  {(window.CATEGORIES || []).map(cat => {
+                    const I = cat.Icon;
+                    const active = selected.includes(cat.id);
+                    return (
+                      <button
+                        key={cat.id}
+                        onClick={() => toggleCat(cat.id)}
+                        className={`flex items-center gap-2 px-3 py-2.5 border text-left transition-all text-[11px] leading-tight
+                          ${active
+                            ? "border-pl-coal bg-pl-coal text-pl-ivory"
+                            : "border-pl-coal/12 bg-pl-white/70 text-pl-gray hover:border-pl-coal/30 hover:text-pl-coal hover:bg-pl-white"
+                          }`}
+                      >
+                        {I && <span className={`shrink-0 ${active ? "text-pl-gold" : "text-pl-coal/30"}`}><I size={12} /></span>}
+                        <span className="truncate">{cat.name}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
             </div>
           </div>
         </div>
 
-        {/* Contenido */}
-        <div className="max-w-7xl mx-auto px-6 lg:px-10 py-14 lg:py-20">
-          {/* Contador */}
-          <div className="flex items-center justify-between mb-8 flex-wrap gap-3">
+        {/* ── Contenido ── */}
+        <div className="max-w-7xl mx-auto px-6 lg:px-10 py-10 lg:py-14">
+          <div className="flex items-center justify-between mb-7 flex-wrap gap-3">
             <div className="text-[13px] text-pl-gray">
               <span className="text-pl-coal font-semibold text-[18px] font-display">
                 {showSections ? (window.BOOKS || []).length : filtered.length}
@@ -308,25 +304,24 @@ const CatalogPage = () => {
             </div>
           </div>
 
-          {/* Secciones (vista por defecto) */}
           {showSections ? (
-            <div className="space-y-20">
+            <div className="space-y-16">
               {sections.map(sec => {
                 const I = sec.Icon;
                 return (
                   <div key={sec.id} id={`sec-${sec.id}`}>
-                    <div className="flex items-end justify-between mb-8 pb-5 border-b border-pl-coal/8">
+                    <div className="flex items-end justify-between mb-7 pb-4 border-b border-pl-coal/8">
                       <div className="flex items-center gap-4">
-                        <div className="w-11 h-11 border border-pl-gold/40 flex items-center justify-center text-pl-coal shrink-0">
-                          {I && <I size={24} />}
+                        <div className="w-10 h-10 border border-pl-gold/40 flex items-center justify-center text-pl-coal shrink-0">
+                          {I && <I size={22} />}
                         </div>
                         <div>
-                          <div className="eyebrow mb-1">{sec.name}</div>
-                          <h2 className="font-display text-pl-coal text-[28px] lg:text-[32px] leading-tight tracking-tight">{sec.name}</h2>
-                          <p className="text-pl-gray text-[13px] mt-0.5">{sec.desc}</p>
+                          <div className="eyebrow mb-0.5">{sec.name}</div>
+                          <h2 className="font-display text-pl-coal text-[26px] lg:text-[30px] leading-tight tracking-tight">{sec.name}</h2>
+                          <p className="text-pl-gray text-[12px] mt-0.5">{sec.desc}</p>
                         </div>
                       </div>
-                      <button onClick={() => { toggleCat(sec.id); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+                      <button onClick={() => toggleCat(sec.id)}
                               className="shrink-0 inline-flex items-center gap-2 text-[11px] tracking-[0.22em] uppercase text-pl-gold-dk hover:text-pl-red transition-colors ml-4">
                         Ver todos ({sec.books.length}) <IconArrow size={12} />
                       </button>
@@ -335,8 +330,8 @@ const CatalogPage = () => {
                       {sec.books.slice(0, 4).map(b => <BookCard key={b.id} book={b} />)}
                     </div>
                     {sec.books.length > 4 && (
-                      <div className="mt-6 text-center">
-                        <button onClick={() => { toggleCat(sec.id); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+                      <div className="mt-5 text-center">
+                        <button onClick={() => toggleCat(sec.id)}
                                 className="inline-flex items-center gap-2 px-6 py-3 border border-pl-coal/15 text-[13px] text-pl-coal hover:border-pl-gold hover:text-pl-gold-dk transition-colors">
                           Ver los {sec.books.length} libros de {sec.name} <IconArrow size={13} />
                         </button>
