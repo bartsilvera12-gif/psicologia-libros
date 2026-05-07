@@ -209,10 +209,12 @@ const CatalogPage = () => {
                 </div>
 
                 {/* Chips + botón agregar */}
-                <div className="relative mt-2">
+                <div className="relative mt-2"
+                     onMouseLeave={() => setPanelOpen(false)}>
                   <div className="flex items-center flex-wrap gap-2 min-h-[38px]">
                     <button
                       ref={addBtnRef}
+                      onMouseEnter={() => setPanelOpen(true)}
                       onClick={() => setPanelOpen(o => !o)}
                       className={`inline-flex items-center gap-2 px-3.5 py-2 border text-[11px] tracking-[0.12em] uppercase font-medium transition-colors
                         ${panelOpen
