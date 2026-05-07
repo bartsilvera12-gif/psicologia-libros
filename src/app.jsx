@@ -24,7 +24,7 @@ const App = () => {
       <div className="min-h-screen paper-bg flex items-center justify-center">
         <div className="flex flex-col items-center gap-6" style={{ animation: "logoReveal 0.8s ease both" }}>
           <div style={{ animation: "logoFloat 4s ease-in-out infinite, glowPulse 3s ease-in-out infinite" }}>
-            <img src="logosinfondo.png" alt="Psicología Libros" style={{ width: 200, height: 200, objectFit: "contain" }} />
+            <img src="logosinfondo2.png" alt="Psicología Libros" style={{ width: 200, height: 200, objectFit: "contain" }} />
           </div>
           <div className="flex items-center gap-3">
             <div className="w-1.5 h-1.5 rounded-full bg-pl-gold animate-bounce" style={{ animationDelay: "0ms" }} />

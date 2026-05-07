@@ -120,7 +120,7 @@ const CatalogPage = () => {
     return (
       <div className="min-h-screen paper-bg flex items-center justify-center">
         <div className="flex flex-col items-center gap-6">
-          <img src="logosinfondo.png" alt="Psicología Libros" style={{ width: 140, height: 140, objectFit: "contain" }} />
+          <img src="logosinfondo2.png" alt="Psicología Libros" style={{ width: 140, height: 140, objectFit: "contain" }} />
           <div className="flex items-center gap-3">
             <div className="w-1.5 h-1.5 rounded-full bg-pl-gold animate-bounce" style={{ animationDelay: "0ms" }} />
             <div className="w-1.5 h-1.5 rounded-full bg-pl-gold animate-bounce" style={{ animationDelay: "150ms" }} />
