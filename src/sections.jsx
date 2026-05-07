@@ -131,10 +131,13 @@ const Hero = () => (
       <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-pl-red/6 rounded-full blur-[120px]" />
       <div className="absolute top-1/2 right-0 w-[350px] h-[350px] bg-pl-gold/8 rounded-full blur-[80px]" />
 
-      {/* Watermark — texto enorme detrás */}
-      <div className="absolute inset-0 flex items-center justify-center">
-        <span className="font-display text-[22vw] leading-none font-bold text-pl-coal/[0.03] whitespace-nowrap tracking-tight select-none">
-          PSICOLOGÍA
+      {/* Watermark — texto detrás */}
+      <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
+        <span className="font-display italic text-[13vw] leading-none text-pl-gold/[0.07] whitespace-nowrap tracking-widest select-none">
+          Psicología
+        </span>
+        <span className="font-display text-[8vw] leading-none text-pl-coal/[0.04] whitespace-nowrap tracking-[0.5em] uppercase select-none">
+          Libros
         </span>
       </div>
 
