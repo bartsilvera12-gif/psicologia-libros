@@ -20,10 +20,8 @@ const Header = ({ active }) => {
       <div className="max-w-7xl mx-auto px-6 lg:px-10">
         <div className="flex items-center justify-between h-[78px]">
           {/* Logo mark */}
-          <a href="#inicio" onClick={(e) => click(e, "inicio")} className="flex items-center gap-3 group">
-            <div className="w-10 h-10 border border-pl-gold/60 flex items-center justify-center bg-pl-ivory">
-              <span className="font-display text-pl-coal text-[22px] leading-none">P</span>
-            </div>
+          <a href="#inicio" onClick={(e) => click(e, "inicio")} className="flex items-center gap-2 group">
+            <img src="logo.jpeg" alt="Psicología Libros" className="w-11 h-11 object-contain" />
             <div className="leading-tight">
               <div className="font-display text-pl-coal text-[20px] tracking-tight">Psicología Libros</div>
               <div className="text-[10px] tracking-[0.28em] uppercase text-pl-gold-dk -mt-0.5">Librería especializada</div>
@@ -78,45 +76,15 @@ const Header = ({ active }) => {
   );
 };
 
-// === Logo SVG ===
+// === Logo imagen real ===
 const LogoSVG = ({ size = 280 }) => (
-  <svg width={size} height={size} viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
-    {/* White circle background */}
-    <circle cx="200" cy="200" r="196" fill="white" stroke="#C9A24A" strokeWidth="2.5"/>
-
-    {/* Open book — left page */}
-    <path d="M108 234 C108 198 142 172 184 166 L194 173 L194 260 C162 258 128 266 108 278 Z" fill="#D71920"/>
-    {/* Open book — right page */}
-    <path d="M292 234 C292 198 258 172 216 166 L206 173 L206 260 C238 258 272 266 292 278 Z" fill="#D71920"/>
-    {/* Spine */}
-    <path d="M194 173 L200 165 L206 173 L206 260 L200 264 L194 260 Z" fill="#9E0D13"/>
-
-    {/* Psi — vertical bar */}
-    <rect x="196" y="106" width="8" height="76" rx="3" fill="#D71920"/>
-    {/* Psi — left arm */}
-    <path d="M200 150 C174 150 156 134 156 114" stroke="#D71920" strokeWidth="9" fill="none" strokeLinecap="round"/>
-    {/* Psi — right arm */}
-    <path d="M200 150 C226 150 244 134 244 114" stroke="#D71920" strokeWidth="9" fill="none" strokeLinecap="round"/>
-
-    {/* PSICOLOGÍA */}
-    <text x="200" y="312" textAnchor="middle"
-          fontFamily="Inter, Arial, sans-serif" fontWeight="800" fontSize="27"
-          letterSpacing="3" fill="#111111">PSICOLOGÍA</text>
-    {/* LIBROS */}
-    <text x="200" y="344" textAnchor="middle"
-          fontFamily="Inter, Arial, sans-serif" fontWeight="800" fontSize="27"
-          letterSpacing="3" fill="#111111">LIBROS</text>
-
-    {/* Gold ornament */}
-    <line x1="153" y1="358" x2="190" y2="358" stroke="#C9A24A" strokeWidth="1.5"/>
-    <circle cx="200" cy="358" r="3" fill="#C9A24A"/>
-    <line x1="210" y1="358" x2="247" y2="358" stroke="#C9A24A" strokeWidth="1.5"/>
-
-    {/* Tagline */}
-    <text x="200" y="378" textAnchor="middle"
-          fontFamily="Cormorant Garamond, Georgia, serif" fontStyle="italic"
-          fontSize="18" fill="#C9A24A">Sabiduría en cada página</text>
-  </svg>
+  <img
+    src="logo.jpeg"
+    alt="Psicología Libros"
+    width={size}
+    height={size}
+    style={{ width: size, height: size, objectFit: "contain", display: "block" }}
+  />
 );
 
 // === Hero ===
@@ -611,9 +579,7 @@ const Footer = () => (
       <div className="grid md:grid-cols-12 gap-10">
         <div className="md:col-span-5">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 border border-pl-gold/60 flex items-center justify-center">
-              <span className="font-display text-pl-ivory text-[22px] leading-none">P</span>
-            </div>
+            <img src="logo.jpeg" alt="Psicología Libros" className="w-12 h-12 object-contain rounded-full bg-white" />
             <div>
               <div className="font-display text-pl-ivory text-[22px] tracking-tight">Psicología Libros</div>
               <div className="text-[10px] tracking-[0.28em] uppercase text-pl-gold">Librería especializada</div>
