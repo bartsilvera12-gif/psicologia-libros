@@ -115,29 +115,42 @@ const CatalogPage = () => {
               </p>
             </div>
 
-            {/* Buscador principal */}
-            <div className="mt-8 max-w-2xl">
-              <div className="flex items-center gap-3 bg-pl-white border border-pl-coal/15 px-5 py-4 shadow-card focus-within:border-pl-gold transition-colors">
-                <IconSearch size={20} />
+            {/* Buscador + selector en una fila */}
+            <div className="mt-8 flex flex-col sm:flex-row gap-3 max-w-3xl">
+              {/* Search */}
+              <div className="flex-1 flex items-center gap-3 bg-pl-white border border-pl-coal/15 px-5 py-4 shadow-card focus-within:border-pl-gold transition-colors">
+                <IconSearch size={18} className="shrink-0 text-pl-gray" />
                 <input
                   value={query}
                   onChange={e => setQuery(e.target.value)}
                   placeholder="Buscar por título, autor o tema…"
                   className="flex-1 bg-transparent outline-none text-[15px] placeholder:text-pl-gray/60"
-                  autoFocus={false}
                 />
                 {query && (
-                  <button onClick={() => setQuery("")} className="text-pl-gray hover:text-pl-coal">
-                    <IconClose size={17} />
+                  <button onClick={() => setQuery("")} className="text-pl-gray hover:text-pl-coal shrink-0">
+                    <IconClose size={16} />
                   </button>
                 )}
+              </div>
+              {/* Category selector */}
+              <div className="relative shrink-0">
+                <select
+                  value={filter}
+                  onChange={e => onPick(e.target.value)}
+                  className="appearance-none h-full min-w-[220px] pl-5 pr-12 py-4 bg-pl-white border border-pl-coal/15 text-[14px] text-pl-coal shadow-card cursor-pointer focus:border-pl-gold focus:outline-none hover:border-pl-gold transition-colors"
+                >
+                  <option value="all">Todas las categorías</option>
+                  {(window.CATEGORIES || []).map(c => (
+                    <option key={c.id} value={c.id}>{c.name}</option>
+                  ))}
+                </select>
+                <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-pl-coal">
+                  <IconChevron size={14} />
+                </span>
               </div>
             </div>
           </div>
         </div>
-
-        {/* Strip de categorías */}
-        <CategoryQuickNav filter={filter} onPick={onPick} linkMode={false} />
 
         {/* Contenido */}
         <div className="max-w-7xl mx-auto px-6 lg:px-10 py-14 lg:py-20">

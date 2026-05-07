@@ -37,7 +37,22 @@ const Header = ({ active, homePath = "" }) => {
 
           {/* Desktop nav */}
           <nav className="hidden lg:flex items-center gap-8">
-            {NAV.map(n => (
+            {/* Inicio siempre primero */}
+            {NAV.filter(n => n.id === "inicio").map(n => (
+              <a key={n.id} href={homePath ? homePath : "#inicio"}
+                 onClick={(e) => homePath ? null : click(e, "inicio")}
+                 className={`text-[13px] tracking-wide transition-colors relative py-2 ${active === n.id ? "text-pl-red" : "text-pl-coal hover:text-pl-red"}`}>
+                {n.label}
+                {active === n.id && <span className="absolute -bottom-0.5 left-0 right-0 h-px bg-pl-gold" />}
+              </a>
+            ))}
+            {/* Catálogo al lado de Inicio */}
+            <a href="catalogo.html"
+               className={`text-[13px] tracking-wide transition-colors relative py-2 ${homePath === "" && window.location.pathname.includes("catalogo") ? "text-pl-red" : "text-pl-coal hover:text-pl-red"}`}>
+              Catálogo
+            </a>
+            {/* Resto del nav */}
+            {NAV.filter(n => n.id !== "inicio").map(n => (
               <a key={n.id} href={homePath ? `${homePath}#${n.id}` : `#${n.id}`}
                  onClick={(e) => homePath ? null : click(e, n.id)}
                  className={`text-[13px] tracking-wide transition-colors relative py-2 ${active === n.id ? "text-pl-red" : "text-pl-coal hover:text-pl-red"}`}>
@@ -45,10 +60,6 @@ const Header = ({ active, homePath = "" }) => {
                 {active === n.id && <span className="absolute -bottom-0.5 left-0 right-0 h-px bg-pl-gold" />}
               </a>
             ))}
-            <a href="catalogo.html"
-               className="text-[13px] tracking-wide text-pl-red font-medium hover:text-pl-red-dk transition-colors py-2">
-              Catálogo
-            </a>
           </nav>
 
           <div className="flex items-center gap-3">
@@ -69,16 +80,23 @@ const Header = ({ active, homePath = "" }) => {
         {open && (
           <div className="lg:hidden border-t border-pl-coal/10 py-4">
             <nav className="flex flex-col">
-              {NAV.map(n => (
+              {NAV.filter(n => n.id === "inicio").map(n => (
+                <a key={n.id} href={homePath ? homePath : "#inicio"}
+                   onClick={(e) => homePath ? null : click(e, "inicio")}
+                   className="py-3 text-[15px] text-pl-coal border-b border-pl-coal/5">
+                  {n.label}
+                </a>
+              ))}
+              <a href="catalogo.html" className="py-3 text-[15px] text-pl-coal border-b border-pl-coal/5">
+                Catálogo
+              </a>
+              {NAV.filter(n => n.id !== "inicio").map(n => (
                 <a key={n.id} href={homePath ? `${homePath}#${n.id}` : `#${n.id}`}
                    onClick={(e) => homePath ? null : click(e, n.id)}
                    className="py-3 text-[15px] text-pl-coal border-b border-pl-coal/5 last:border-0">
                   {n.label}
                 </a>
               ))}
-              <a href="catalogo.html" className="py-3 text-[15px] text-pl-red font-medium border-b border-pl-coal/5">
-                Catálogo
-              </a>
               <a href={waLink("Hola, quiero consultar el catálogo de Psicología Libros.")}
                  target="_blank" rel="noreferrer"
                  className="mt-3 inline-flex items-center justify-center gap-2 px-5 py-3 bg-pl-red text-white text-[13px]">
