@@ -170,8 +170,16 @@ window.__sbLoadPLData = async () => {
   ]);
 };
 
+const plGetAdmin = async (table, query = "") => {
+  const res = await fetch(`${PL_SUPABASE_URL}/rest/v1/${table}?${query}`, { headers: plHeaders(true) });
+  if (!res.ok) throw new Error(`GET ${table}: ${res.status}`);
+  return res.json();
+};
+
 Object.assign(window, {
-  plGet, plPost, plPatch, plDelete,
+  PL_SUPABASE_URL, PL_SERVICE_KEY,
+  plHeaders,
+  plGet, plPost, plPatch, plDelete, plGetAdmin,
   loadPLBooks, loadPLCategories, loadPLFaqs,
   createPLBook, updatePLBook, deletePLBook,
   createPLCategory, updatePLCategory, deletePLCategory,
