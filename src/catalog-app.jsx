@@ -16,8 +16,8 @@ const CategoryPanel = ({ selected, onToggle, onClear, anchorRef, onClose }) => {
   return (
     <div
       ref={ref}
-      className="absolute top-[calc(100%+6px)] left-0 w-[320px] bg-pl-white border border-pl-coal/12 shadow-card-hv z-50"
-      style={{ animation: "fadeSlideIn 0.18s ease both" }}
+      className="absolute top-full left-0 w-[320px] bg-pl-white border border-pl-coal/12 shadow-card-hv z-50"
+      style={{ animation: "fadeSlideIn 0.18s ease both", paddingTop: 2 }}
     >
       <div className="flex items-center justify-between px-5 py-3 border-b border-pl-coal/8">
         <span className="text-[11px] tracking-[0.22em] uppercase text-pl-gold-dk font-medium">Filtrar por categoría</span>
@@ -73,6 +73,7 @@ const CatalogPage = () => {
   const [query,     setQuery]     = React.useState("");
   const [panelOpen, setPanelOpen] = React.useState(false);
   const addBtnRef = React.useRef(null);
+  const closeTimer = React.useRef(null);
 
   React.useEffect(() => {
     window.__sbLoadPLData().finally(() => {
@@ -210,11 +211,11 @@ const CatalogPage = () => {
 
                 {/* Chips + botón agregar */}
                 <div className="relative mt-2"
-                     onMouseLeave={() => setPanelOpen(false)}>
+                     onMouseEnter={() => { clearTimeout(closeTimer.current); setPanelOpen(true); }}
+                     onMouseLeave={() => { closeTimer.current = setTimeout(() => setPanelOpen(false), 120); }}>
                   <div className="flex items-center flex-wrap gap-2 min-h-[38px]">
                     <button
                       ref={addBtnRef}
-                      onMouseEnter={() => setPanelOpen(true)}
                       onClick={() => setPanelOpen(o => !o)}
                       className={`inline-flex items-center gap-2 px-3.5 py-2 border text-[11px] tracking-[0.12em] uppercase font-medium transition-colors
                         ${panelOpen
