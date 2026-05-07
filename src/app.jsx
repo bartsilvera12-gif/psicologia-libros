@@ -49,6 +49,7 @@ const App = () => {
         <Contact />
       </main>
       <Footer />
+      <ScrollTopBtn />
     </div>
   );
 };

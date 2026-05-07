@@ -25,7 +25,7 @@ const Header = ({ active, homePath = "" }) => {
   const logoHref = homePath ? homePath : "#inicio";
 
   return (
-    <header className={`fixed top-0 inset-x-0 z-50 header-blur transition-shadow ${scrolled ? "header-scrolled" : ""}`}>
+    <header className={`relative z-50 header-blur transition-shadow ${scrolled ? "header-scrolled" : ""}`}>
       <div className="max-w-7xl mx-auto px-6 lg:px-10">
         <div className="flex items-center justify-between h-[78px]">
           {/* Logo mark */}
@@ -179,7 +179,7 @@ const LogoSVG = ({ size = 280 }) => (
 
 // === Hero ===
 const Hero = () => (
-  <section id="inicio" className="hero-texture relative min-h-screen flex items-center pt-[78px] overflow-hidden">
+  <section id="inicio" className="hero-texture relative min-h-screen flex items-center overflow-hidden">
     {/* ── Fondo decorativo ── */}
     <div className="absolute inset-0 pointer-events-none select-none overflow-hidden">
       {/* Blobs de color */}
@@ -796,6 +796,29 @@ const Contact = () => (
   </section>
 );
 
+// === Botón scroll al inicio ===
+const ScrollTopBtn = () => {
+  const [visible, setVisible] = React.useState(false);
+  React.useEffect(() => {
+    const onScroll = () => setVisible(window.scrollY > 300);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+  if (!visible) return null;
+  return (
+    <button
+      onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+      className="fixed bottom-7 right-7 z-50 w-11 h-11 bg-pl-coal text-pl-ivory flex items-center justify-center shadow-card-hv hover:bg-pl-gold-dk transition-colors"
+      style={{ animation: "fadeSlideIn 0.2s ease both" }}
+      aria-label="Volver al inicio"
+    >
+      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.2">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5"/>
+      </svg>
+    </button>
+  );
+};
+
 // === Footer ===
 const Footer = () => (
   <footer className="bg-pl-coal text-pl-ivory/85 border-t border-pl-gold/20">
@@ -848,5 +871,5 @@ const Footer = () => (
 Object.assign(window, {
   Header, LogoSVG, Hero,
   CategoryQuickNav, FeaturedCarousel, CatalogBySections,
-  About, Benefits, FAQSection, Contact, Footer,
+  About, Benefits, FAQSection, Contact, Footer, ScrollTopBtn,
 });

@@ -141,7 +141,7 @@ const CatalogPage = () => {
     <div className="min-h-screen">
       <Header active="" homePath="index.html" />
 
-      <main className="pt-[78px]">
+      <main>
         {/* ── Hero compacto ── */}
         <div className="hero-texture border-b border-pl-coal/8 py-8 lg:py-10 relative">
           {/* Decoración de fondo */}
@@ -395,6 +395,7 @@ const CatalogPage = () => {
       </main>
 
       <Footer />
+      <ScrollTopBtn />
     </div>
   );
 };
