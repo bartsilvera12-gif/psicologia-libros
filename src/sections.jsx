@@ -175,12 +175,10 @@ const Hero = () => (
              style={{ animation: "logoReveal 0.95s cubic-bezier(0.2,0.8,0.2,1) both" }}>
 
           <div style={{ animation: "logoFloat 6s ease-in-out infinite, glowPulse 4s ease-in-out infinite" }}>
-            <img src="logosinfondo.png" alt="Psicología Libros"
-                 style={{
-                   width: 340, height: 340, objectFit: "contain", display: "block",
-                   maskImage: "radial-gradient(circle, black 44%, transparent 45%)",
-                   WebkitMaskImage: "radial-gradient(circle, black 44%, transparent 45%)"
-                 }} />
+            <div style={{ width: 340, height: 340, borderRadius: "50%", overflow: "hidden", flexShrink: 0 }}>
+              <img src="logosinfondo.png" alt="Psicología Libros"
+                   style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+            </div>
           </div>
 
           <div className="mt-8 flex flex-wrap justify-center lg:justify-start gap-4"
