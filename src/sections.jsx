@@ -127,13 +127,6 @@ const Hero = () => (
       </div>
     </div>
 
-    {/* Scroll indicator */}
-    <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
-         style={{ animation: "fadeSlideIn 1s 1.3s both" }}>
-      <span className="text-[9px] tracking-[0.35em] uppercase text-pl-gold">Explorar</span>
-      <div className="w-px h-14 bg-gradient-to-b from-pl-gold/60 to-transparent origin-top"
-           style={{ animation: "scrollPulse 1.8s ease-in-out infinite" }} />
-    </div>
   </section>
 );
 
