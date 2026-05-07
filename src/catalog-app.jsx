@@ -164,10 +164,10 @@ const CatalogPage = () => {
             </div>
 
             {/* Layout 2 columnas */}
-            <div className="grid lg:grid-cols-[1fr_340px] gap-8 lg:gap-12 items-start">
+            <div className="grid lg:grid-cols-3 gap-8 lg:gap-12 items-start">
 
               {/* Columna izquierda: título + búsqueda + chips */}
-              <div>
+              <div className="lg:col-span-2">
                 <div className="eyebrow mb-3">Catálogo completo</div>
                 <h1 className="font-display text-pl-coal text-[36px] sm:text-[44px] leading-[1.05] tracking-tight mb-1">
                   {catLabel
@@ -261,31 +261,64 @@ const CatalogPage = () => {
                 </div>
               </div>
 
-              {/* Columna derecha: grid rápido de categorías */}
-              <div className="hidden lg:block">
-                <div className="text-[10px] tracking-[0.22em] uppercase text-pl-gold-dk font-medium mb-3">
-                  Explorar por categoría
+              {/* Columna derecha */}
+              <div className="hidden lg:flex flex-col gap-4">
+
+                {/* Stats */}
+                <div className="bg-pl-white border border-pl-coal/8 p-5 shadow-card">
+                  <div className="text-[10px] tracking-[0.22em] uppercase text-pl-gold-dk font-medium mb-4">Nuestro catálogo</div>
+                  <div className="grid grid-cols-3 text-center divide-x divide-pl-coal/8">
+                    <div className="px-2">
+                      <div className="font-display text-pl-coal text-[26px] leading-none">+1k</div>
+                      <div className="text-[10px] tracking-[0.15em] uppercase text-pl-gray mt-1.5">Títulos</div>
+                    </div>
+                    <div className="px-2">
+                      <div className="font-display text-pl-coal text-[26px] leading-none">12</div>
+                      <div className="text-[10px] tracking-[0.15em] uppercase text-pl-gray mt-1.5">Categorías</div>
+                    </div>
+                    <div className="px-2">
+                      <div className="font-display text-pl-coal text-[26px] leading-none">PY</div>
+                      <div className="text-[10px] tracking-[0.15em] uppercase text-pl-gray mt-1.5">Paraguay</div>
+                    </div>
+                  </div>
                 </div>
-                <div className="grid grid-cols-2 gap-1.5">
-                  {(window.CATEGORIES || []).map(cat => {
-                    const I = cat.Icon;
-                    const active = selected.includes(cat.id);
-                    return (
-                      <button
-                        key={cat.id}
-                        onClick={() => toggleCat(cat.id)}
-                        className={`flex items-center gap-2 px-3 py-2.5 border text-left transition-all text-[11px] leading-tight
-                          ${active
-                            ? "border-pl-coal bg-pl-coal text-pl-ivory"
-                            : "border-pl-coal/12 bg-pl-white/70 text-pl-gray hover:border-pl-coal/30 hover:text-pl-coal hover:bg-pl-white"
-                          }`}
-                      >
-                        {I && <span className={`shrink-0 ${active ? "text-pl-gold" : "text-pl-coal/30"}`}><I size={12} /></span>}
-                        <span className="truncate">{cat.name}</span>
-                      </button>
-                    );
-                  })}
+
+                {/* Grid de categorías */}
+                <div className="bg-pl-white border border-pl-coal/8 p-5 shadow-card">
+                  <div className="text-[10px] tracking-[0.22em] uppercase text-pl-gold-dk font-medium mb-3">Explorar por área</div>
+                  <div className="grid grid-cols-2 gap-1.5">
+                    {(window.CATEGORIES || []).map(cat => {
+                      const I = cat.Icon;
+                      const active = selected.includes(cat.id);
+                      return (
+                        <button
+                          key={cat.id}
+                          onClick={() => toggleCat(cat.id)}
+                          className={`flex items-center gap-2 px-2.5 py-2 border text-left transition-all
+                            ${active
+                              ? "border-pl-coal bg-pl-coal text-pl-ivory"
+                              : "border-pl-coal/10 text-pl-gray hover:border-pl-coal/30 hover:text-pl-coal hover:bg-pl-ivory/60"
+                            }`}
+                        >
+                          {I && <span className={`shrink-0 ${active ? "text-pl-gold" : "text-pl-coal/25"}`}><I size={11} /></span>}
+                          <span className="truncate text-[11px] leading-tight">{cat.name}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
+
+                {/* CTA WhatsApp */}
+                <a href={waLink("Hola, busco un libro de psicología en el catálogo.")}
+                   target="_blank" rel="noreferrer"
+                   className="flex items-center gap-3 px-4 py-3.5 bg-pl-coal text-pl-ivory border border-pl-coal hover:bg-black transition-colors">
+                  <IconWhatsapp size={16} />
+                  <div>
+                    <div className="text-[12px] font-medium">¿No encontrás lo que buscás?</div>
+                    <div className="text-[11px] text-pl-ivory/60">Consultanos por WhatsApp</div>
+                  </div>
+                </a>
+
               </div>
 
             </div>
