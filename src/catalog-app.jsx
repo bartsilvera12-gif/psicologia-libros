@@ -277,78 +277,24 @@ const CatalogPage = () => {
                 </div>
               </div>
 
-              {/* Columna derecha: vitrina de libros */}
-              <div className="hidden lg:block relative" style={{ animation: "fadeSlideIn 0.9s 0.35s both" }}>
-                <div className="bg-pl-white p-6 shadow-card-hv border border-pl-coal/6 relative">
-                  {/* Gold corner accent */}
-                  <div className="absolute top-0 right-0 w-16 h-px bg-pl-gold" />
-                  <div className="absolute top-0 right-0 w-px h-16 bg-pl-gold" />
-                  <div className="absolute bottom-0 left-0 w-10 h-px bg-pl-gold/40" />
+              {/* Columna derecha */}
+              <div className="hidden lg:flex flex-col gap-4">
 
-                  <div className="eyebrow mb-5">Catálogo especializado</div>
-
-                  {/* Libros en abanico */}
-                  <div className="relative h-[190px] flex items-end justify-center">
-                    <div className="absolute" style={{ left: "10%", bottom: 0, transform: "rotate(-10deg)", zIndex: 1 }}>
-                      <div className="hero-book typo-cover i w-[88px] h-[132px] shadow-card">
-                        <div className="frame" />
-                        <div className="absolute inset-0 flex flex-col items-center justify-center gap-1.5 px-2 text-center">
-                          <span className="text-[8px] tracking-[0.2em] uppercase" style={{color:"#5b4a22",opacity:0.55}}>P·L</span>
-                          <span className="font-display text-[11px] leading-snug" style={{color:"#2b2418"}}>Trauma<br/>&amp; duelo</span>
-                        </div>
-                      </div>
+                {/* Stats */}
+                <div className="bg-pl-white border border-pl-coal/8 p-5 shadow-card">
+                  <div className="text-[10px] tracking-[0.22em] uppercase text-pl-gold-dk font-medium mb-4">Nuestro catálogo</div>
+                  <div className="grid grid-cols-3 text-center divide-x divide-pl-coal/8">
+                    <div className="px-2">
+                      <div className="font-display text-pl-coal text-[26px] leading-none">+1k</div>
+                      <div className="text-[10px] tracking-[0.15em] uppercase text-pl-gray mt-1.5">Títulos</div>
                     </div>
-                    <div className="absolute" style={{ right: "10%", bottom: 0, transform: "rotate(10deg)", zIndex: 1 }}>
-                      <div className="hero-book typo-cover r w-[88px] h-[132px] shadow-card">
-                        <div className="frame" />
-                        <div className="absolute inset-0 flex flex-col items-center justify-center gap-1.5 px-2 text-center">
-                          <span className="text-[8px] tracking-[0.2em] uppercase text-pl-gold opacity-55">P·L</span>
-                          <span className="font-display text-[11px] leading-snug text-pl-ivory">Salud<br/>mental</span>
-                        </div>
-                      </div>
+                    <div className="px-2">
+                      <div className="font-display text-pl-coal text-[26px] leading-none">12</div>
+                      <div className="text-[10px] tracking-[0.15em] uppercase text-pl-gray mt-1.5">Categorías</div>
                     </div>
-                    <div className="relative" style={{ zIndex: 3 }}>
-                      <div className="hero-book typo-cover w-[102px] h-[154px] shadow-card-hv" style={{ animation: "logoFloat 5s ease-in-out infinite" }}>
-                        <div className="frame" />
-                        <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 px-2 text-center">
-                          <span className="text-[8px] tracking-[0.22em] uppercase text-pl-gold opacity-60">P·L</span>
-                          <span className="font-display text-[13px] leading-snug text-pl-ivory">La mente<br/>humana</span>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="absolute" style={{ left: "28%", bottom: 0, transform: "rotate(-4deg)", zIndex: 2 }}>
-                      <div className="hero-book typo-cover b w-[88px] h-[135px] shadow-card">
-                        <div className="frame" />
-                        <div className="absolute inset-0 flex flex-col items-center justify-center gap-1.5 px-2 text-center">
-                          <span className="text-[8px] tracking-[0.2em] uppercase text-pl-gold opacity-55">P·L</span>
-                          <span className="font-display text-[11px] leading-snug text-pl-ivory">Neuro-<br/>psicología</span>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="absolute" style={{ right: "28%", bottom: 0, transform: "rotate(4deg)", zIndex: 2 }}>
-                      <div className="hero-book typo-cover g w-[88px] h-[135px] shadow-card">
-                        <div className="frame" />
-                        <div className="absolute inset-0 flex flex-col items-center justify-center gap-1.5 px-2 text-center">
-                          <span className="text-[8px] tracking-[0.2em] uppercase text-pl-gold opacity-55">P·L</span>
-                          <span className="font-display text-[11px] leading-snug text-pl-ivory">Mind-<br/>fulness</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Stats */}
-                  <div className="mt-6 pt-5 border-t border-pl-coal/8 grid grid-cols-3 text-center">
-                    <div>
-                      <div className="font-display text-pl-coal text-[24px] tracking-tight leading-none">+1k</div>
-                      <div className="text-[10px] tracking-[0.18em] uppercase text-pl-gray mt-1.5">Títulos</div>
-                    </div>
-                    <div className="border-x border-pl-coal/8">
-                      <div className="font-display text-pl-coal text-[24px] tracking-tight leading-none">12</div>
-                      <div className="text-[10px] tracking-[0.18em] uppercase text-pl-gray mt-1.5">Categorías</div>
-                    </div>
-                    <div>
-                      <div className="font-display text-pl-coal text-[24px] tracking-tight leading-none">PY</div>
-                      <div className="text-[10px] tracking-[0.18em] uppercase text-pl-gray mt-1.5">Paraguay</div>
+                    <div className="px-2">
+                      <div className="font-display text-pl-coal text-[26px] leading-none">PY</div>
+                      <div className="text-[10px] tracking-[0.15em] uppercase text-pl-gray mt-1.5">Paraguay</div>
                     </div>
                   </div>
                 </div>
@@ -356,13 +302,14 @@ const CatalogPage = () => {
                 {/* CTA WhatsApp */}
                 <a href={waLink("Hola, busco un libro de psicología en el catálogo.")}
                    target="_blank" rel="noreferrer"
-                   className="mt-3 flex items-center gap-3 px-4 py-3.5 bg-pl-coal text-pl-ivory border border-pl-coal hover:bg-black transition-colors">
+                   className="flex items-center gap-3 px-4 py-3.5 bg-pl-coal text-pl-ivory border border-pl-coal hover:bg-black transition-colors">
                   <IconWhatsapp size={16} />
                   <div>
                     <div className="text-[12px] font-medium">¿No encontrás lo que buscás?</div>
                     <div className="text-[11px] text-pl-ivory/60">Consultanos por WhatsApp</div>
                   </div>
                 </a>
+
               </div>
 
             </div>
