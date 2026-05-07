@@ -42,7 +42,6 @@ const App = () => {
       <Header active={active} />
       <main>
         <Hero />
-        <CategoryQuickNav linkMode={true} />
         <FeaturedCarousel />
         <About />
         <Benefits />
