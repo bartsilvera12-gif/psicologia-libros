@@ -46,7 +46,7 @@ const Header = ({ active, homePath = "" }) => {
               </a>
             ))}
             <a href="catalogo.html"
-               className="text-[13px] tracking-wide text-pl-coal hover:text-pl-red transition-colors py-2">
+               className="text-[13px] tracking-wide text-pl-red font-medium hover:text-pl-red-dk transition-colors py-2">
               Catálogo
             </a>
           </nav>
@@ -76,7 +76,7 @@ const Header = ({ active, homePath = "" }) => {
                   {n.label}
                 </a>
               ))}
-              <a href="catalogo.html" className="py-3 text-[15px] text-pl-coal border-b border-pl-coal/5">
+              <a href="catalogo.html" className="py-3 text-[15px] text-pl-red font-medium border-b border-pl-coal/5">
                 Catálogo
               </a>
               <a href={waLink("Hola, quiero consultar el catálogo de Psicología Libros.")}

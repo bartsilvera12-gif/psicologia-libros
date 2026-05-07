@@ -196,7 +196,6 @@ const FAQS = [
 // === Nav links ===
 const NAV = [
   { id: "inicio",   label: "Inicio" },
-  { id: "catalogo", label: "Catálogo" },
   { id: "nosotros", label: "Nosotros" },
   { id: "faq",      label: "FAQ" },
   { id: "contacto", label: "Contacto" },
