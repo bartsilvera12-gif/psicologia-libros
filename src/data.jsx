@@ -1,3 +1,6 @@
+// === Datos locales — fallback si Supabase no responde ===
+// Los datos reales vienen de pl_books / pl_categories / pl_faqs en Supabase.
+
 // === Configurable contact ===
 const WHATSAPP_NUMBER = "595981234567"; // configurable
 const WA_BASE = `https://wa.me/${WHATSAPP_NUMBER}`;
