@@ -1,5 +1,6 @@
 // === Header ===
-const Header = ({ active }) => {
+// homePath: "" para index.html, "index.html" para catalog page
+const Header = ({ active, homePath = "" }) => {
   const [scrolled, setScrolled] = React.useState(false);
   const [open, setOpen]         = React.useState(false);
 
@@ -12,15 +13,21 @@ const Header = ({ active }) => {
   const click = (e, id) => {
     e.preventDefault();
     setOpen(false);
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (homePath) {
+      window.location.href = `${homePath}#${id}`;
+    } else {
+      document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
   };
+
+  const logoHref = homePath ? homePath : "#inicio";
 
   return (
     <header className={`fixed top-0 inset-x-0 z-50 header-blur transition-shadow ${scrolled ? "header-scrolled" : ""}`}>
       <div className="max-w-7xl mx-auto px-6 lg:px-10">
         <div className="flex items-center justify-between h-[78px]">
           {/* Logo mark */}
-          <a href="#inicio" onClick={(e) => click(e, "inicio")} className="flex items-center gap-2 group">
+          <a href={logoHref} onClick={(e) => homePath ? null : click(e, "inicio")} className="flex items-center gap-2 group">
             <img src="logo.jpeg" alt="Psicología Libros" className="w-11 h-11 object-contain" />
             <div className="leading-tight">
               <div className="font-display text-pl-coal text-[20px] tracking-tight">Psicología Libros</div>
@@ -31,12 +38,17 @@ const Header = ({ active }) => {
           {/* Desktop nav */}
           <nav className="hidden lg:flex items-center gap-8">
             {NAV.map(n => (
-              <a key={n.id} href={`#${n.id}`} onClick={(e) => click(e, n.id)}
+              <a key={n.id} href={homePath ? `${homePath}#${n.id}` : `#${n.id}`}
+                 onClick={(e) => homePath ? null : click(e, n.id)}
                  className={`text-[13px] tracking-wide transition-colors relative py-2 ${active === n.id ? "text-pl-red" : "text-pl-coal hover:text-pl-red"}`}>
                 {n.label}
                 {active === n.id && <span className="absolute -bottom-0.5 left-0 right-0 h-px bg-pl-gold" />}
               </a>
             ))}
+            <a href="catalogo.html"
+               className="text-[13px] tracking-wide text-pl-coal hover:text-pl-red transition-colors py-2">
+              Catálogo
+            </a>
           </nav>
 
           <div className="flex items-center gap-3">
@@ -44,7 +56,7 @@ const Header = ({ active }) => {
                target="_blank" rel="noreferrer"
                className="hidden sm:inline-flex items-center gap-2 px-5 py-3 bg-pl-red text-white text-[13px] hover:bg-pl-red-dk transition-colors">
               <IconWhatsapp size={16} />
-              <span>Consultar catálogo</span>
+              <span>Consultar</span>
             </a>
             <button className="lg:hidden w-10 h-10 border border-pl-coal/15 text-pl-coal flex items-center justify-center"
                     aria-label={open ? "Cerrar menú" : "Abrir menú"}
@@ -58,11 +70,15 @@ const Header = ({ active }) => {
           <div className="lg:hidden border-t border-pl-coal/10 py-4">
             <nav className="flex flex-col">
               {NAV.map(n => (
-                <a key={n.id} href={`#${n.id}`} onClick={(e) => click(e, n.id)}
+                <a key={n.id} href={homePath ? `${homePath}#${n.id}` : `#${n.id}`}
+                   onClick={(e) => homePath ? null : click(e, n.id)}
                    className="py-3 text-[15px] text-pl-coal border-b border-pl-coal/5 last:border-0">
                   {n.label}
                 </a>
               ))}
+              <a href="catalogo.html" className="py-3 text-[15px] text-pl-coal border-b border-pl-coal/5">
+                Catálogo
+              </a>
               <a href={waLink("Hola, quiero consultar el catálogo de Psicología Libros.")}
                  target="_blank" rel="noreferrer"
                  className="mt-3 inline-flex items-center justify-center gap-2 px-5 py-3 bg-pl-red text-white text-[13px]">
@@ -114,8 +130,7 @@ const Hero = () => (
       {/* Buttons */}
       <div className="mt-10 flex flex-wrap justify-center gap-4"
            style={{ animation: "fadeSlideIn 0.8s 0.6s both" }}>
-        <a href="#catalogo"
-           onClick={(e) => { e.preventDefault(); document.getElementById("catalogo")?.scrollIntoView({ behavior: "smooth" }); }}
+        <a href="catalogo.html"
            className="inline-flex items-center gap-2 px-8 py-4 bg-pl-coal text-pl-ivory text-[14px] tracking-wide hover:bg-black transition-colors">
           Ver catálogo <IconArrow size={15} />
         </a>
@@ -130,17 +145,30 @@ const Hero = () => (
   </section>
 );
 
-// === Category Quick Nav (sticky strip below hero) ===
-const CategoryQuickNav = ({ filter, onPick }) => (
+// === Category Quick Nav ===
+// linkMode=true → pills van a catalogo.html?cat=XXX (usado en index)
+// linkMode=false → pills llaman a onPick (usado en catalogo.html)
+const CategoryQuickNav = ({ filter = "all", onPick, linkMode = false }) => (
   <div id="categorias" className="sticky top-[78px] z-40 bg-pl-ivory/96 backdrop-blur-sm border-b border-pl-coal/10 shadow-sm">
     <div className="max-w-7xl mx-auto px-4 lg:px-10">
       <div className="flex items-center gap-1 overflow-x-auto scrollbar-hide py-3">
-        <button
-          onClick={() => onPick("all")}
-          className={`shrink-0 px-4 py-2 text-[11px] tracking-[0.2em] uppercase transition-all duration-200 rounded-none ${filter === "all" ? "cat-pill-active" : "text-pl-gray hover:text-pl-coal"}`}>
-          Todas
-        </button>
-        {CATEGORIES.map(cat => (
+        {linkMode ? (
+          <a href="catalogo.html"
+             className={`shrink-0 px-4 py-2 text-[11px] tracking-[0.2em] uppercase transition-all duration-200 ${filter === "all" ? "cat-pill-active" : "text-pl-gray hover:text-pl-coal"}`}>
+            Todas
+          </a>
+        ) : (
+          <button onClick={() => onPick("all")}
+            className={`shrink-0 px-4 py-2 text-[11px] tracking-[0.2em] uppercase transition-all duration-200 ${filter === "all" ? "cat-pill-active" : "text-pl-gray hover:text-pl-coal"}`}>
+            Todas
+          </button>
+        )}
+        {CATEGORIES.map(cat => linkMode ? (
+          <a key={cat.id} href={`catalogo.html?cat=${cat.id}`}
+             className={`shrink-0 px-4 py-2 text-[11px] tracking-[0.2em] uppercase transition-all duration-200 whitespace-nowrap ${filter === cat.id ? "cat-pill-active" : "text-pl-gray hover:text-pl-coal"}`}>
+            {cat.name}
+          </a>
+        ) : (
           <button key={cat.id} onClick={() => onPick(cat.id)}
             className={`shrink-0 px-4 py-2 text-[11px] tracking-[0.2em] uppercase transition-all duration-200 whitespace-nowrap ${filter === cat.id ? "cat-pill-active" : "text-pl-gray hover:text-pl-coal"}`}>
             {cat.name}

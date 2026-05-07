@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Catálogo | Psicología Libros</title>
+  <meta name="description" content="Catálogo completo de libros de psicología, salud mental, bienestar emocional y desarrollo humano." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'pl-red':    '#D71920',
+            'pl-red-dk': '#A8121A',
+            'pl-coal':   '#111111',
+            'pl-gold':   '#C9A24A',
+            'pl-gold-dk':'#A4842F',
+            'pl-ivory':  '#F8F4EA',
+            'pl-gray':   '#4A4A4A',
+            'pl-beige':  '#EFE6D4',
+            'pl-white':  '#FFFFFF',
+          },
+          fontFamily: {
+            display: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+          boxShadow: {
+            'card':    '0 1px 2px rgba(17,17,17,0.04), 0 8px 24px -12px rgba(17,17,17,0.10)',
+            'card-hv': '0 2px 6px rgba(17,17,17,0.05), 0 24px 40px -16px rgba(17,17,17,0.18)',
+          },
+        }
+      }
+    }
+  </script>
+
+  <style>
+    html { scroll-behavior: smooth; }
+    body {
+      background: #F8F4EA;
+      color: #111111;
+      font-family: 'Inter', system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    .font-display { font-family: 'Cormorant Garamond', Georgia, serif; }
+    .paper-bg {
+      background-color: #F8F4EA;
+      background-image:
+        radial-gradient(circle at 20% 10%, rgba(201,162,74,0.05), transparent 40%),
+        radial-gradient(circle at 80% 90%, rgba(215,25,32,0.04), transparent 40%);
+    }
+    .gold-rule-short { height:1px; width:56px; background:#C9A24A; }
+    .eyebrow { font-family:'Inter',sans-serif; font-size:11px; letter-spacing:0.22em; text-transform:uppercase; color:#A4842F; font-weight:500; }
+    .book-cover { position:relative; overflow:hidden; }
+    .book-cover::after { content:''; position:absolute; inset:0; background:linear-gradient(180deg,rgba(17,17,17,0.0) 60%,rgba(17,17,17,0.18) 100%); pointer-events:none; }
+    .lift { transition:transform .35s cubic-bezier(.2,.7,.2,1),box-shadow .35s,border-color .35s; }
+    .lift:hover { transform:translateY(-4px); }
+    .header-blur { background-color:rgba(248,244,234,0.78); backdrop-filter:saturate(140%) blur(10px); -webkit-backdrop-filter:saturate(140%) blur(10px); }
+    .header-scrolled { box-shadow:0 1px 0 rgba(17,17,17,0.06),0 6px 24px -16px rgba(17,17,17,0.18); }
+    .typo-cover { background:linear-gradient(160deg,#1c1c1c,#2a2724 60%,#161513); color:#F8F4EA; position:relative; }
+    .typo-cover .frame { position:absolute; inset:14px; border:1px solid rgba(201,162,74,0.45); }
+    .typo-cover.r { background:linear-gradient(160deg,#4a0d10,#6b1216 50%,#2a0507); }
+    .typo-cover.b { background:linear-gradient(160deg,#1d2a3a,#2c4258 60%,#0f1822); }
+    .typo-cover.i { background:linear-gradient(160deg,#efe6d4,#d6c8a8 60%,#c2b58f); color:#2b2418; }
+    .typo-cover.i .frame { border-color:rgba(166,131,53,0.6); }
+    .typo-cover.g { background:linear-gradient(160deg,#2d3530,#424a44 60%,#1c211e); }
+    .typo-cover.p { background:linear-gradient(160deg,#2a2030,#3d2f48 60%,#1a1322); }
+    .faq-content { display:grid; grid-template-rows:0fr; transition:grid-template-rows .35s cubic-bezier(.2,.7,.2,1); }
+    .faq-content.open { grid-template-rows:1fr; }
+    .faq-content > div { overflow:hidden; }
+    ::-webkit-scrollbar { width:10px; height:10px; }
+    ::-webkit-scrollbar-track { background:#F8F4EA; }
+    ::-webkit-scrollbar-thumb { background:#EFE6D4; border-radius:6px; }
+    ::-webkit-scrollbar-thumb:hover { background:#C9A24A; }
+    button:focus-visible,a:focus-visible,input:focus-visible { outline:2px solid #C9A24A; outline-offset:2px; }
+    .scrollbar-hide { -ms-overflow-style:none; scrollbar-width:none; }
+    .scrollbar-hide::-webkit-scrollbar { display:none; }
+    .cat-pill-active { background:#111111; color:#F8F4EA; }
+    @keyframes fadeSlideIn { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
+  </style>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel" src="src/icons.jsx"></script>
+  <script type="text/babel" src="src/data.jsx"></script>
+  <script type="text/babel" src="src/supabase.jsx"></script>
+  <script type="text/babel" src="src/components.jsx"></script>
+  <script type="text/babel" src="src/sections.jsx"></script>
+  <script type="text/babel" src="src/catalog-app.jsx"></script>
+</body>
+</html>
