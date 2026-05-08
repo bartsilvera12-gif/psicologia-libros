@@ -179,11 +179,11 @@ const LogoSVG = ({ size = 280 }) => (
 
 // === Vitrina del hero ===
 const VITRINE_FALLBACK = [
-  { pal:"r",    short:"Trauma\n& Duelo",      title:"Trauma & Duelo",      author:"" },
-  { pal:"b",    short:"Neuro-\npsicología",   title:"Neuropsicología",     author:"" },
-  { pal:"coal", short:"La Mente\nHumana",     title:"La Mente Humana",     author:"" },
-  { pal:"g",    short:"Mind-\nfulness",       title:"Mindfulness",         author:"" },
-  { pal:"p",    short:"Salud\nMental",        title:"Salud Mental",        author:"" },
+  { pal:"r",    short:"Trauma\n& Duelo",      title:"Trauma & Duelo",      author:"", cat:"trauma"      },
+  { pal:"b",    short:"Neuro-\npsicología",   title:"Neuropsicología",     author:"", cat:"neuro"       },
+  { pal:"coal", short:"La Mente\nHumana",     title:"La Mente Humana",     author:"", cat:"clinica"     },
+  { pal:"g",    short:"Mind-\nfulness",       title:"Mindfulness",         author:"", cat:"mindfulness" },
+  { pal:"p",    short:"Salud\nMental",        title:"Salud Mental",        author:"", cat:"salud"       },
 ];
 const VIT_SLOTS = [
   { pos:"absolute", style:{ left:"10%",  bottom:0, transform:"rotate(-10deg)", zIndex:1 }, w:100, h:150 },
@@ -225,7 +225,9 @@ const VitrineBook = ({ book, fb, slot, isCenter }) => {
     if (book) {
       window.location.href = `libro.html?id=${book.id}`;
     } else {
-      window.location.href = "catalogo.html";
+      // Busca el primer libro real de esa categoría
+      const match = (window.BOOKS || []).find(b => b.category === fb.cat && b.is_active !== false);
+      window.location.href = match ? `libro.html?id=${match.id}` : "catalogo.html";
     }
   };
 
