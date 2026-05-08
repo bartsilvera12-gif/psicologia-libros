@@ -139,7 +139,7 @@ const BookCard = ({ book }) => {
         <div className="mt-5 flex items-end justify-between gap-3">
           <div>
             <div className="text-[10px] tracking-[0.22em] uppercase text-pl-gray/70">Precio</div>
-            <div className="font-display text-pl-coal text-[20px] mt-0.5 leading-tight">
+            <div className="font-display text-pl-coal text-[20px] mt-0.5 leading-tight whitespace-nowrap">
               {book.price}
             </div>
           </div>
