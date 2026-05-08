@@ -506,7 +506,7 @@ const CategoryQuickNav = ({ filter = "all", onPick, linkMode = false }) => (
   </div>
 );
 
-// === Carrusel horizontal (estilo slider; flechas a los lados, “Ver todos” arriba) ===
+// === Carrusel de rejilla: slide horizontal ("slide") o fade + translate como destacados antiguos ("fade") ===
 const BooksSlideCarousel = ({
   eyebrow,
   titleNode,
@@ -516,6 +516,7 @@ const BooksSlideCarousel = ({
   autoRotate = true,
   rotateMs = 5200,
   sectionClassName = "bg-pl-white",
+  pageTransition = "slide",
 }) => {
   const chunks = React.useMemo(() => {
     const list = Array.isArray(books) ? books : [];
@@ -527,27 +528,53 @@ const BooksSlideCarousel = ({
 
   const pageCount = chunks.length;
   const [page, setPage] = React.useState(0);
+  const [fadeVisible, setFadeVisible] = React.useState(true);
+  const fadeMs = 380;
 
   React.useEffect(() => {
     setPage(0);
+    setFadeVisible(true);
   }, [pageCount]);
 
-  const go = React.useCallback(
-    (idx) => setPage(((idx % pageCount) + pageCount) % pageCount),
-    [pageCount]
+  const goToPage = React.useCallback(
+    (idx) => {
+      const target = ((idx % pageCount) + pageCount) % pageCount;
+      if (pageTransition === "fade") {
+        setFadeVisible(false);
+        window.setTimeout(() => {
+          setPage(target);
+          setFadeVisible(true);
+        }, fadeMs);
+      } else {
+        setPage(target);
+      }
+    },
+    [pageCount, pageTransition]
   );
 
   React.useEffect(() => {
     if (!autoRotate || pageCount <= 1) return;
-    const t = setInterval(() => setPage((p) => (p + 1) % pageCount), rotateMs);
-    return () => clearInterval(t);
-  }, [autoRotate, pageCount, rotateMs]);
+    const t = window.setInterval(() => {
+      if (pageTransition === "fade") {
+        setFadeVisible(false);
+        window.setTimeout(() => {
+          setPage((p) => (p + 1) % pageCount);
+          setFadeVisible(true);
+        }, fadeMs);
+      } else {
+        setPage((p) => (p + 1) % pageCount);
+      }
+    }, rotateMs);
+    return () => window.clearInterval(t);
+  }, [autoRotate, pageCount, rotateMs, pageTransition]);
 
   if (!pageCount) return null;
 
   const carouselArrowClass =
     "flex absolute top-1/2 z-20 -translate-y-1/2 w-9 h-9 sm:w-10 sm:h-10 items-center justify-center " +
     "bg-pl-white/95 border border-pl-coal/15 text-pl-coal shadow-sm hover:border-pl-gold hover:text-pl-gold transition-colors";
+
+  const currentChunk = chunks[page] || [];
 
   return (
     <section className={`py-20 lg:py-28 ${sectionClassName}`}>
@@ -569,7 +596,7 @@ const BooksSlideCarousel = ({
             <>
               <button
                 type="button"
-                onClick={() => go(page - 1)}
+                onClick={() => goToPage(page - 1)}
                 className={`${carouselArrowClass} left-0 lg:-left-2`}
                 aria-label="Anterior"
               >
@@ -579,7 +606,7 @@ const BooksSlideCarousel = ({
               </button>
               <button
                 type="button"
-                onClick={() => go(page + 1)}
+                onClick={() => goToPage(page + 1)}
                 className={`${carouselArrowClass} right-0 lg:-right-2`}
                 aria-label="Siguiente"
               >
@@ -591,20 +618,36 @@ const BooksSlideCarousel = ({
           ) : null}
 
           <div className="overflow-hidden px-10 sm:px-12">
-            <div
-              className="flex transition-transform duration-[600ms] ease-[cubic-bezier(0.33,1,0.68,1)] will-change-transform"
-              style={{ transform: `translate3d(-${page * 100}%,0,0)` }}
-            >
-              {chunks.map((chunk, i) => (
-                <div key={i} className="w-full shrink-0 min-w-0">
-                  <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {chunk.map((b) => (
-                      <BookCard key={b.id} book={b} />
-                    ))}
-                  </div>
+            {pageTransition === "fade" ? (
+              <div
+                style={{
+                  opacity: fadeVisible ? 1 : 0,
+                  transform: fadeVisible ? "translateX(0)" : "translateX(20px)",
+                  transition: "opacity 0.4s ease, transform 0.4s cubic-bezier(0.2,0.7,0.2,1)",
+                }}
+              >
+                <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                  {currentChunk.map((b) => (
+                    <BookCard key={b.id} book={b} />
+                  ))}
                 </div>
-              ))}
-            </div>
+              </div>
+            ) : (
+              <div
+                className="flex transition-transform duration-[600ms] ease-[cubic-bezier(0.33,1,0.68,1)] will-change-transform"
+                style={{ transform: `translate3d(-${page * 100}%,0,0)` }}
+              >
+                {chunks.map((chunk, i) => (
+                  <div key={i} className="w-full shrink-0 min-w-0">
+                    <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                      {chunk.map((b) => (
+                        <BookCard key={b.id} book={b} />
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {pageCount > 1 ? (
@@ -613,7 +656,7 @@ const BooksSlideCarousel = ({
                 <button
                   key={i}
                   type="button"
-                  onClick={() => go(i)}
+                  onClick={() => goToPage(i)}
                   className={`transition-all duration-300 rounded-none ${
                     i === page ? "w-7 h-2 bg-pl-red" : "w-2 h-2 bg-pl-coal/20 hover:bg-pl-gold"
                   }`}
@@ -647,29 +690,39 @@ const FeaturedHeroSlider = ({ books }) => {
 
   return (
     <section className="relative overflow-hidden py-16 lg:py-24">
-      {/* Fondo tipo vitrina El Lector */}
-      <div className="absolute inset-0 bg-gradient-to-br from-[#0d4a52] via-[#0a3540] to-[#061a20]" aria-hidden />
+      {/* Paleta Psicología Libros: carbón, rojo, oro, marfil — sin verdes */}
+      <div
+        className="absolute inset-0 bg-gradient-to-br from-pl-coal via-[#1f1514] to-pl-coal"
+        aria-hidden
+      />
+      <div
+        className="pointer-events-none absolute inset-0 bg-gradient-to-t from-pl-red/18 via-transparent to-pl-gold/6"
+        aria-hidden
+      />
       <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
-        <div className="absolute -top-32 -left-32 h-[480px] w-[480px] rounded-full bg-pink-200/12 blur-3xl" />
-        <div className="absolute top-1/4 right-[-80px] h-[420px] w-[420px] rounded-full bg-cyan-100/8 blur-3xl" />
-        <div className="absolute bottom-[-60px] left-1/3 h-[360px] w-[360px] rounded-full bg-indigo-950/35 blur-3xl" />
-        <div className="absolute inset-0 opacity-[0.07]" style={{
-          backgroundImage: "radial-gradient(circle at 20% 30%, white 0.5px, transparent 0.6px)",
-          backgroundSize: "28px 28px",
-        }} />
+        <div className="absolute -top-28 -left-24 h-[460px] w-[460px] rounded-full bg-pl-gold/14 blur-3xl" />
+        <div className="absolute top-1/3 right-[-100px] h-[400px] w-[400px] rounded-full bg-pl-red/15 blur-3xl" />
+        <div className="absolute bottom-[-40px] left-1/4 h-[340px] w-[340px] rounded-full bg-pl-ivory/8 blur-3xl" />
+        <div
+          className="absolute inset-0 opacity-[0.06]"
+          style={{
+            backgroundImage: "radial-gradient(circle at 20% 30%, rgba(248,244,234,0.9) 0.5px, transparent 0.6px)",
+            backgroundSize: "26px 26px",
+          }}
+        />
       </div>
 
       <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-10">
         <div className="mb-10 flex flex-col justify-between gap-4 sm:mb-14 sm:flex-row sm:items-end">
           <div>
-            <span className="text-[11px] font-medium uppercase tracking-[0.28em] text-white/70">Selección</span>
-            <h2 className="font-display mt-2 text-[32px] tracking-tight text-white sm:text-4xl lg:text-[44px]">
-              Libros <em className="font-normal italic text-[#fbbf24]">destacados</em>
+            <span className="text-[11px] font-medium uppercase tracking-[0.28em] text-pl-ivory/75">Selección</span>
+            <h2 className="font-display mt-2 text-[32px] tracking-tight text-pl-ivory sm:text-4xl lg:text-[44px]">
+              Libros <em className="font-normal italic text-pl-gold">destacados</em>
             </h2>
           </div>
           <a
             href="catalogo.html"
-            className="shrink-0 text-[12px] uppercase tracking-[0.2em] text-white/90 transition-colors hover:text-white"
+            className="shrink-0 text-[12px] uppercase tracking-[0.2em] text-pl-gold/95 transition-colors hover:text-pl-ivory"
           >
             Ver todos
           </a>
@@ -681,7 +734,7 @@ const FeaturedHeroSlider = ({ books }) => {
               <button
                 type="button"
                 onClick={() => go(-1)}
-                className="absolute left-0 top-1/2 z-20 flex h-14 w-14 -translate-x-1 -translate-y-1/2 items-center justify-center text-white/30 transition-colors hover:text-white/95 lg:h-16 lg:w-16 lg:-translate-x-6"
+                className="absolute left-0 top-1/2 z-20 flex h-14 w-14 -translate-x-1 -translate-y-1/2 items-center justify-center text-pl-ivory/35 transition-colors hover:text-pl-gold lg:h-16 lg:w-16 lg:-translate-x-6"
                 aria-label="Anterior"
               >
                 <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3" aria-hidden>
@@ -691,7 +744,7 @@ const FeaturedHeroSlider = ({ books }) => {
               <button
                 type="button"
                 onClick={() => go(1)}
-                className="absolute right-0 top-1/2 z-20 flex h-14 w-14 translate-x-1 -translate-y-1/2 items-center justify-center text-white/30 transition-colors hover:text-white/95 lg:h-16 lg:w-16 lg:translate-x-6"
+                className="absolute right-0 top-1/2 z-20 flex h-14 w-14 translate-x-1 -translate-y-1/2 items-center justify-center text-pl-ivory/35 transition-colors hover:text-pl-gold lg:h-16 lg:w-16 lg:translate-x-6"
                 aria-label="Siguiente"
               >
                 <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3" aria-hidden>
@@ -726,13 +779,13 @@ const FeaturedHeroSlider = ({ books }) => {
                     </a>
                   </div>
                   <div className="order-1 px-1 text-center lg:order-2 lg:text-left">
-                    <p className="text-[11px] font-medium uppercase tracking-[0.28em] text-white/85 sm:text-xs">
+                    <p className="text-[11px] font-medium uppercase tracking-[0.28em] text-pl-ivory/88 sm:text-xs">
                       {(b.author || "").toUpperCase()}
                     </p>
-                    <h3 className="mt-3 font-sans text-[clamp(28px,5.2vw,54px)] font-bold leading-[1.06] tracking-tight text-white">
+                    <h3 className="mt-3 font-sans text-[clamp(28px,5.2vw,54px)] font-bold leading-[1.06] tracking-tight text-pl-ivory">
                       {b.title}
                     </h3>
-                    <p className="mt-5 font-display text-[clamp(22px,3.6vw,36px)] font-semibold tabular-nums tracking-tight text-white">
+                    <p className="mt-5 font-display text-[clamp(22px,3.6vw,36px)] font-semibold tabular-nums tracking-tight text-pl-ivory">
                       {typeof window.formatPrecioGs === "function" ? window.formatPrecioGs(b.price) : b.price}
                     </p>
                     <a
@@ -740,7 +793,7 @@ const FeaturedHeroSlider = ({ books }) => {
                       className="mt-8 inline-flex items-center gap-2 rounded-full bg-white px-8 py-3.5 text-[14px] font-semibold tracking-wide text-pl-coal shadow-lg shadow-black/25 transition-colors hover:bg-pl-ivory"
                     >
                       Ver libro
-                      <span className="inline-flex text-[#ea580c]" aria-hidden>
+                      <span className="inline-flex text-pl-red" aria-hidden>
                         <IconArrow size={16} />
                       </span>
                     </a>
@@ -760,7 +813,7 @@ const FeaturedHeroSlider = ({ books }) => {
                   aria-current={i === idx ? "true" : undefined}
                   onClick={() => setIdx(i)}
                   className={`h-2 rounded-full transition-all duration-300 ${
-                    i === idx ? "w-8 bg-orange-500" : "w-2 bg-white/35 hover:bg-white/55"
+                    i === idx ? "w-8 bg-pl-red" : "w-2 bg-pl-ivory/35 hover:bg-pl-ivory/55"
                   }`}
                 />
               ))}
@@ -797,6 +850,7 @@ const CatalogPreviewCarousel = () => {
       autoRotate={catalog.length > 8}
       rotateMs={5600}
       sectionClassName="bg-pl-beige/30"
+      pageTransition="fade"
     />
   );
 };
