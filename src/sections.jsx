@@ -574,7 +574,7 @@ const BooksSlideCarousel = ({
 
   const isNovedades = variant === "novedades";
   const gridClass = isNovedades
-    ? "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-5 lg:gap-6"
+    ? "grid grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6"
     : "grid sm:grid-cols-2 lg:grid-cols-4 gap-6";
 
   const carouselArrowClass = isNovedades
@@ -718,24 +718,31 @@ const FeaturedHeroSlider = ({ books }) => {
   const go = (delta) => setIdx((i) => ((i + delta) % n + n) % n);
 
   return (
-    <section className="relative overflow-hidden border-y border-pl-coal/[0.06] bg-gradient-to-b from-pl-ivory via-pl-white to-pl-beige/25 py-16 lg:py-24">
+    <section className="relative overflow-hidden border-y border-pl-gold/15 bg-gradient-to-b from-[#2c2419] via-pl-coal to-[#0a0908] py-16 lg:py-24">
       <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
-        <div className="absolute -top-16 right-1/4 h-72 w-72 rounded-full bg-pl-gold/10 blur-3xl" />
-        <div className="absolute bottom-0 left-0 h-64 w-64 rounded-full bg-pl-red/[0.06] blur-3xl" />
-        <div className="absolute top-1/2 left-1/2 h-96 w-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-pl-beige/40 blur-3xl" />
+        <div className="absolute -top-20 right-1/4 h-80 w-80 rounded-full bg-pl-gold/12 blur-3xl" />
+        <div className="absolute bottom-0 left-0 h-72 w-72 rounded-full bg-pl-red/18 blur-3xl" />
+        <div className="absolute top-1/3 left-1/4 h-64 w-64 rounded-full bg-pl-gold-dk/10 blur-3xl" />
+        <div
+          className="absolute inset-0 opacity-[0.05]"
+          style={{
+            backgroundImage: "radial-gradient(circle at 25% 35%, rgba(248,244,234,0.9) 0.5px, transparent 0.6px)",
+            backgroundSize: "24px 24px",
+          }}
+        />
       </div>
 
       <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-10">
         <div className="mb-10 flex flex-col justify-between gap-4 sm:mb-14 sm:flex-row sm:items-end">
           <div>
-            <span className="text-[11px] font-medium uppercase tracking-[0.28em] text-pl-gold-dk">Selección</span>
-            <h2 className="font-display mt-2 text-[32px] tracking-tight text-pl-coal sm:text-4xl lg:text-[44px]">
-              Libros <em className="font-normal italic text-pl-red">destacados</em>
+            <span className="text-[11px] font-medium uppercase tracking-[0.28em] text-pl-gold/85">Selección</span>
+            <h2 className="font-display mt-2 text-[32px] tracking-tight text-pl-ivory sm:text-4xl lg:text-[44px]">
+              Libros <em className="font-normal italic text-pl-gold">destacados</em>
             </h2>
           </div>
           <a
             href="catalogo.html"
-            className="shrink-0 text-[12px] uppercase tracking-[0.2em] text-pl-gold-dk transition-colors hover:text-pl-red"
+            className="shrink-0 text-[12px] uppercase tracking-[0.2em] text-pl-gold/90 transition-colors hover:text-pl-ivory"
           >
             Ver todos
           </a>
@@ -747,7 +754,7 @@ const FeaturedHeroSlider = ({ books }) => {
               <button
                 type="button"
                 onClick={() => go(-1)}
-                className="absolute left-0 top-1/2 z-20 flex h-12 w-12 -translate-x-1 -translate-y-1/2 items-center justify-center text-pl-coal/35 transition-colors hover:text-pl-coal lg:h-14 lg:w-14 lg:-translate-x-4"
+                className="absolute left-0 top-1/2 z-20 flex h-12 w-12 -translate-x-1 -translate-y-1/2 items-center justify-center text-pl-ivory/35 transition-colors hover:text-pl-gold lg:h-14 lg:w-14 lg:-translate-x-4"
                 aria-label="Anterior"
               >
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3" aria-hidden>
@@ -757,7 +764,7 @@ const FeaturedHeroSlider = ({ books }) => {
               <button
                 type="button"
                 onClick={() => go(1)}
-                className="absolute right-0 top-1/2 z-20 flex h-12 w-12 translate-x-1 -translate-y-1/2 items-center justify-center text-pl-coal/35 transition-colors hover:text-pl-coal lg:h-14 lg:w-14 lg:translate-x-4"
+                className="absolute right-0 top-1/2 z-20 flex h-12 w-12 translate-x-1 -translate-y-1/2 items-center justify-center text-pl-ivory/35 transition-colors hover:text-pl-gold lg:h-14 lg:w-14 lg:translate-x-4"
                 aria-label="Siguiente"
               >
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3" aria-hidden>
@@ -784,7 +791,7 @@ const FeaturedHeroSlider = ({ books }) => {
                       style={{ perspective: "880px" }}
                     >
                       <div
-                        className="shadow-xl shadow-pl-coal/12 transition-transform duration-500 group-hover/el-cover:scale-[1.02]"
+                        className="shadow-2xl shadow-black/45 transition-transform duration-500 group-hover/el-cover:scale-[1.02]"
                         style={{ transform: "rotateY(-7deg) rotateX(3deg)" }}
                       >
                         <BookCover book={b} large />
@@ -792,10 +799,10 @@ const FeaturedHeroSlider = ({ books }) => {
                     </a>
                   </div>
                   <div className="order-1 px-1 text-center lg:order-2 lg:text-left">
-                    <p className="text-[11px] font-medium uppercase tracking-[0.28em] text-pl-gray sm:text-xs">
+                    <p className="text-[11px] font-medium uppercase tracking-[0.28em] text-pl-ivory/75 sm:text-xs">
                       {(b.author || "").toUpperCase()}
                     </p>
-                    <h3 className="mt-3 font-sans text-[clamp(28px,5.2vw,54px)] font-bold leading-[1.06] tracking-tight text-pl-coal">
+                    <h3 className="mt-3 font-sans text-[clamp(28px,5.2vw,54px)] font-bold leading-[1.06] tracking-tight text-pl-ivory">
                       {b.title}
                     </h3>
                     <p className="mt-5 font-display text-[clamp(22px,3.6vw,36px)] font-semibold tabular-nums tracking-tight text-pl-gold">
@@ -826,7 +833,7 @@ const FeaturedHeroSlider = ({ books }) => {
                   aria-current={i === idx ? "true" : undefined}
                   onClick={() => setIdx(i)}
                   className={`h-2 rounded-full transition-all duration-300 ${
-                    i === idx ? "w-8 bg-pl-red" : "w-2 bg-pl-coal/15 hover:bg-pl-coal/30"
+                    i === idx ? "w-8 bg-pl-red" : "w-2 bg-pl-ivory/30 hover:bg-pl-ivory/50"
                   }`}
                 />
               ))}
@@ -853,7 +860,7 @@ const CatalogPreviewCarousel = () => {
     []
   );
   if (!catalog.length) return null;
-  const perSlide = 5;
+  const perSlide = 4;
   return (
     <BooksSlideCarousel
       eyebrow=""
