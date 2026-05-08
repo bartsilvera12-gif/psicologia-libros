@@ -137,22 +137,16 @@ const BookCard = ({ book }) => {
         <div className="mt-4 gold-rule-short" />
         <div className="flex-1" />
         <div className="mt-5 flex items-end justify-between gap-3">
-          <div>
+          <div className="shrink-0">
             <div className="text-[10px] tracking-[0.22em] uppercase text-pl-gray/70">Precio</div>
             <div className="font-display text-pl-coal text-[20px] mt-0.5 leading-tight whitespace-nowrap">
               {book.price}
             </div>
           </div>
-          <div className="flex items-center gap-2 shrink-0">
-            <a href={detailHref}
-               className="inline-flex items-center gap-1.5 px-3 py-2.5 border border-pl-coal/20 text-pl-coal text-[11px] tracking-wide hover:border-pl-gold hover:text-pl-gold-dk transition-colors">
-              Ver más
-            </a>
-            <a href={waLink(msg)} target="_blank" rel="noreferrer"
-               className="inline-flex items-center gap-1.5 px-3 py-2.5 bg-pl-red text-white text-[11px] tracking-wide hover:bg-pl-red-dk transition-colors">
-              <IconWhatsapp size={14} /> Consultar
-            </a>
-          </div>
+          <a href={waLink(msg)} target="_blank" rel="noreferrer"
+             className="shrink-0 inline-flex items-center gap-1.5 px-4 py-2.5 bg-pl-red text-white text-[12px] tracking-wide hover:bg-pl-red-dk transition-colors">
+            <IconWhatsapp size={14} /> Consultar
+          </a>
         </div>
       </div>
     </article>
