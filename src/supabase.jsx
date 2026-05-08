@@ -61,7 +61,11 @@ const mapBook = (row) => {
     author:      row.author,
     category:    row.category_id,
     description: row.description || "",
-    price:       row.price || "Consultar precio",
+    price:       row.price
+      ? (typeof window !== "undefined" && window.formatPrecioGs
+          ? window.formatPrecioGs(row.price)
+          : row.price)
+      : "Consultar precio",
     status:      row.status || "consultar",
     cover: {
       palette: row.cover_palette || "coal",

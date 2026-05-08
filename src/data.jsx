@@ -32,6 +32,21 @@ const CATEGORIES = [
 
 const catName = (id) => (CATEGORIES.find(c => c.id === id) || {}).name || id;
 
+/** Precio en guaraníes: miles con punto y prefijo «Gs.» (ej. Gs. 150.000). Sin cifras → Consultar precio. */
+function formatPrecioGs(raw) {
+  if (raw == null) return "Consultar precio";
+  const s = String(raw).trim();
+  if (!s) return "Consultar precio";
+  if (/^consultar/i.test(s) && s.replace(/\D/g, "").length === 0) return "Consultar precio";
+  const digits = s.replace(/\D/g, "");
+  if (!digits) return "Consultar precio";
+  const n = parseInt(digits, 10);
+  if (!Number.isFinite(n) || n < 0) return "Consultar precio";
+  const miles = n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  return `Gs. ${miles}`;
+}
+window.formatPrecioGs = formatPrecioGs;
+
 // === Books — 12 entries, mix of featured ===
 // covers use a typographic placeholder palette ('coal' | 'red' | 'blue' | 'ivory' | 'green' | 'plum')
 const BOOKS = [

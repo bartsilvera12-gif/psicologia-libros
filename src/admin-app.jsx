@@ -358,7 +358,7 @@ const BookForm = ({ book, categories, onSave, onClose }) => {
     author:        def.author,
     category_id:   def.category || def.category_id || "",
     description:   def.description || "",
-    price:         def.price === "Consultar precio" ? "" : (def.price || ""),
+    price:         def.price === "Consultar precio" ? "" : (typeof window.formatPrecioGs === "function" ? window.formatPrecioGs(def.price) : (def.price || "")),
     status:        def.status || "consultar",
     featured:      def.featured || false,
     is_active:     def.is_active !== false,
@@ -388,7 +388,9 @@ const BookForm = ({ book, categories, onSave, onClose }) => {
         author:        f.author.trim(),
         category_id:   f.category_id,
         description:   f.description.trim(),
-        price:         f.price.trim() || "Consultar precio",
+        price:         f.price.trim()
+          ? (typeof window.formatPrecioGs === "function" ? window.formatPrecioGs(f.price.trim()) : f.price.trim())
+          : "Consultar precio",
         status:        f.status,
         cover_palette: book?.cover?.palette || book?.cover_palette || "coal",
         cover_short:   f.title.trim(),
@@ -599,7 +601,7 @@ const AdminBooks = ({ books, categories, onRefresh, onToast }) => {
                     {(b.status||"").replace("_"," ")}
                   </span>
                 </td>
-                <td className="px-4 py-3 text-gray-500 text-[12px]">{b.price}</td>
+                <td className="px-4 py-3 text-gray-500 text-[12px] font-sans tabular-nums">{typeof window.formatPrecioGs === "function" ? window.formatPrecioGs(b.price) : b.price}</td>
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-1">
                     <button onClick={()=>setModal(b)} className="p-1.5 text-gray-400 hover:text-pl-coal transition-colors" title="Editar"><IcoEdit /></button>
