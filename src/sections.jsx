@@ -574,7 +574,7 @@ const BooksSlideCarousel = ({
 
   const isNovedades = variant === "novedades";
   const gridClass = isNovedades
-    ? "grid grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6"
+    ? "grid grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6 [&>*]:min-w-0"
     : "grid sm:grid-cols-2 lg:grid-cols-4 gap-6";
 
   const carouselArrowClass = isNovedades
@@ -663,12 +663,15 @@ const BooksSlideCarousel = ({
               </div>
             ) : (
               <div
-                className="flex transition-transform duration-[600ms] ease-[cubic-bezier(0.33,1,0.68,1)] will-change-transform"
+                className="flex w-full transition-transform duration-[600ms] ease-[cubic-bezier(0.33,1,0.68,1)] will-change-transform"
                 style={{ transform: `translate3d(-${page * 100}%,0,0)` }}
               >
                 {chunks.map((chunk, i) => (
-                  <div key={i} className="w-full shrink-0 min-w-0">
-                    <div className={gridClass}>
+                  <div
+                    key={i}
+                    className="box-border min-w-0 shrink-0 basis-full flex-[0_0_100%] max-w-full"
+                  >
+                    <div className={`${gridClass} max-w-full`}>
                       {chunk.map((b) => (
                         <BookCard key={b.id} book={b} />
                       ))}
