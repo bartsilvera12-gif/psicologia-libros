@@ -202,15 +202,11 @@
     /* Category pill active */
     .cat-pill-active { background: #111111; color: #F8F4EA; }
 
-    /* Hero book hover — lift & scale */
+    /* Hero book — transición manejada por React */
     .hero-book {
       transition: transform 0.38s cubic-bezier(0.2, 0.7, 0.2, 1),
                   box-shadow 0.38s cubic-bezier(0.2, 0.7, 0.2, 1);
-      cursor: default;
-    }
-    .hero-book:hover {
-      transform: translateY(-16px) scale(1.06) !important;
-      box-shadow: 0 28px 50px -14px rgba(17,17,17,0.35) !important;
+      cursor: pointer;
     }
   </style>
 
