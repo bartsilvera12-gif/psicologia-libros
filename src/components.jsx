@@ -57,10 +57,11 @@ const BtnGhost = ({ href, onClick, children, className = "", ...rest }) => {
 
 // === Book cover (typographic placeholder, editorial) ===
 const BookCover = ({ book, large = false }) => {
-  if (book.image_url) {
+  const coverUrl = (book.image_urls && book.image_urls.length > 0) ? book.image_urls[0] : book.image_url;
+  if (coverUrl) {
     return (
       <div className={`book-cover w-full ${large ? "aspect-[2/3]" : "aspect-[3/4]"} overflow-hidden bg-pl-coal/5`}>
-        <img src={book.image_url} alt={book.title}
+        <img src={coverUrl} alt={book.title}
              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
       </div>
     );

@@ -349,7 +349,7 @@ const PALETTES = ["coal","r","b","i","g","p"];
 const STATUSES = ["disponible","consultar","agotado","por_encargo"];
 
 const BookForm = ({ book, categories, onSave, onClose }) => {
-  const def = book || { title:"", author:"", category_id:"", description:"", price:"", status:"consultar", cover_palette:"coal", cover_short:"", featured:false, is_active:true, image_url:"" };
+  const def = book || { title:"", author:"", category_id:"", description:"", price:"", status:"consultar", cover_palette:"coal", cover_short:"", featured:false, is_active:true, image_urls:[] };
   const [f, setF] = React.useState({
     title:         def.title,
     author:        def.author,
@@ -361,10 +361,19 @@ const BookForm = ({ book, categories, onSave, onClose }) => {
     cover_short:   def.cover?.short   || def.cover_short   || "",
     featured:      def.featured || false,
     is_active:     def.is_active !== false,
-    image_url:     def.image_url || "",
+    image_urls:    def.image_urls || (def.image_url ? [def.image_url] : []),
   });
+  const [imgInput, setImgInput] = React.useState("");
   const [saving, setSaving] = React.useState(false);
   const [err, setErr]       = React.useState("");
+
+  const addImgUrl = () => {
+    const url = imgInput.trim();
+    if (!url) return;
+    upd("image_urls", [...f.image_urls, url]);
+    setImgInput("");
+  };
+  const removeImgUrl = (idx) => upd("image_urls", f.image_urls.filter((_, i) => i !== idx));
 
   const upd = (k, v) => setF(p => ({ ...p, [k]: v }));
 
@@ -384,7 +393,7 @@ const BookForm = ({ book, categories, onSave, onClose }) => {
         cover_short:   f.cover_short.trim() || f.title.trim(),
         featured:      f.featured,
         is_active:     f.is_active,
-        image_url: f.image_url.trim() || null,
+        image_url: f.image_urls.length > 0 ? JSON.stringify(f.image_urls) : null,
       };
       if (book?.id) { await window.updatePLBook(book.id, payload); }
       else          { await window.createPLBook(payload); }
@@ -414,13 +423,41 @@ const BookForm = ({ book, categories, onSave, onClose }) => {
         <Textarea value={f.description} onChange={e=>upd("description",e.target.value)}
                   rows={6} resizable={true} placeholder="Escribí una sinopsis del libro: de qué trata, a quién va dirigido, qué temas aborda…" />
       </Field>
-      <Field label="Imagen de portada" hint="URL de imagen JPG/PNG. Si se agrega, reemplaza la portada tipográfica.">
-        <Input value={f.image_url || ""} onChange={e=>upd("image_url",e.target.value)} placeholder="https://ejemplo.com/portada.jpg" />
-        {f.image_url && (
-          <div className="mt-2 flex items-start gap-3">
-            <img src={f.image_url} alt="Vista previa" className="h-28 w-auto object-cover border border-gray-200"
-                 onError={e => { e.target.style.display="none"; }} />
-            <div className="text-[11px] text-gray-400 mt-1">Vista previa de la portada</div>
+      <Field label="Imágenes" hint="Podés agregar varias imágenes. La primera se usa como portada.">
+        <div className="flex gap-2 items-center">
+          <input
+            value={imgInput}
+            onChange={e => setImgInput(e.target.value)}
+            onKeyDown={e => { if (e.key === "Enter") { e.preventDefault(); addImgUrl(); } }}
+            placeholder="Pegar URL de imagen y presionar +"
+            className="flex-1 border border-[#DDD0B6] px-4 py-2.5 text-[13px] bg-white focus:border-pl-gold transition-colors"
+            style={{ borderRadius: 99 }}
+          />
+          <button
+            type="button"
+            onClick={addImgUrl}
+            style={{ background: "linear-gradient(135deg,#a855f7,#ec4899)", borderRadius: 10, width: 42, height: 42, flexShrink: 0 }}
+            className="flex items-center justify-center text-white text-[22px] font-light leading-none hover:opacity-90 transition-opacity shadow-sm">
+            +
+          </button>
+        </div>
+        {f.image_urls.length > 0 && (
+          <div className="mt-3 flex flex-wrap gap-2">
+            {f.image_urls.map((url, i) => (
+              <div key={i} className="flex items-center gap-2 bg-white border border-[#DDD0B6] pr-2 pl-1.5 py-1.5 max-w-full" style={{ borderRadius: 8 }}>
+                <img src={url} alt="" className="w-8 h-10 object-cover shrink-0"
+                     style={{ borderRadius: 4 }}
+                     onError={e => { e.target.style.background="#f3f4f6"; e.target.src=""; }} />
+                {i === 0 && (
+                  <span className="text-[9px] tracking-[0.18em] uppercase font-semibold shrink-0" style={{ color:"#A4842F" }}>portada</span>
+                )}
+                <span className="text-[11px] text-gray-400 truncate max-w-[160px]">{url.split("/").pop()}</span>
+                <button type="button" onClick={() => removeImgUrl(i)}
+                        className="shrink-0 w-5 h-5 flex items-center justify-center text-gray-400 hover:text-pl-red transition-colors text-[14px]">
+                  ×
+                </button>
+              </div>
+            ))}
           </div>
         )}
       </Field>
@@ -550,8 +587,8 @@ const AdminBooks = ({ books, categories, onRefresh, onToast }) => {
               <tr key={b.id} className="table-row border-b border-[#EDE4D0] last:border-0">
                 <td className="px-4 py-3">
                   <div className="w-7 h-9 overflow-hidden shrink-0" style={{ background: palBg[b.cover?.palette] || "#1c1c1c" }}>
-                    {b.image_url
-                      ? <img src={b.image_url} alt="" className="w-full h-full object-cover" onError={e=>e.target.style.display="none"} />
+                    {(b.image_urls?.[0] || b.image_url)
+                      ? <img src={b.image_urls?.[0] || b.image_url} alt="" className="w-full h-full object-cover" onError={e=>e.target.style.display="none"} />
                       : <div className="w-full h-full flex items-center justify-center text-[6px] text-pl-ivory leading-tight text-center p-0.5">
                           {(b.cover?.short||b.title).slice(0,6)}
                         </div>

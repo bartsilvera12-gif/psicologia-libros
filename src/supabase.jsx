@@ -42,24 +42,38 @@ const plDelete = async (table, filter) => {
   if (!res.ok) throw new Error(`DELETE ${table}: ${res.status}`);
 };
 
+/* ── Parsear image_url (puede ser URL simple o JSON array) ── */
+const parseImageUrls = (val) => {
+  if (!val) return [];
+  try {
+    const parsed = JSON.parse(val);
+    if (Array.isArray(parsed)) return parsed.filter(Boolean);
+  } catch(e) {}
+  return val ? [val] : [];
+};
+
 /* ── Mapear fila de pl_books → formato interno de la app ── */
-const mapBook = (row) => ({
-  id:          row.id,
-  title:       row.title,
-  author:      row.author,
-  category:    row.category_id,
-  description: row.description || "",
-  price:       row.price || "Consultar precio",
-  status:      row.status || "consultar",
-  cover: {
-    palette: row.cover_palette || "coal",
-    short:   row.cover_short   || row.title,
-  },
-  featured:      row.featured      || false,
-  vitrine_order: row.vitrine_order  ?? null,
-  is_active:     row.is_active !== false,
-  image_url: row.image_url || null,
-});
+const mapBook = (row) => {
+  const urls = parseImageUrls(row.image_url);
+  return {
+    id:          row.id,
+    title:       row.title,
+    author:      row.author,
+    category:    row.category_id,
+    description: row.description || "",
+    price:       row.price || "Consultar precio",
+    status:      row.status || "consultar",
+    cover: {
+      palette: row.cover_palette || "coal",
+      short:   row.cover_short   || row.title,
+    },
+    featured:      row.featured      || false,
+    vitrine_order: row.vitrine_order  ?? null,
+    is_active:     row.is_active !== false,
+    image_urls: urls,
+    image_url:  urls[0] || null,
+  };
+};
 
 /* ── Mapear fila de pl_categories → formato interno ──────── */
 const ICON_MAP = {
@@ -121,7 +135,7 @@ const loadPLFaqs = async () => {
 };
 
 /* ── CRUD Libros (admin) ─────────────────────────────────── */
-const createPLBook = async ({ title, author, category_id, description, price, status, cover_palette, cover_short, featured, image_url }) => {
+const createPLBook = async ({ title, author, category_id, description, price, status, cover_palette, cover_short, featured, image_urls = [] }) => {
   const [row] = await plPost("pl_books", {
     title, author, category_id,
     description: description || "",
@@ -131,7 +145,7 @@ const createPLBook = async ({ title, author, category_id, description, price, st
     cover_short:   cover_short   || title,
     featured:      featured      || false,
     is_active:     true,
-    image_url: image_url || null,
+    image_url: image_urls.length > 0 ? JSON.stringify(image_urls) : null,
   });
   return row;
 };
