@@ -58,6 +58,7 @@ const mapBook = (row) => ({
   featured:      row.featured      || false,
   vitrine_order: row.vitrine_order  ?? null,
   is_active:     row.is_active !== false,
+  image_url: row.image_url || null,
 });
 
 /* ── Mapear fila de pl_categories → formato interno ──────── */
@@ -120,7 +121,7 @@ const loadPLFaqs = async () => {
 };
 
 /* ── CRUD Libros (admin) ─────────────────────────────────── */
-const createPLBook = async ({ title, author, category_id, description, price, status, cover_palette, cover_short, featured }) => {
+const createPLBook = async ({ title, author, category_id, description, price, status, cover_palette, cover_short, featured, image_url }) => {
   const [row] = await plPost("pl_books", {
     title, author, category_id,
     description: description || "",
@@ -130,6 +131,7 @@ const createPLBook = async ({ title, author, category_id, description, price, st
     cover_short:   cover_short   || title,
     featured:      featured      || false,
     is_active:     true,
+    image_url: image_url || null,
   });
   return row;
 };

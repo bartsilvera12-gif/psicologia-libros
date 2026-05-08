@@ -215,13 +215,28 @@ const AdminLogin = ({ onLogin }) => {
 };
 
 /* ── DASHBOARD ──────────────────────────────────── */
-const StatCard = ({ label, value, sub, color = "gold" }) => {
-  const colors = { gold: "border-pl-gold/40", red: "border-pl-red/40", coal: "border-pl-coal/30", green: "border-green-400/40" };
+const StatCard = ({ label, value, sub, color = "gold", icon }) => {
+  const styles = {
+    gold:  { accent:"#C9A24A", bg:"#fffbf0", text:"#92700a" },
+    red:   { accent:"#D71920", bg:"#fff5f5", text:"#991b1b" },
+    coal:  { accent:"#111111", bg:"#f9fafb", text:"#374151" },
+    green: { accent:"#2d7a45", bg:"#f0fdf4", text:"#166534" },
+  };
+  const s = styles[color] || styles.gold;
   return (
-    <div className={`stat-card border-l-4 ${colors[color]} fade-in`}>
-      <div className="text-[11px] tracking-[0.2em] uppercase text-gray-400 mb-1">{label}</div>
-      <div className="font-display text-pl-coal text-[36px] leading-none">{value}</div>
-      {sub && <div className="text-[11px] text-gray-400 mt-1">{sub}</div>}
+    <div className="bg-white border border-gray-200 p-5 fade-in" style={{ borderLeftWidth:3, borderLeftColor:s.accent }}>
+      <div className="flex items-start justify-between gap-2">
+        <div className="flex-1 min-w-0">
+          <div className="text-[10px] tracking-[0.22em] uppercase font-medium mb-2" style={{ color: s.text }}>{label}</div>
+          <div className="font-display text-pl-coal text-[38px] leading-none">{value}</div>
+          {sub && <div className="text-[11px] mt-2" style={{ color: s.text, opacity:0.7 }}>{sub}</div>}
+        </div>
+        {icon && (
+          <div className="w-9 h-9 flex items-center justify-center rounded-sm shrink-0" style={{ background: s.bg, color: s.accent }}>
+            {icon}
+          </div>
+        )}
+      </div>
     </div>
   );
 };
@@ -253,10 +268,10 @@ const AdminDashboard = ({ books, categories }) => {
 
       {/* KPIs */}
       <div className="grid grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
-        <StatCard label="Libros activos"   value={fmt(activos)}    sub={inactivos > 0 ? `${inactivos} inactivos` : "Todos activos"} color="gold" />
-        <StatCard label="Categorías"       value={fmt(categories.length)} sub={`${catStats.filter(c=>c.count===0).length} vacías`} color="coal" />
-        <StatCard label="Destacados"       value={fmt(destacados)} sub="en carrusel hero" color="red" />
-        <StatCard label="Con precio"       value={fmt(conPrecio)}  sub={`${total - conPrecio} a consultar`} color="green" />
+        <StatCard label="Libros activos"   value={fmt(activos)}           sub={inactivos > 0 ? `${inactivos} inactivos` : "Todos activos"} color="gold"  icon={<IcoBooks />}  />
+        <StatCard label="Categorías"       value={fmt(categories.length)} sub={`${catStats.filter(c=>c.count===0).length} vacías`}         color="coal"  icon={<IcoCats />}   />
+        <StatCard label="Destacados"       value={fmt(destacados)}        sub="en carrusel"                                                color="red"   icon={<IcoStar />}   />
+        <StatCard label="Con precio"       value={fmt(conPrecio)}         sub={`${total - conPrecio} a consultar`}                         color="green" icon={<IcoBooks />}  />
       </div>
 
       <div className="grid lg:grid-cols-2 gap-6 mb-6">
@@ -328,7 +343,7 @@ const PALETTES = ["coal","r","b","i","g","p"];
 const STATUSES = ["disponible","consultar","agotado","por_encargo"];
 
 const BookForm = ({ book, categories, onSave, onClose }) => {
-  const def = book || { title:"", author:"", category_id:"", description:"", price:"", status:"consultar", cover_palette:"coal", cover_short:"", featured:false, is_active:true };
+  const def = book || { title:"", author:"", category_id:"", description:"", price:"", status:"consultar", cover_palette:"coal", cover_short:"", featured:false, is_active:true, image_url:"" };
   const [f, setF] = React.useState({
     title:         def.title,
     author:        def.author,
@@ -340,6 +355,7 @@ const BookForm = ({ book, categories, onSave, onClose }) => {
     cover_short:   def.cover?.short   || def.cover_short   || "",
     featured:      def.featured || false,
     is_active:     def.is_active !== false,
+    image_url:     def.image_url || "",
   });
   const [saving, setSaving] = React.useState(false);
   const [err, setErr]       = React.useState("");
@@ -362,6 +378,7 @@ const BookForm = ({ book, categories, onSave, onClose }) => {
         cover_short:   f.cover_short.trim() || f.title.trim(),
         featured:      f.featured,
         is_active:     f.is_active,
+        image_url: f.image_url.trim() || null,
       };
       if (book?.id) { await window.updatePLBook(book.id, payload); }
       else          { await window.createPLBook(payload); }
@@ -390,6 +407,16 @@ const BookForm = ({ book, categories, onSave, onClose }) => {
       <Field label="Sinopsis" hint="Texto que aparece en la página de detalle del libro. Podés escribir varios párrafos.">
         <Textarea value={f.description} onChange={e=>upd("description",e.target.value)}
                   rows={6} resizable={true} placeholder="Escribí una sinopsis del libro: de qué trata, a quién va dirigido, qué temas aborda…" />
+      </Field>
+      <Field label="Imagen de portada" hint="URL de imagen JPG/PNG. Si se agrega, reemplaza la portada tipográfica.">
+        <Input value={f.image_url || ""} onChange={e=>upd("image_url",e.target.value)} placeholder="https://ejemplo.com/portada.jpg" />
+        {f.image_url && (
+          <div className="mt-2 flex items-start gap-3">
+            <img src={f.image_url} alt="Vista previa" className="h-28 w-auto object-cover border border-gray-200"
+                 onError={e => { e.target.style.display="none"; }} />
+            <div className="text-[11px] text-gray-400 mt-1">Vista previa de la portada</div>
+          </div>
+        )}
       </Field>
       <div className="grid grid-cols-2 gap-4">
         <Field label="Precio" hint="Dejar vacío = Consultar precio"><Input value={f.price} onChange={e=>upd("price",e.target.value)} placeholder="Ej: Gs. 150.000" /></Field>
@@ -427,6 +454,10 @@ const BookForm = ({ book, categories, onSave, onClose }) => {
           <input type="checkbox" checked={f.is_active} onChange={e=>upd("is_active",e.target.checked)} className="w-4 h-4 accent-[#C9A24A]" />
           <span className="text-[13px] text-gray-700">Activo (visible)</span>
         </label>
+      </div>
+      <div className="mb-4 px-4 py-3 bg-blue-50 border border-blue-200 text-blue-700 text-[11px]">
+        <strong>Columna requerida en Supabase:</strong> <code className="bg-blue-100 px-1 font-mono">ALTER TABLE pl_books ADD COLUMN image_url text;</code>
+        <span className="ml-1 opacity-70">(solo una vez)</span>
       </div>
       <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">
         <Btn variant="outline" type="button" onClick={onClose}>Cancelar</Btn>
@@ -516,9 +547,13 @@ const AdminBooks = ({ books, categories, onRefresh, onToast }) => {
             {slice.map(b => (
               <tr key={b.id} className="table-row border-b border-gray-50 last:border-0">
                 <td className="px-4 py-3">
-                  <div className="w-7 h-9 flex items-center justify-center text-[7px] text-pl-ivory leading-tight text-center"
-                       style={{ background: palBg[b.cover?.palette] || "#1c1c1c" }}>
-                    {(b.cover?.short||b.title).slice(0,6)}
+                  <div className="w-7 h-9 overflow-hidden shrink-0" style={{ background: palBg[b.cover?.palette] || "#1c1c1c" }}>
+                    {b.image_url
+                      ? <img src={b.image_url} alt="" className="w-full h-full object-cover" onError={e=>e.target.style.display="none"} />
+                      : <div className="w-full h-full flex items-center justify-center text-[6px] text-pl-ivory leading-tight text-center p-0.5">
+                          {(b.cover?.short||b.title).slice(0,6)}
+                        </div>
+                    }
                   </div>
                 </td>
                 <td className="px-4 py-3">
@@ -1080,52 +1115,95 @@ const AdminApp = () => {
   return (
     <div className="flex min-h-screen">
       {/* Sidebar */}
-      <aside className="w-[220px] shrink-0 bg-white border-r border-gray-200 flex flex-col">
-        <div className="px-5 py-5 border-b border-gray-100">
-          <div className="flex items-center gap-2.5">
+      <aside className="w-[230px] shrink-0 flex flex-col" style={{ background:"#111111" }}>
+        {/* Logo */}
+        <div className="px-5 py-5" style={{ borderBottom:"1px solid rgba(255,255,255,0.07)" }}>
+          <div className="flex items-center gap-3">
             <img src="logosinfondo2.png" alt="" className="w-9 h-9 object-contain" />
             <div>
-              <div className="font-display text-pl-coal text-[16px] leading-tight">Psicología<br/>Libros</div>
-              <div className="text-[9px] tracking-[0.2em] uppercase text-pl-gold-dk">Admin</div>
+              <div className="font-display text-white text-[15px] leading-tight">Psicología<br/>Libros</div>
+              <div className="text-[8px] tracking-[0.3em] uppercase mt-0.5" style={{ color:"#C9A24A" }}>Panel Admin</div>
             </div>
           </div>
         </div>
 
+        {/* Nav */}
         <nav className="flex-1 px-3 py-4 space-y-0.5">
           {NAV.map(n => (
             <button key={n.id} onClick={()=>setTab(n.id)}
-                    className={`sidebar-link w-full text-left ${tab===n.id?"active":""}`}>
-              {n.icon} {n.label}
+                    className="w-full flex items-center gap-3 px-3 py-2.5 text-[13px] font-medium transition-all text-left rounded-sm"
+                    style={tab===n.id
+                      ? { background:"rgba(201,162,74,0.14)", color:"#C9A24A" }
+                      : { color:"rgba(255,255,255,0.45)" }}
+                    onMouseEnter={e => { if(tab!==n.id) e.currentTarget.style.background="rgba(255,255,255,0.05)"; e.currentTarget.style.color="rgba(255,255,255,0.85)"; }}
+                    onMouseLeave={e => { if(tab!==n.id) { e.currentTarget.style.background=""; e.currentTarget.style.color="rgba(255,255,255,0.45)"; } }}>
+              <span style={tab===n.id ? { color:"#C9A24A" } : { color:"rgba(255,255,255,0.25)" }}>{n.icon}</span>
+              {n.label}
+              {tab===n.id && <span className="ml-auto w-1 h-4 rounded-full" style={{ background:"#C9A24A" }} />}
             </button>
           ))}
         </nav>
 
-        <div className="px-3 py-4 border-t border-gray-100 space-y-1">
-          <button onClick={loadAll} className="sidebar-link w-full text-left">
+        {/* Bottom actions */}
+        <div className="px-3 py-4 space-y-0.5" style={{ borderTop:"1px solid rgba(255,255,255,0.07)" }}>
+          <button onClick={loadAll}
+                  className="w-full flex items-center gap-3 px-3 py-2.5 text-[12px] transition-all text-left rounded-sm"
+                  style={{ color:"rgba(255,255,255,0.35)" }}
+                  onMouseEnter={e=>{ e.currentTarget.style.background="rgba(255,255,255,0.05)"; e.currentTarget.style.color="rgba(255,255,255,0.7)"; }}
+                  onMouseLeave={e=>{ e.currentTarget.style.background=""; e.currentTarget.style.color="rgba(255,255,255,0.35)"; }}>
             <IcoRefresh /> Actualizar datos
           </button>
-          <a href="index.html" className="sidebar-link">
+          <a href="index.html" target="_blank"
+             className="flex items-center gap-3 px-3 py-2.5 text-[12px] transition-all rounded-sm"
+             style={{ color:"rgba(255,255,255,0.35)" }}
+             onMouseEnter={e=>{ e.currentTarget.style.background="rgba(255,255,255,0.05)"; e.currentTarget.style.color="rgba(255,255,255,0.7)"; }}
+             onMouseLeave={e=>{ e.currentTarget.style.background=""; e.currentTarget.style.color="rgba(255,255,255,0.35)"; }}>
             <IcoEye /> Ver sitio
           </a>
-          <button onClick={logout} className="sidebar-link w-full text-left text-red-400 hover:text-red-600 hover:bg-red-50">
+          <button onClick={logout}
+                  className="w-full flex items-center gap-3 px-3 py-2.5 text-[12px] transition-all text-left rounded-sm"
+                  style={{ color:"rgba(239,68,68,0.5)" }}
+                  onMouseEnter={e=>{ e.currentTarget.style.background="rgba(239,68,68,0.08)"; e.currentTarget.style.color="rgba(239,68,68,0.85)"; }}
+                  onMouseLeave={e=>{ e.currentTarget.style.background=""; e.currentTarget.style.color="rgba(239,68,68,0.5)"; }}>
             <IcoLogout /> Cerrar sesión
           </button>
         </div>
       </aside>
 
       {/* Main */}
-      <main className="flex-1 min-w-0 p-8 overflow-y-auto">
-        {loading ? <Spinner /> : (
-          <>
-            {tab==="dash"       && <AdminDashboard  books={books} categories={categories} />}
-            {tab==="books"      && <AdminBooks       books={books} categories={categories} onRefresh={loadAll} onToast={showToast} />}
-            {tab==="destacados" && <AdminDestacados  books={books} onRefresh={loadAll} onToast={showToast} />}
-            {tab==="vitrina"    && <AdminVitrine     books={books} onRefresh={loadAll} onToast={showToast} />}
-            {tab==="cats"       && <AdminCategories  categories={categories} books={books} onRefresh={loadAll} onToast={showToast} />}
-            {tab==="faqs"       && <AdminFAQs        faqs={faqs} onRefresh={loadAll} onToast={showToast} />}
-          </>
-        )}
-      </main>
+      <div className="flex-1 min-w-0 flex flex-col" style={{ background:"#F3F4F6" }}>
+        {/* Topbar */}
+        <div className="h-14 bg-white border-b border-gray-200 flex items-center justify-between px-8 shrink-0 shadow-sm">
+          <div className="flex items-center gap-3">
+            <span className="text-[10px] tracking-[0.25em] uppercase text-gray-400 font-medium">
+              {NAV.find(n=>n.id===tab)?.label || "Panel"}
+            </span>
+          </div>
+          <div className="flex items-center gap-3">
+            <button onClick={loadAll} className="p-2 text-gray-400 hover:text-gray-700 transition-colors" title="Actualizar">
+              <IcoRefresh />
+            </button>
+            <div className="w-px h-5 bg-gray-200" />
+            <div className="flex items-center gap-2">
+              <div className="w-7 h-7 bg-pl-coal text-white text-[10px] font-bold flex items-center justify-center tracking-wide">A</div>
+              <span className="text-[12px] text-gray-500 font-medium">admin</span>
+            </div>
+          </div>
+        </div>
+        {/* Content */}
+        <main className="flex-1 overflow-y-auto p-8">
+          {loading ? <Spinner /> : (
+            <>
+              {tab==="dash"       && <AdminDashboard  books={books} categories={categories} />}
+              {tab==="books"      && <AdminBooks       books={books} categories={categories} onRefresh={loadAll} onToast={showToast} />}
+              {tab==="destacados" && <AdminDestacados  books={books} onRefresh={loadAll} onToast={showToast} />}
+              {tab==="vitrina"    && <AdminVitrine     books={books} onRefresh={loadAll} onToast={showToast} />}
+              {tab==="cats"       && <AdminCategories  categories={categories} books={books} onRefresh={loadAll} onToast={showToast} />}
+              {tab==="faqs"       && <AdminFAQs        faqs={faqs} onRefresh={loadAll} onToast={showToast} />}
+            </>
+          )}
+        </main>
+      </div>
 
       {toast && <Toast key={toast.key} msg={toast.msg} type={toast.type} onDone={()=>setToast(null)} />}
     </div>

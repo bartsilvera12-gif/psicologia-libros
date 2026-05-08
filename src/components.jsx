@@ -57,6 +57,14 @@ const BtnGhost = ({ href, onClick, children, className = "", ...rest }) => {
 
 // === Book cover (typographic placeholder, editorial) ===
 const BookCover = ({ book, large = false }) => {
+  if (book.image_url) {
+    return (
+      <div className={`book-cover w-full ${large ? "aspect-[2/3]" : "aspect-[3/4]"} overflow-hidden bg-pl-coal/5`}>
+        <img src={book.image_url} alt={book.title}
+             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+      </div>
+    );
+  }
   const palettes = {
     coal:  "typo-cover",
     red:   "typo-cover r",
@@ -70,20 +78,17 @@ const BookCover = ({ book, large = false }) => {
   return (
     <div className={`${cls} book-cover w-full ${large ? "aspect-[2/3]" : "aspect-[3/4]"}`}>
       <div className="frame" />
-      {/* Top mark */}
       <div className="absolute top-5 left-0 right-0 flex flex-col items-center gap-1.5">
         <div className={`w-6 h-px ${isLight ? "bg-pl-gold-dk" : "bg-pl-gold"}`} />
         <div className={`text-[9px] tracking-[0.3em] uppercase ${isLight ? "text-pl-gold-dk" : "text-pl-gold"}`}>
           Psicología · Libros
         </div>
       </div>
-      {/* Title */}
       <div className="absolute inset-0 flex items-center justify-center px-6">
         <div className="font-display text-center leading-[1.05] tracking-tight whitespace-pre-line text-[clamp(20px,3.4vw,34px)]">
           {(book.cover.short || "").replace(/\\n/g, "\n")}
         </div>
       </div>
-      {/* Bottom author */}
       <div className="absolute bottom-5 left-0 right-0 flex flex-col items-center gap-1.5">
         <div className={`text-[9px] tracking-[0.25em] uppercase opacity-80 ${isLight ? "text-[#5b4a22]" : ""}`}>
           {book.author}
