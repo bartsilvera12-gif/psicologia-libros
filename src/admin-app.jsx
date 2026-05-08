@@ -39,28 +39,34 @@ const Toast = ({ msg, type = "ok", onDone }) => {
   );
 };
 
-const Modal = ({ title, onClose, children }) => (
+const Modal = ({ title, onClose, children, wide = false }) => (
   <div className="modal-backdrop" onClick={e => e.target === e.currentTarget && onClose()}>
-    <div className="modal fade-in">
-      <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
-        <h3 className="font-display text-pl-coal text-[20px]">{title}</h3>
-        <button onClick={onClose} className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-700 transition-colors"><IcoX /></button>
+    <div className={`modal fade-in${wide ? " modal-wide" : ""}`}>
+      <div className="flex items-center justify-between px-6 py-4" style={{ background:"#111111", borderBottom:"2px solid #C9A24A" }}>
+        <h3 className="font-display text-white text-[22px] tracking-tight">{title}</h3>
+        <button onClick={onClose}
+                className="w-8 h-8 flex items-center justify-center transition-colors"
+                style={{ color:"rgba(255,255,255,0.4)" }}
+                onMouseEnter={e=>e.currentTarget.style.color="white"}
+                onMouseLeave={e=>e.currentTarget.style.color="rgba(255,255,255,0.4)"}>
+          <IcoX />
+        </button>
       </div>
-      <div className="px-6 py-5">{children}</div>
+      <div className="px-6 py-6">{children}</div>
     </div>
   </div>
 );
 
 const Field = ({ label, children, hint }) => (
   <div className="mb-4">
-    <label className="block text-[11px] tracking-[0.18em] uppercase text-gray-500 font-medium mb-1.5">{label}</label>
+    <label className="block text-[10px] tracking-[0.2em] uppercase font-semibold mb-1.5" style={{ color:"#A4842F" }}>{label}</label>
     {children}
-    {hint && <p className="text-[11px] text-gray-400 mt-1">{hint}</p>}
+    {hint && <p className="text-[11px] mt-1.5 leading-relaxed" style={{ color:"#8a7a65" }}>{hint}</p>}
   </div>
 );
 
 const Input = (props) => (
-  <input {...props} className={`w-full border border-gray-200 px-3 py-2.5 text-[13px] bg-white focus:border-pl-gold transition-colors ${props.className || ""}`} />
+  <input {...props} className={`w-full border border-[#DDD0B6] px-3 py-2.5 text-[13px] bg-white focus:border-pl-gold transition-colors ${props.className || ""}`} />
 );
 
 /* AdminCustomSelect — dropdown estilizado para el panel admin */
@@ -83,7 +89,7 @@ const AdminCustomSelect = ({ value, onChange, options = [], className = "", disa
         type="button"
         disabled={disabled}
         onClick={() => !disabled && setOpen(o => !o)}
-        className={`w-full flex items-center justify-between gap-2 border border-gray-200 px-3 py-2.5 text-[13px] bg-white transition-colors text-left focus:outline-none focus:border-pl-gold
+        className={`w-full flex items-center justify-between gap-2 border border-[#DDD0B6] px-3 py-2.5 text-[13px] bg-white transition-colors text-left focus:outline-none focus:border-pl-gold
           ${disabled ? "opacity-60 cursor-not-allowed" : "cursor-pointer hover:border-pl-gold"}`}>
         <span className="flex items-center gap-2 truncate min-w-0">
           {selected?.dot && <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ background: selected.dot }} />}
@@ -97,7 +103,7 @@ const AdminCustomSelect = ({ value, onChange, options = [], className = "", disa
         </svg>
       </button>
       {open && (
-        <div className="absolute left-0 right-0 top-full bg-white border border-gray-200 border-t-0 shadow-card-hv overflow-y-auto" style={{ zIndex:500, maxHeight:256 }}>
+        <div className="absolute left-0 right-0 top-full bg-white border border-[#DDD0B6] border-t-0 shadow-card-hv overflow-y-auto" style={{ zIndex:500, maxHeight:256 }}>
           {options.map(opt => {
             const isSelected = String(opt.value) === String(value);
             return (
@@ -126,7 +132,7 @@ const AdminCustomSelect = ({ value, onChange, options = [], className = "", disa
 };
 
 const Textarea = ({ resizable = false, ...props }) => (
-  <textarea {...props} rows={props.rows || 3} className={`w-full border border-gray-200 px-3 py-2.5 text-[13px] bg-white focus:border-pl-gold transition-colors leading-relaxed ${resizable ? "resize-y" : "resize-none"} ${props.className || ""}`} />
+  <textarea {...props} rows={props.rows || 3} className={`w-full border border-[#DDD0B6] px-3 py-2.5 text-[13px] bg-white focus:border-pl-gold transition-colors leading-relaxed ${resizable ? "resize-y" : "resize-none"} ${props.className || ""}`} />
 );
 
 const Btn = ({ children, variant = "primary", size = "md", ...props }) => {
@@ -178,7 +184,7 @@ const AdminLogin = ({ onLogin }) => {
           <div className="font-display text-pl-coal text-[28px]">Panel Admin</div>
           <div className="text-[11px] tracking-[0.22em] uppercase text-pl-gold-dk mt-1">Psicología Libros</div>
         </div>
-        <form onSubmit={submit} className="bg-white border border-gray-200 p-8 shadow-card">
+        <form onSubmit={submit} className="bg-white border border-[#E0D5C0] p-8 shadow-card">
           {err && <div className="mb-5 px-4 py-3 bg-red-50 border border-red-200 text-red-700 text-[12px]">{err}</div>}
 
           <div className="mb-4">
@@ -224,7 +230,7 @@ const StatCard = ({ label, value, sub, color = "gold", icon }) => {
   };
   const s = styles[color] || styles.gold;
   return (
-    <div className="bg-white border border-gray-200 p-5 fade-in" style={{ borderLeftWidth:3, borderLeftColor:s.accent }}>
+    <div className="bg-white p-5 fade-in" style={{ border:`1px solid #E0D5C0`, borderLeftWidth:3, borderLeftColor:s.accent }}>
       <div className="flex items-start justify-between gap-2">
         <div className="flex-1 min-w-0">
           <div className="text-[10px] tracking-[0.22em] uppercase font-medium mb-2" style={{ color: s.text }}>{label}</div>
@@ -276,7 +282,7 @@ const AdminDashboard = ({ books, categories }) => {
 
       <div className="grid lg:grid-cols-2 gap-6 mb-6">
         {/* Distribución por categoría */}
-        <div className="bg-white border border-gray-200 p-6">
+        <div className="bg-white border border-[#E0D5C0] p-6">
           <div className="text-[11px] tracking-[0.2em] uppercase text-gray-400 mb-5 font-medium">Libros por categoría</div>
           <div className="space-y-3">
             {catStats.map(cat => (
@@ -294,11 +300,11 @@ const AdminDashboard = ({ books, categories }) => {
         </div>
 
         {/* Libros recientes */}
-        <div className="bg-white border border-gray-200 p-6">
+        <div className="bg-white border border-[#E0D5C0] p-6">
           <div className="text-[11px] tracking-[0.2em] uppercase text-gray-400 mb-5 font-medium">Libros recientes</div>
           <div className="space-y-2">
             {recientes.map(b => (
-              <div key={b.id} className="flex items-center gap-3 py-2 border-b border-gray-50 last:border-0">
+              <div key={b.id} className="flex items-center gap-3 py-2 border-b border-[#EDE4D0] last:border-0">
                 <div className="w-7 h-9 shrink-0 flex items-center justify-center text-[8px] text-pl-ivory font-medium leading-tight text-center"
                      style={{ background: palettes[b.cover?.palette] || "#1c1c1c" }}>
                   {b.cover?.short?.slice(0,4) || b.title?.slice(0,4)}
@@ -318,7 +324,7 @@ const AdminDashboard = ({ books, categories }) => {
       </div>
 
       {/* Resumen de estado */}
-      <div className="bg-white border border-gray-200 p-6">
+      <div className="bg-white border border-[#E0D5C0] p-6">
         <div className="text-[11px] tracking-[0.2em] uppercase text-gray-400 mb-5 font-medium">Distribución de estado</div>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {[
@@ -327,7 +333,7 @@ const AdminDashboard = ({ books, categories }) => {
             { label: "Agotado",         count: books.filter(b=>b.status==="agotado").length,         cls:"badge-red"    },
             { label: "Por encargo",     count: books.filter(b=>b.status==="por_encargo").length,     cls:"badge-gray"   },
           ].map(s => (
-            <div key={s.label} className="flex items-center gap-3 p-3 bg-gray-50">
+            <div key={s.label} className="flex items-center gap-3 p-3 bg-[#FAF6EE]">
               <span className={`badge ${s.cls}`}>{s.label}</span>
               <span className="font-display text-pl-coal text-[22px] leading-none">{s.count}</span>
             </div>
@@ -455,11 +461,7 @@ const BookForm = ({ book, categories, onSave, onClose }) => {
           <span className="text-[13px] text-gray-700">Activo (visible)</span>
         </label>
       </div>
-      <div className="mb-4 px-4 py-3 bg-blue-50 border border-blue-200 text-blue-700 text-[11px]">
-        <strong>Columna requerida en Supabase:</strong> <code className="bg-blue-100 px-1 font-mono">ALTER TABLE pl_books ADD COLUMN image_url text;</code>
-        <span className="ml-1 opacity-70">(solo una vez)</span>
-      </div>
-      <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">
+      <div className="flex justify-end gap-3 pt-4 border-t border-[#E0D0B0]">
         <Btn variant="outline" type="button" onClick={onClose}>Cancelar</Btn>
         <Btn variant="primary" type="submit" disabled={saving}>
           {saving ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : (book ? "Guardar cambios" : "Agregar libro")}
@@ -512,7 +514,7 @@ const AdminBooks = ({ books, categories, onRefresh, onToast }) => {
 
       {/* Filtros */}
       <div className="flex items-center gap-3 mb-4 flex-wrap">
-        <div className="flex items-center gap-2 bg-white border border-gray-200 px-3 py-2">
+        <div className="flex items-center gap-2 bg-white border border-[#E0D5C0] px-3 py-2">
           <IcoSearch />
           <input value={search} onChange={e=>{setSearch(e.target.value);setPage(1);}} placeholder="Buscar título, autor…"
                  className="text-[13px] outline-none w-[220px]" />
@@ -531,10 +533,10 @@ const AdminBooks = ({ books, categories, onRefresh, onToast }) => {
       </div>
 
       {/* Tabla */}
-      <div className="bg-white border border-gray-200 overflow-x-auto">
+      <div className="bg-white border border-[#E0D5C0] overflow-x-auto">
         <table className="w-full text-[13px]">
           <thead>
-            <tr className="border-b border-gray-100 bg-gray-50">
+            <tr className="border-b border-[#EDE4D0] bg-[#FAF6EE]">
               <th className="text-left px-4 py-3 text-[10px] tracking-[0.18em] uppercase text-gray-400 font-medium w-8">#</th>
               <th className="text-left px-4 py-3 text-[10px] tracking-[0.18em] uppercase text-gray-400 font-medium">Libro</th>
               <th className="text-left px-4 py-3 text-[10px] tracking-[0.18em] uppercase text-gray-400 font-medium">Categoría</th>
@@ -545,7 +547,7 @@ const AdminBooks = ({ books, categories, onRefresh, onToast }) => {
           </thead>
           <tbody>
             {slice.map(b => (
-              <tr key={b.id} className="table-row border-b border-gray-50 last:border-0">
+              <tr key={b.id} className="table-row border-b border-[#EDE4D0] last:border-0">
                 <td className="px-4 py-3">
                   <div className="w-7 h-9 overflow-hidden shrink-0" style={{ background: palBg[b.cover?.palette] || "#1c1c1c" }}>
                     {b.image_url
@@ -605,7 +607,7 @@ const AdminBooks = ({ books, categories, onRefresh, onToast }) => {
 
       {/* Modal agregar/editar */}
       {modal && (
-        <Modal title={modal==="add" ? "Agregar libro" : "Editar libro"} onClose={()=>setModal(null)}>
+        <Modal title={modal==="add" ? "Agregar libro" : "Editar libro"} onClose={()=>setModal(null)} wide={true}>
           <BookForm book={modal==="add" ? null : modal} categories={categories}
                     onSave={()=>{ setModal(null); onRefresh(); onToast(modal==="add"?"Libro agregado":"Cambios guardados"); }}
                     onClose={()=>setModal(null)} />
@@ -670,7 +672,7 @@ const CatForm = ({ cat, onSave, onClose }) => {
         </Field>
         <Field label="Orden"><Input type="number" value={f.sort_order} onChange={e=>upd("sort_order",e.target.value)} /></Field>
       </div>
-      <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">
+      <div className="flex justify-end gap-3 pt-4 border-t border-[#E0D0B0]">
         <Btn variant="outline" type="button" onClick={onClose}>Cancelar</Btn>
         <Btn variant="primary" type="submit" disabled={saving}>
           {saving ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : (isEdit?"Guardar":"Crear")}
@@ -702,10 +704,10 @@ const AdminCategories = ({ categories, books, onRefresh, onToast }) => {
         <Btn variant="primary" onClick={()=>setModal("add")}><IcoPlus /> Nueva categoría</Btn>
       </div>
 
-      <div className="bg-white border border-gray-200 overflow-x-auto">
+      <div className="bg-white border border-[#E0D5C0] overflow-x-auto">
         <table className="w-full text-[13px]">
           <thead>
-            <tr className="border-b border-gray-100 bg-gray-50">
+            <tr className="border-b border-[#EDE4D0] bg-[#FAF6EE]">
               <th className="text-left px-5 py-3 text-[10px] tracking-[0.18em] uppercase text-gray-400 font-medium">ID</th>
               <th className="text-left px-5 py-3 text-[10px] tracking-[0.18em] uppercase text-gray-400 font-medium">Nombre</th>
               <th className="text-left px-5 py-3 text-[10px] tracking-[0.18em] uppercase text-gray-400 font-medium">Descripción</th>
@@ -716,7 +718,7 @@ const AdminCategories = ({ categories, books, onRefresh, onToast }) => {
           </thead>
           <tbody>
             {categories.map(c => (
-              <tr key={c.id} className="table-row border-b border-gray-50 last:border-0">
+              <tr key={c.id} className="table-row border-b border-[#EDE4D0] last:border-0">
                 <td className="px-5 py-3 text-gray-400 font-mono text-[11px]">{c.id}</td>
                 <td className="px-5 py-3 text-pl-coal font-medium">{c.name}</td>
                 <td className="px-5 py-3 text-gray-500 max-w-[200px] truncate">{c.desc}</td>
@@ -781,7 +783,7 @@ const FaqForm = ({ faq, onSave, onClose }) => {
       <Field label="Pregunta"><Input value={f.question} onChange={e=>upd("question",e.target.value)} placeholder="¿Cuál es la pregunta?" /></Field>
       <Field label="Respuesta"><Textarea value={f.answer} onChange={e=>upd("answer",e.target.value)} rows={4} placeholder="Respuesta completa…" /></Field>
       <Field label="Orden"><Input type="number" value={f.sort_order} onChange={e=>upd("sort_order",e.target.value)} /></Field>
-      <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">
+      <div className="flex justify-end gap-3 pt-4 border-t border-[#E0D0B0]">
         <Btn variant="outline" type="button" onClick={onClose}>Cancelar</Btn>
         <Btn variant="primary" type="submit" disabled={saving}>
           {saving ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : (faq?"Guardar":"Crear")}
@@ -812,7 +814,7 @@ const AdminFAQs = ({ faqs, onRefresh, onToast }) => {
       </div>
 
       {faqs.length === 0 ? (
-        <div className="bg-white border border-gray-200 px-6 py-16 text-center">
+        <div className="bg-white border border-[#E0D5C0] px-6 py-16 text-center">
           <div className="text-gray-300 text-[40px] mb-3">?</div>
           <div className="text-[13px] text-gray-400">No hay preguntas frecuentes cargadas</div>
           <button onClick={()=>setModal("add")} className="mt-4 text-[12px] text-pl-gold-dk hover:underline">Agregar la primera</button>
@@ -820,7 +822,7 @@ const AdminFAQs = ({ faqs, onRefresh, onToast }) => {
       ) : (
         <div className="space-y-3">
           {faqs.map((f, i) => (
-            <div key={f.id||i} className="bg-white border border-gray-200 hover:border-gray-300 transition-colors">
+            <div key={f.id||i} className="bg-white border border-[#E0D5C0] hover:border-gray-300 transition-colors">
               <div className="flex items-start gap-4 px-6 py-5">
                 {/* Número */}
                 <div className="shrink-0 w-7 h-7 border border-pl-gold/40 flex items-center justify-center text-[11px] font-medium text-pl-gold-dk mt-0.5">
@@ -937,7 +939,7 @@ const AdminVitrine = ({ books, onRefresh, onToast }) => {
           const pal = book?.cover?.palette || "coal";
           const short = (book?.cover?.short || "").replace(/\\n/g,"\n");
           return (
-            <div key={i} className="bg-white border border-gray-200 p-4">
+            <div key={i} className="bg-white border border-[#E0D5C0] p-4">
               <div className="text-[10px] tracking-[0.2em] uppercase text-gray-400 mb-3 font-medium">Slot {i+1}{i===2?" (centro)":""}</div>
               <div className="flex justify-center mb-4">
                 <div style={{ width:72, height:108, background: book ? (VITRINE_PAL_BG[pal]||"#1c1c1c") : "#f3f4f6", position:"relative", flexShrink:0 }}>
@@ -998,13 +1000,13 @@ const AdminDestacados = ({ books, onRefresh, onToast }) => {
       </div>
 
       {featured.length > 0 && (
-        <div className="bg-white border border-gray-200 p-5 mb-6">
+        <div className="bg-white border border-[#E0D5C0] p-5 mb-6">
           <div className="text-[11px] tracking-[0.2em] uppercase text-gray-400 mb-4 font-medium">Actualmente en el carrusel ({featured.length})</div>
           <div className="flex flex-wrap gap-3">
             {featured.map(b => {
               const pal = b.cover?.palette || "coal";
               return (
-                <div key={b.id} className="flex items-center gap-2 bg-gray-50 border border-gray-200 pr-3 py-2 pl-2">
+                <div key={b.id} className="flex items-center gap-2 bg-[#FAF6EE] border border-[#E0D5C0] pr-3 py-2 pl-2">
                   <div style={{ width:32, height:46, background:palBg[pal], position:"relative", flexShrink:0 }}>
                     <div style={{ position:"absolute", inset:4, border:"1px solid rgba(201,162,74,0.4)" }} />
                   </div>
@@ -1023,10 +1025,10 @@ const AdminDestacados = ({ books, onRefresh, onToast }) => {
         </div>
       )}
 
-      <div className="bg-white border border-gray-200 overflow-x-auto">
+      <div className="bg-white border border-[#E0D5C0] overflow-x-auto">
         <table className="w-full text-[13px]">
           <thead>
-            <tr className="border-b border-gray-100 bg-gray-50">
+            <tr className="border-b border-[#EDE4D0] bg-[#FAF6EE]">
               <th className="text-left px-4 py-3 text-[10px] tracking-[0.18em] uppercase text-gray-400 font-medium w-8"></th>
               <th className="text-left px-4 py-3 text-[10px] tracking-[0.18em] uppercase text-gray-400 font-medium">Libro</th>
               <th className="text-left px-4 py-3 text-[10px] tracking-[0.18em] uppercase text-gray-400 font-medium">Autor</th>
@@ -1036,7 +1038,7 @@ const AdminDestacados = ({ books, onRefresh, onToast }) => {
           </thead>
           <tbody>
             {books.filter(b => b.is_active !== false).map(b => (
-              <tr key={b.id} className="table-row border-b border-gray-50 last:border-0">
+              <tr key={b.id} className="table-row border-b border-[#EDE4D0] last:border-0">
                 <td className="px-4 py-2.5">
                   <div style={{ width:24, height:36, background:palBg[b.cover?.palette||"coal"], flexShrink:0 }} />
                 </td>
@@ -1171,9 +1173,9 @@ const AdminApp = () => {
       </aside>
 
       {/* Main */}
-      <div className="flex-1 min-w-0 flex flex-col" style={{ background:"#F3F4F6" }}>
+      <div className="flex-1 min-w-0 flex flex-col" style={{ background:"#EFE6D4" }}>
         {/* Topbar */}
-        <div className="h-14 bg-white border-b border-gray-200 flex items-center justify-between px-8 shrink-0 shadow-sm">
+        <div className="h-14 bg-white border-b border-[#E0D5C0] flex items-center justify-between px-8 shrink-0" style={{ boxShadow:"0 1px 0 rgba(17,17,17,0.04), 0 4px 16px -8px rgba(17,17,17,0.08)" }}>
           <div className="flex items-center gap-3">
             <span className="text-[10px] tracking-[0.25em] uppercase text-gray-400 font-medium">
               {NAV.find(n=>n.id===tab)?.label || "Panel"}
@@ -1183,7 +1185,7 @@ const AdminApp = () => {
             <button onClick={loadAll} className="p-2 text-gray-400 hover:text-gray-700 transition-colors" title="Actualizar">
               <IcoRefresh />
             </button>
-            <div className="w-px h-5 bg-gray-200" />
+            <div className="w-px h-5 bg-[#E0D5C0]" />
             <div className="flex items-center gap-2">
               <div className="w-7 h-7 bg-pl-coal text-white text-[10px] font-bold flex items-center justify-center tracking-wide">A</div>
               <span className="text-[12px] text-gray-500 font-medium">admin</span>

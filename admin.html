@@ -39,11 +39,11 @@
     }
   </script>
   <style>
-    body { background:#F3F4F6; font-family:'Inter',sans-serif; -webkit-font-smoothing:antialiased; }
+    body { background:#EFE6D4; font-family:'Inter',sans-serif; -webkit-font-smoothing:antialiased; }
     .font-display { font-family:'Cormorant Garamond',Georgia,serif; }
     ::-webkit-scrollbar { width:6px; height:6px; }
-    ::-webkit-scrollbar-track { background:#f1f1f1; }
-    ::-webkit-scrollbar-thumb { background:#d1d5db; border-radius:3px; }
+    ::-webkit-scrollbar-track { background:#EFE6D4; }
+    ::-webkit-scrollbar-thumb { background:#D4C5A8; border-radius:3px; }
     ::-webkit-scrollbar-thumb:hover { background:#C9A24A; }
     @keyframes fadeIn { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
     .fade-in { animation: fadeIn 0.25s ease both; }
@@ -52,16 +52,17 @@
     .sidebar-link:hover { background:rgba(201,162,74,0.08); color:#111; }
     .sidebar-link.active { background:rgba(201,162,74,0.15); color:#111; font-weight:500; }
     .sidebar-link.active svg { color:#A4842F; }
-    .stat-card { background:#fff; border:1px solid #e5e7eb; padding:20px 24px; }
-    .bar-fill { height:8px; background:#C9A24A; border-radius:2px; transition:width 0.6s ease; }
+    .stat-card { background:#fff; border:1px solid #E0D5C0; padding:20px 24px; }
+    .bar-fill { height:8px; background:linear-gradient(90deg,#C9A24A,#A4842F); border-radius:2px; transition:width 0.6s ease; }
     .badge { display:inline-flex; align-items:center; padding:2px 8px; font-size:11px; font-weight:500; border-radius:2px; }
     .badge-green  { background:#dcfce7; color:#166534; }
     .badge-red    { background:#fee2e2; color:#991b1b; }
     .badge-yellow { background:#fef9c3; color:#854d0e; }
     .badge-gray   { background:#f3f4f6; color:#374151; }
-    .table-row:hover { background:#fafafa; }
-    .modal-backdrop { position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:100; display:flex; align-items:center; justify-content:center; padding:24px; }
-    .modal { background:#fff; width:100%; max-width:560px; max-height:90vh; overflow-y:auto; }
+    .table-row:hover { background:#FAF6EE; }
+    .modal-backdrop { position:fixed; inset:0; background:rgba(17,17,17,0.55); backdrop-filter:blur(3px); z-index:100; display:flex; align-items:center; justify-content:center; padding:24px; }
+    .modal { background:#F8F4EA; width:100%; max-width:580px; max-height:90vh; overflow-y:auto; box-shadow:0 24px 60px rgba(17,17,17,0.3); }
+    .modal-wide { max-width:720px; }
     button:focus-visible { outline:2px solid #C9A24A; outline-offset:2px; }
   </style>
 
