@@ -97,13 +97,16 @@ const BookCover = ({ book, large = false }) => {
 // === Status pill ===
 const StatusPill = ({ status }) => {
   const map = {
-    disponible: { label: "Disponible", dot: "bg-emerald-700", text: "text-emerald-800", bg: "bg-emerald-700/5", border: "border-emerald-800/15" },
-    consultar:  { label: "Consultar disponibilidad", dot: "bg-pl-gold-dk", text: "text-pl-gold-dk", bg: "bg-pl-gold/10", border: "border-pl-gold/30" },
+    disponible:  { label: "Disponible",  color: "#3d7a4a" },
+    consultar:   { label: "Consultar",   color: "#A4842F" },
+    agotado:     { label: "Agotado",     color: "#8B1A1A" },
+    por_encargo: { label: "Por encargo", color: "#4A4A4A" },
   };
   const s = map[status] || map.consultar;
   return (
-    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 text-[11px] tracking-wide ${s.text} ${s.bg} border ${s.border}`}>
-      <span className={`w-1.5 h-1.5 rounded-full ${s.dot}`} />
+    <span className="inline-flex items-center gap-2 text-[10px] tracking-[0.22em] uppercase font-medium"
+          style={{ color: s.color }}>
+      <span style={{ display:"inline-block", width:16, height:1, background: s.color, opacity:0.6 }} />
       {s.label}
     </span>
   );
