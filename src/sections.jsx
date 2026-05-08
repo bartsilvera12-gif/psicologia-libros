@@ -385,15 +385,15 @@ const Hero = () => (
             {/* Stats — EB Garamond (coherente con el resto del sitio) */}
             <div className="relative z-10 mt-8 pt-6 border-t border-pl-coal/8 grid grid-cols-3 text-center gap-1">
               <div className="min-w-0 px-1">
-                <div className="font-display tabular-nums font-semibold text-pl-coal text-[26px] sm:text-[28px] tracking-tight leading-none">+1.000</div>
+                <div className="font-display tabular-nums font-normal text-pl-coal text-[26px] sm:text-[28px] tracking-tight leading-none">+1.000</div>
                 <div className="font-display text-[10px] tracking-[0.22em] uppercase text-pl-gray mt-1.5">Títulos</div>
               </div>
               <div className="border-x border-pl-coal/8 min-w-0 px-1">
-                <div className="font-display tabular-nums font-semibold text-pl-coal text-[26px] sm:text-[28px] tracking-tight leading-none">12</div>
+                <div className="font-display tabular-nums font-normal text-pl-coal text-[26px] sm:text-[28px] tracking-tight leading-none">12</div>
                 <div className="font-display text-[10px] tracking-[0.22em] uppercase text-pl-gray mt-1.5">Categorías</div>
               </div>
               <div className="min-w-0 px-1">
-                <div className="font-display tabular-nums font-semibold text-pl-coal text-[26px] sm:text-[28px] tracking-tight leading-none">100%</div>
+                <div className="font-display tabular-nums font-normal text-pl-coal text-[26px] sm:text-[28px] tracking-tight leading-none">100%</div>
                 <div className="font-display text-[10px] tracking-[0.22em] uppercase text-pl-gray mt-1.5">Especializado</div>
               </div>
             </div>
