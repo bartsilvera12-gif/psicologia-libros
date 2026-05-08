@@ -769,7 +769,7 @@ const About = () => (
         <div className="bg-pl-white p-8 shadow-card relative">
           <div className="relative overflow-hidden aspect-[3/4] border border-pl-coal/[0.07]">
             <img
-              src="https://images.unsplash.com/photo-1526243741027-4448ffdaa074?auto=format&fit=crop&w=960&q=85"
+              src="images/nosotros-libreria.jpg"
               alt="Estanterías de libros en una librería"
               className="h-full w-full object-cover object-center"
               loading="lazy"
