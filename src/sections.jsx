@@ -400,11 +400,11 @@ const Hero = () => (
           </div>
 
           {/* Quote panel superpuesto */}
-          <div className="absolute -bottom-5 -left-5 bg-pl-coal text-pl-ivory p-5 max-w-[190px] shadow-card-hv hidden lg:block"
+          <div className="absolute -bottom-5 -left-5 bg-pl-coal text-pl-ivory p-7 max-w-[240px] shadow-card-hv hidden lg:block"
                style={{ animation: "fadeSlideIn 1.1s 0.7s both" }}>
-            <span className="font-display text-pl-gold text-[28px] leading-none">"</span>
-            <p className="font-display italic text-[13px] leading-snug mt-0.5">Sabiduría en cada página</p>
-            <div className="mt-3 text-[9px] tracking-[0.28em] uppercase text-pl-gold">Psicología Libros</div>
+            <span className="font-display text-pl-gold text-[36px] leading-none">"</span>
+            <p className="font-display italic text-[16px] leading-snug mt-1">Sabiduría en cada página</p>
+            <div className="mt-4 text-[10px] tracking-[0.28em] uppercase text-pl-gold">Psicología Libros</div>
           </div>
         </div>
 
