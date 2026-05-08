@@ -905,26 +905,41 @@ const AdminDestacados = ({ books, onRefresh, onToast }) => {
         </div>
       )}
 
-      <div className="bg-white border border-gray-200">
-        <div className="px-5 py-3 border-b border-gray-100 bg-gray-50 text-[10px] tracking-[0.18em] uppercase text-gray-400 font-medium">
-          Todos los libros — hacé clic en ⭐ para agregar/quitar del carrusel
-        </div>
-        {books.filter(b => b.is_active !== false).map(b => (
-          <div key={b.id} className="table-row flex items-center gap-4 px-5 py-3 border-b border-gray-50 last:border-0">
-            <div style={{ width:28, height:40, background:palBg[b.cover?.palette||"coal"], flexShrink:0 }} />
-            <div className="flex-1 min-w-0">
-              <div className="text-[13px] font-medium text-pl-coal truncate">{b.title}</div>
-              <div className="text-[11px] text-gray-400">{b.author}</div>
-            </div>
-            <button onClick={()=>toggle(b)} disabled={saving===b.id}
-                    className={`shrink-0 w-8 h-8 flex items-center justify-center transition-colors ${b.featured ? "text-pl-gold" : "text-gray-300 hover:text-pl-gold"}`}
-                    title={b.featured ? "Quitar de destacados" : "Agregar a destacados"}>
-              {saving===b.id
-                ? <div className="w-4 h-4 border-2 border-gray-300 border-t-pl-gold rounded-full animate-spin"/>
-                : <IcoStar />}
-            </button>
-          </div>
-        ))}
+      <div className="bg-white border border-gray-200 overflow-x-auto">
+        <table className="w-full text-[13px]">
+          <thead>
+            <tr className="border-b border-gray-100 bg-gray-50">
+              <th className="text-left px-4 py-3 text-[10px] tracking-[0.18em] uppercase text-gray-400 font-medium w-8"></th>
+              <th className="text-left px-4 py-3 text-[10px] tracking-[0.18em] uppercase text-gray-400 font-medium">Libro</th>
+              <th className="text-left px-4 py-3 text-[10px] tracking-[0.18em] uppercase text-gray-400 font-medium">Autor</th>
+              <th className="text-left px-4 py-3 text-[10px] tracking-[0.18em] uppercase text-gray-400 font-medium">Categoría</th>
+              <th className="text-center px-4 py-3 text-[10px] tracking-[0.18em] uppercase text-gray-400 font-medium w-24">Destacado</th>
+            </tr>
+          </thead>
+          <tbody>
+            {books.filter(b => b.is_active !== false).map(b => (
+              <tr key={b.id} className="table-row border-b border-gray-50 last:border-0">
+                <td className="px-4 py-2.5">
+                  <div style={{ width:24, height:36, background:palBg[b.cover?.palette||"coal"], flexShrink:0 }} />
+                </td>
+                <td className="px-4 py-2.5 font-medium text-pl-coal">{b.title}</td>
+                <td className="px-4 py-2.5 text-gray-400 text-[12px]">{b.author}</td>
+                <td className="px-4 py-2.5 text-gray-400 text-[12px]">
+                  {(window.CATEGORIES||[]).find(c=>c.id===b.category)?.name || b.category}
+                </td>
+                <td className="px-4 py-2.5 text-center">
+                  <button onClick={()=>toggle(b)} disabled={saving===b.id}
+                          className={`w-8 h-8 inline-flex items-center justify-center transition-colors ${b.featured ? "text-pl-gold" : "text-gray-300 hover:text-pl-gold"}`}
+                          title={b.featured ? "Quitar de destacados" : "Agregar a destacados"}>
+                    {saving===b.id
+                      ? <div className="w-4 h-4 border-2 border-gray-200 border-t-pl-gold rounded-full animate-spin"/>
+                      : <IcoStar />}
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );
