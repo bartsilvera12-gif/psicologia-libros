@@ -431,12 +431,11 @@ const BookForm = ({ book, categories, onSave, onClose }) => {
             onKeyDown={e => { if (e.key === "Enter") { e.preventDefault(); addImgUrl(); } }}
             placeholder="Pegar URL de imagen y presionar +"
             className="flex-1 border border-[#DDD0B6] px-4 py-2.5 text-[13px] bg-white focus:border-pl-gold transition-colors"
-            style={{ borderRadius: 99 }}
           />
           <button
             type="button"
             onClick={addImgUrl}
-            style={{ background: "#111111", borderRadius: 10, width: 42, height: 42, flexShrink: 0 }}
+            style={{ background: "#111111", borderRadius: 0, width: 42, height: 42, flexShrink: 0 }}
             className="flex items-center justify-center text-white text-[22px] font-light leading-none hover:bg-pl-gold-dk transition-colors shadow-sm"
             onMouseEnter={e=>e.currentTarget.style.background="#A4842F"}
             onMouseLeave={e=>e.currentTarget.style.background="#111111"}>
@@ -446,9 +445,9 @@ const BookForm = ({ book, categories, onSave, onClose }) => {
         {f.image_urls.length > 0 && (
           <div className="mt-3 flex flex-wrap gap-2">
             {f.image_urls.map((url, i) => (
-              <div key={i} className="flex items-center gap-2 bg-white border border-[#DDD0B6] pr-2 pl-1.5 py-1.5 max-w-full" style={{ borderRadius: 8 }}>
+              <div key={i} className="flex items-center gap-2 bg-white border border-[#DDD0B6] pr-2 pl-1.5 py-1.5 max-w-full">
                 <img src={url} alt="" className="w-8 h-10 object-cover shrink-0"
-                     style={{ borderRadius: 4 }}
+                     style={{ borderRadius: 0 }}
                      onError={e => { e.target.style.background="#f3f4f6"; e.target.src=""; }} />
                 {i === 0 && (
                   <span className="text-[9px] tracking-[0.18em] uppercase font-semibold shrink-0" style={{ color:"#A4842F" }}>portada</span>
