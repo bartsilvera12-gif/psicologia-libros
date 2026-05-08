@@ -218,11 +218,15 @@ const VitrineBook = ({ book, fb, slot, isCenter }) => {
     } : {
       transform: baseTransform || undefined,
     }),
-    cursor: book ? "pointer" : "default",
+    cursor: "pointer",
   };
 
   const handleClick = () => {
-    if (book) window.location.href = `libro.html?id=${book.id}`;
+    if (book) {
+      window.location.href = `libro.html?id=${book.id}`;
+    } else {
+      window.location.href = "catalogo.html";
+    }
   };
 
   return (
