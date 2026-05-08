@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/png" href="logosinfondo2.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Preguntas Frecuentes | Psicología Libros</title>
+  <meta name="description" content="Resolvé tus dudas sobre nuestro catálogo, disponibilidad, precios y envíos. Librería especializada en psicología." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'pl-red':    '#D71920',
+            'pl-red-dk': '#A8121A',
+            'pl-coal':   '#111111',
+            'pl-gold':   '#C9A24A',
+            'pl-gold-dk':'#A4842F',
+            'pl-ivory':  '#F8F4EA',
+            'pl-gray':   '#4A4A4A',
+            'pl-beige':  '#EFE6D4',
+            'pl-white':  '#FFFFFF',
+          },
+          fontFamily: {
+            display: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+          boxShadow: {
+            'card':    '0 1px 2px rgba(17,17,17,0.04), 0 8px 24px -12px rgba(17,17,17,0.10)',
+            'card-hv': '0 2px 6px rgba(17,17,17,0.05), 0 24px 40px -16px rgba(17,17,17,0.18)',
+          },
+        }
+      }
+    }
+  </script>
+
+  <style>
+    html { scroll-behavior: smooth; }
+    body {
+      background: #F8F4EA;
+      color: #111111;
+      font-family: 'Inter', system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    .font-display { font-family: 'Cormorant Garamond', Georgia, serif; }
+    .hero-texture {
+      background-color: #F0E9DB;
+      background-image:
+        radial-gradient(ellipse 70% 60% at 8% 50%, rgba(201,162,74,0.18), transparent),
+        radial-gradient(ellipse 50% 50% at 92% 20%, rgba(215,25,32,0.07), transparent);
+    }
+    .paper-bg {
+      background-color: #F8F4EA;
+      background-image:
+        radial-gradient(circle at 20% 10%, rgba(201,162,74,0.05), transparent 40%),
+        radial-gradient(circle at 80% 90%, rgba(215,25,32,0.04), transparent 40%);
+    }
+    .gold-rule-short { height:1px; width:56px; background:#C9A24A; }
+    .eyebrow { font-family:'Inter',sans-serif; font-size:11px; letter-spacing:0.22em; text-transform:uppercase; color:#A4842F; font-weight:500; }
+    .header-blur { background-color:rgba(248,244,234,0.78); backdrop-filter:saturate(140%) blur(10px); -webkit-backdrop-filter:saturate(140%) blur(10px); }
+    .header-scrolled { box-shadow:0 1px 0 rgba(17,17,17,0.06),0 6px 24px -16px rgba(17,17,17,0.18); }
+    .faq-content { display:grid; grid-template-rows:0fr; transition:grid-template-rows .35s cubic-bezier(.2,.7,.2,1); }
+    .faq-content.open { grid-template-rows:1fr; }
+    .faq-content > div { overflow:hidden; }
+    ::-webkit-scrollbar { width:10px; height:10px; }
+    ::-webkit-scrollbar-track { background:#F8F4EA; }
+    ::-webkit-scrollbar-thumb { background:#EFE6D4; border-radius:6px; }
+    ::-webkit-scrollbar-thumb:hover { background:#C9A24A; }
+    button:focus-visible,a:focus-visible,input:focus-visible { outline:2px solid #C9A24A; outline-offset:2px; }
+    .scrollbar-hide { -ms-overflow-style:none; scrollbar-width:none; }
+    .scrollbar-hide::-webkit-scrollbar { display:none; }
+    .cat-pill-active { background:#111111; color:#F8F4EA; }
+    @keyframes fadeSlideIn { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes logoFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+    @keyframes glowPulse { 0%,100%{filter:drop-shadow(0 0 0px rgba(201,162,74,0))} 50%{filter:drop-shadow(0 0 28px rgba(201,162,74,0.35))} }
+    @keyframes logoReveal { from{opacity:0;transform:scale(0.9) translateY(24px)} to{opacity:1;transform:scale(1) translateY(0)} }
+    .gold-rule { height:1px; background:linear-gradient(90deg,transparent,#C9A24A 40%,#C9A24A 60%,transparent); }
+  </style>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel" src="src/icons.jsx"></script>
+  <script type="text/babel" src="src/data.jsx"></script>
+  <script type="text/babel" src="src/supabase.jsx"></script>
+  <script type="text/babel" src="src/components.jsx"></script>
+  <script type="text/babel" src="src/sections.jsx"></script>
+  <script type="text/babel" src="src/faq-app.jsx"></script>
+</body>
+</html>

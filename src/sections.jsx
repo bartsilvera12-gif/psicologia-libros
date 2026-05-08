@@ -54,6 +54,12 @@ const Header = ({ active, homePath = "" }) => {
               Catálogo
               {window.location.pathname.includes("catalogo") && <span className="absolute -bottom-0.5 left-0 right-0 h-px bg-pl-gold" />}
             </a>
+            {/* FAQ — link directo */}
+            <a href="faq.html"
+               className={`text-[13px] tracking-wide transition-colors relative py-2 ${window.location.pathname.includes("faq") ? "text-pl-red" : "text-pl-coal hover:text-pl-red"}`}>
+              FAQ
+              {window.location.pathname.includes("faq") && <span className="absolute -bottom-0.5 left-0 right-0 h-px bg-pl-gold" />}
+            </a>
 
             {/* Categorías — con mega-dropdown */}
             <div className="relative"
@@ -96,8 +102,8 @@ const Header = ({ active, homePath = "" }) => {
                 </div>
               )}
             </div>
-            {/* Resto del nav */}
-            {NAV.filter(n => n.id !== "inicio").map(n => (
+            {/* Resto del nav (excluye inicio y faq — esos tienen links directos) */}
+            {NAV.filter(n => n.id !== "inicio" && n.id !== "faq").map(n => (
               <a key={n.id} href={homePath ? `${homePath}#${n.id}` : `#${n.id}`}
                  onClick={(e) => homePath ? null : click(e, n.id)}
                  className={`text-[13px] tracking-wide transition-colors relative py-2 ${active === n.id ? "text-pl-red" : "text-pl-coal hover:text-pl-red"}`}>
@@ -135,6 +141,9 @@ const Header = ({ active, homePath = "" }) => {
               <a href="catalogo.html" className="py-3 text-[15px] text-pl-coal border-b border-pl-coal/5">
                 Catálogo
               </a>
+              <a href="faq.html" className="py-3 text-[15px] text-pl-coal border-b border-pl-coal/5">
+                FAQ
+              </a>
               <div className="border-b border-pl-coal/5">
                 <div className="py-3 text-[15px] text-pl-coal">Categorías</div>
                 <div className="pb-2 flex flex-col gap-0.5">
@@ -146,7 +155,7 @@ const Header = ({ active, homePath = "" }) => {
                   ))}
                 </div>
               </div>
-              {NAV.filter(n => n.id !== "inicio").map(n => (
+              {NAV.filter(n => n.id !== "inicio" && n.id !== "faq").map(n => (
                 <a key={n.id} href={homePath ? `${homePath}#${n.id}` : `#${n.id}`}
                    onClick={(e) => homePath ? null : click(e, n.id)}
                    className="py-3 text-[15px] text-pl-coal border-b border-pl-coal/5 last:border-0">
@@ -857,10 +866,6 @@ const Contact = () => (
              className="inline-flex items-center gap-3 px-8 py-5 bg-pl-red text-white text-[15px] tracking-wide hover:bg-pl-red-dk transition-colors">
             <IconWhatsapp size={20} /> Consultar por WhatsApp
           </a>
-          <a href={`mailto:${CONTACT.email}`}
-             className="inline-flex items-center gap-2 px-8 py-5 border border-pl-ivory/20 text-pl-ivory text-[14px] hover:border-pl-gold hover:text-pl-gold transition-colors">
-            <IconMail size={16} /> Enviar correo
-          </a>
         </div>
         <div className="mt-12 grid sm:grid-cols-3 gap-8 max-w-2xl">
           <a href={CONTACT.instagram} target="_blank" rel="noreferrer" className="flex items-start gap-3 group">
@@ -963,9 +968,13 @@ const Footer = () => (
           <ul className="space-y-3 text-[14px]">
             {NAV.map(n => (
               <li key={n.id}>
-                <a href={`#${n.id}`} className="hover:text-pl-gold transition-colors">{n.label}</a>
+                <a href={n.id === "faq" ? "faq.html" : `#${n.id}`}
+                   className="hover:text-pl-gold transition-colors">{n.label}</a>
               </li>
             ))}
+            <li>
+              <a href="catalogo.html" className="hover:text-pl-gold transition-colors">Catálogo</a>
+            </li>
           </ul>
         </div>
         <div className="md:col-span-4">

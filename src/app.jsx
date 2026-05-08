@@ -8,7 +8,7 @@ const App = () => {
 
   React.useEffect(() => {
     if (!ready) return;
-    const ids = ["inicio", "nosotros", "faq", "contacto"];
+    const ids = ["inicio", "nosotros", "contacto"];
     const obs = new IntersectionObserver((entries) => {
       entries.forEach(e => { if (e.isIntersecting) setActive(e.target.id); });
     }, { rootMargin: "-40% 0px -55% 0px", threshold: 0 });
@@ -45,7 +45,6 @@ const App = () => {
         <FeaturedCarousel />
         <About />
         <Benefits />
-        <FAQSection />
         <Contact />
       </main>
       <Footer />
