@@ -39,23 +39,27 @@ const Toast = ({ msg, type = "ok", onDone }) => {
   );
 };
 
-const Modal = ({ title, onClose, children, wide = false }) => (
-  <div className="modal-backdrop" onClick={e => e.target === e.currentTarget && onClose()}>
-    <div className={`modal fade-in${wide ? " modal-wide" : ""}`}>
-      <div className="flex items-center justify-between px-6 py-4" style={{ background:"#111111", borderBottom:"2px solid #C9A24A" }}>
-        <h3 className="font-display text-white text-[22px] tracking-tight">{title}</h3>
-        <button onClick={onClose}
-                className="w-8 h-8 flex items-center justify-center transition-colors"
-                style={{ color:"rgba(255,255,255,0.4)" }}
-                onMouseEnter={e=>e.currentTarget.style.color="white"}
-                onMouseLeave={e=>e.currentTarget.style.color="rgba(255,255,255,0.4)"}>
-          <IcoX />
-        </button>
+const Modal = ({ title, onClose, children, wide = false }) =>
+  ReactDOM.createPortal(
+    (
+      <div className="modal-backdrop" onClick={e => e.target === e.currentTarget && onClose()}>
+        <div className={`modal fade-in${wide ? " modal-wide" : ""}`}>
+          <div className="flex items-center justify-between px-6 py-4" style={{ background:"#111111", borderBottom:"2px solid #C9A24A" }}>
+            <h3 className="font-display text-white text-[22px] tracking-tight">{title}</h3>
+            <button onClick={onClose}
+                    className="w-8 h-8 flex items-center justify-center transition-colors"
+                    style={{ color:"rgba(255,255,255,0.4)" }}
+                    onMouseEnter={e=>e.currentTarget.style.color="white"}
+                    onMouseLeave={e=>e.currentTarget.style.color="rgba(255,255,255,0.4)"}>
+              <IcoX />
+            </button>
+          </div>
+          <div className="px-6 py-6">{children}</div>
+        </div>
       </div>
-      <div className="px-6 py-6">{children}</div>
-    </div>
-  </div>
-);
+    ),
+    document.body
+  );
 
 const Field = ({ label, children, hint }) => (
   <div className="mb-4">
