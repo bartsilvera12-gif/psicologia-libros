@@ -177,58 +177,56 @@ const LogoSVG = ({ size = 280 }) => (
   />
 );
 
-// === Vitrina del hero (usa libros destacados) ===
-const VITRINE_SLOTS = [
-  { pos: "absolute", style: { left:"10%",  bottom:0, transform:"rotate(-10deg)", zIndex:1 }, w:100, h:150, center:false },
-  { pos: "absolute", style: { left:"28%",  bottom:0, transform:"rotate(-4deg)",  zIndex:2 }, w:100, h:152, center:false },
-  { pos: "relative", style: { zIndex:3, animation:"logoFloat 5s ease-in-out infinite" }, w:115, h:172, center:true  },
-  { pos: "absolute", style: { right:"28%", bottom:0, transform:"rotate(4deg)",   zIndex:2 }, w:100, h:152, center:false },
-  { pos: "absolute", style: { right:"10%", bottom:0, transform:"rotate(10deg)",  zIndex:1 }, w:100, h:150, center:false },
-];
-const FALLBACK_BOOKS = [
-  { cover:{ palette:"i" }, cover_short:"Trauma\n& duelo",    _ivory:true },
-  { cover:{ palette:"b" }, cover_short:"Neuro-\npsicología", _ivory:false },
-  { cover:{ palette:"coal" }, cover_short:"La mente\nhumana",_ivory:false },
-  { cover:{ palette:"g" }, cover_short:"Mind-\nfulness",     _ivory:false },
-  { cover:{ palette:"r" }, cover_short:"Salud\nmental",      _ivory:false },
-];
-const palBg  = { coal:"#1c1c1c", r:"#4a0d10", b:"#1d2a3a", i:"#efe6d4", g:"#2d3530", p:"#2a2030" };
-const palFrm = { coal:"rgba(201,162,74,0.45)", r:"rgba(201,162,74,0.45)", b:"rgba(201,162,74,0.45)", i:"rgba(166,131,53,0.6)", g:"rgba(201,162,74,0.45)", p:"rgba(201,162,74,0.45)" };
-const palTxt = { coal:"#F8F4EA", r:"#F8F4EA", b:"#F8F4EA", i:"#2b2418", g:"#F8F4EA", p:"#F8F4EA" };
-const palLbl = { coal:"rgba(201,162,74,0.6)", r:"rgba(201,162,74,0.55)", b:"rgba(201,162,74,0.55)", i:"rgba(91,74,34,0.55)", g:"rgba(201,162,74,0.55)", p:"rgba(201,162,74,0.55)" };
-
-const HeroVitrine = () => {
-  const featured = (window.BOOKS || []).filter(b => b.featured && b.is_active !== false);
-  const books = VITRINE_SLOTS.map((_, i) => featured[i] || FALLBACK_BOOKS[i]);
-
-  return (
-    <div className="relative h-[220px] flex items-end justify-center">
-      {VITRINE_SLOTS.map((slot, i) => {
-        const b = books[i];
-        const pal = b.cover?.palette || "coal";
-        const txt = b.cover_short || b.cover?.short || b.title || "P·L";
-        const lines = txt.replace(/\\n/g, "\n").split("\n");
-        const wrapStyle = slot.pos === "relative"
-          ? { position:"relative", ...slot.style }
-          : { position:"absolute", ...slot.style };
-        return (
-          <div key={i} style={wrapStyle}>
-            <div className={`hero-book ${slot.pos==="relative" ? "shadow-card-hv" : "shadow-card"}`}
-                 style={{ width:slot.w, height:slot.h, background:palBg[pal]||"#1c1c1c", position:"relative" }}>
-              <div style={{ position:"absolute", inset:14, border:`1px solid ${palFrm[pal]||"rgba(201,162,74,0.45)"}` }} />
-              <div style={{ position:"absolute", inset:0, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:6, padding:"0 10px", textAlign:"center" }}>
-                <span style={{ fontSize:9, letterSpacing:"0.2em", textTransform:"uppercase", color:palLbl[pal], opacity:0.9 }}>P·L</span>
-                <span className="font-display" style={{ fontSize: slot.center ? 15 : 12, lineHeight:1.3, color:palTxt[pal] }}>
-                  {lines.map((l,j) => <React.Fragment key={j}>{l}{j<lines.length-1&&<br/>}</React.Fragment>)}
-                </span>
-              </div>
-            </div>
-          </div>
-        );
-      })}
+// === Vitrina decorativa del hero ===
+const HeroVitrine = () => (
+  <div className="relative h-[220px] flex items-end justify-center">
+    <div className="absolute" style={{ left:"10%", bottom:0, transform:"rotate(-10deg)", zIndex:1 }}>
+      <div className="hero-book typo-cover i w-[100px] h-[150px] shadow-card">
+        <div className="frame" />
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-1.5 px-3 text-center">
+          <span className="text-[9px] tracking-[0.2em] uppercase" style={{color:"#5b4a22",opacity:0.55}}>P·L</span>
+          <span className="font-display text-[12px] leading-snug" style={{color:"#2b2418"}}>Trauma<br/>&amp; duelo</span>
+        </div>
+      </div>
     </div>
-  );
-};
+    <div className="absolute" style={{ left:"28%", bottom:0, transform:"rotate(-4deg)", zIndex:2 }}>
+      <div className="hero-book typo-cover b w-[100px] h-[152px] shadow-card">
+        <div className="frame" />
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-1.5 px-3 text-center">
+          <span className="text-[9px] tracking-[0.2em] uppercase text-pl-gold opacity-55">P·L</span>
+          <span className="font-display text-[12px] leading-snug text-pl-ivory">Neuro-<br/>psicología</span>
+        </div>
+      </div>
+    </div>
+    <div className="relative" style={{ zIndex:3 }}>
+      <div className="hero-book typo-cover w-[115px] h-[172px] shadow-card-hv" style={{ animation:"logoFloat 5s ease-in-out infinite" }}>
+        <div className="frame" />
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 px-3 text-center">
+          <span className="text-[9px] tracking-[0.22em] uppercase text-pl-gold opacity-60">P·L</span>
+          <span className="font-display text-[15px] leading-snug text-pl-ivory">La mente<br/>humana</span>
+        </div>
+      </div>
+    </div>
+    <div className="absolute" style={{ right:"28%", bottom:0, transform:"rotate(4deg)", zIndex:2 }}>
+      <div className="hero-book typo-cover g w-[100px] h-[152px] shadow-card">
+        <div className="frame" />
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-1.5 px-3 text-center">
+          <span className="text-[9px] tracking-[0.2em] uppercase text-pl-gold opacity-55">P·L</span>
+          <span className="font-display text-[12px] leading-snug text-pl-ivory">Mind-<br/>fulness</span>
+        </div>
+      </div>
+    </div>
+    <div className="absolute" style={{ right:"10%", bottom:0, transform:"rotate(10deg)", zIndex:1 }}>
+      <div className="hero-book typo-cover r w-[100px] h-[150px] shadow-card">
+        <div className="frame" />
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-1.5 px-3 text-center">
+          <span className="text-[9px] tracking-[0.2em] uppercase text-pl-gold opacity-55">P·L</span>
+          <span className="font-display text-[12px] leading-snug text-pl-ivory">Salud<br/>mental</span>
+        </div>
+      </div>
+    </div>
+  </div>
+);
 
 // === Hero ===
 const Hero = () => (
@@ -824,8 +822,7 @@ const Footer = () => (
       <div className="grid md:grid-cols-12 gap-10">
         <div className="md:col-span-5">
           <div className="flex items-center gap-3">
-            <img src="logosinfondo2.png" alt="Psicología Libros" className="w-12 h-12 object-contain"
-                 style={{ maskImage: "radial-gradient(circle, black 44%, transparent 45%)", WebkitMaskImage: "radial-gradient(circle, black 44%, transparent 45%)" }} />
+            <img src="logosinfondo2.png" alt="Psicología Libros" className="w-12 h-12 object-contain" />
             <div>
               <div className="font-display text-pl-ivory text-[22px] tracking-tight">Psicología Libros</div>
               <div className="text-[10px] tracking-[0.28em] uppercase text-pl-gold">Librería especializada</div>

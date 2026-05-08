@@ -246,44 +246,6 @@ const AdminDashboard = ({ books, categories }) => {
         </div>
       </div>
 
-      {/* Vitrina Hero */}
-      <div className="bg-white border border-gray-200 p-6 mb-6">
-        <div className="flex items-center justify-between mb-4">
-          <div className="text-[11px] tracking-[0.2em] uppercase text-gray-400 font-medium">Vitrina del hero</div>
-          <span className="text-[11px] text-gray-400">Los primeros 5 libros marcados como ⭐ Destacado</span>
-        </div>
-        {(() => {
-          const vitrine = books.filter(b => b.featured && b.is_active !== false).slice(0, 5);
-          const palBg = { coal:"#1c1c1c", r:"#4a0d10", b:"#1d2a3a", i:"#efe6d4", g:"#2d3530", p:"#2a2030" };
-          const palTxt = { coal:"#F8F4EA", r:"#F8F4EA", b:"#F8F4EA", i:"#2b2418", g:"#F8F4EA", p:"#F8F4EA" };
-          if (vitrine.length === 0) return (
-            <div className="text-[13px] text-gray-400 py-4">Ningún libro marcado como destacado aún. Marcá libros con ⭐ en la sección Libros.</div>
-          );
-          return (
-            <div className="flex items-end gap-4">
-              {vitrine.map((b, i) => {
-                const pal = b.cover?.palette || "coal";
-                const txt = (b.cover?.short || b.title || "").replace(/\\n/g,"\n");
-                return (
-                  <div key={b.id} className="text-center">
-                    <div style={{ width:72, height:108, background:palBg[pal]||"#1c1c1c", position:"relative", flexShrink:0 }}>
-                      <div style={{ position:"absolute", inset:8, border:"1px solid rgba(201,162,74,0.4)" }} />
-                      <div style={{ position:"absolute", inset:0, display:"flex", alignItems:"center", justifyContent:"center", padding:"0 6px", textAlign:"center" }}>
-                        <span style={{ fontFamily:"Cormorant Garamond,Georgia,serif", fontSize:11, lineHeight:1.3, color:palTxt[pal] }}>{txt}</span>
-                      </div>
-                    </div>
-                    <div className="text-[10px] text-gray-400 mt-1.5 max-w-[72px] truncate">{i===2?"▲ centro":""}</div>
-                  </div>
-                );
-              })}
-              {vitrine.length < 5 && (
-                <div className="text-[12px] text-gray-300 italic pb-4">+ {5-vitrine.length} slot{5-vitrine.length>1?"s":""} vacío{5-vitrine.length>1?"s":""} (usa fallback)</div>
-              )}
-            </div>
-          );
-        })()}
-      </div>
-
       {/* Resumen de estado */}
       <div className="bg-white border border-gray-200 p-6">
         <div className="text-[11px] tracking-[0.2em] uppercase text-gray-400 mb-5 font-medium">Distribución de estado</div>
