@@ -506,7 +506,7 @@ const CategoryQuickNav = ({ filter = "all", onPick, linkMode = false }) => (
   </div>
 );
 
-// === Carrusel de rejilla: slide horizontal ("slide") o fade + translate como destacados antiguos ("fade") ===
+// === Carrusel de rejilla: slide horizontal ("slide") o fade ("fade"); variant "novedades" = fila tipo El Lector ===
 const BooksSlideCarousel = ({
   eyebrow,
   titleNode,
@@ -517,6 +517,8 @@ const BooksSlideCarousel = ({
   rotateMs = 5200,
   sectionClassName = "bg-pl-white",
   pageTransition = "slide",
+  variant = "default",
+  showDots = true,
 }) => {
   const chunks = React.useMemo(() => {
     const list = Array.isArray(books) ? books : [];
@@ -570,26 +572,53 @@ const BooksSlideCarousel = ({
 
   if (!pageCount) return null;
 
-  const carouselArrowClass =
-    "flex absolute top-1/2 z-20 -translate-y-1/2 w-9 h-9 sm:w-10 sm:h-10 items-center justify-center " +
-    "bg-pl-white/95 border border-pl-coal/15 text-pl-coal shadow-sm hover:border-pl-gold hover:text-pl-gold transition-colors";
+  const isNovedades = variant === "novedades";
+  const gridClass = isNovedades
+    ? "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-5 lg:gap-6"
+    : "grid sm:grid-cols-2 lg:grid-cols-4 gap-6";
+
+  const carouselArrowClass = isNovedades
+    ? "flex absolute top-1/2 z-20 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 items-center justify-center text-pl-coal/45 hover:text-pl-coal transition-colors"
+    : "flex absolute top-1/2 z-20 -translate-y-1/2 w-9 h-9 sm:w-10 sm:h-10 items-center justify-center " +
+      "bg-pl-white/95 border border-pl-coal/15 text-pl-coal shadow-sm hover:border-pl-gold hover:text-pl-gold transition-colors";
+
+  const arrowIconSize = isNovedades ? 22 : 14;
 
   const currentChunk = chunks[page] || [];
 
   return (
-    <section className={`py-20 lg:py-28 ${sectionClassName}`}>
+    <section className={`py-16 lg:py-24 ${sectionClassName}`}>
       <div className="max-w-7xl mx-auto px-6 lg:px-10">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-12">
-          <SectionTitle eyebrow={eyebrow} title={titleNode} />
-          {verTodosHref ? (
-            <a
-              href={verTodosHref}
-              className="shrink-0 text-[12px] tracking-[0.2em] uppercase text-pl-gold hover:text-pl-red transition-colors sm:pb-1"
-            >
-              Ver todos
-            </a>
-          ) : null}
-        </div>
+        {isNovedades ? (
+          <div className="mb-10 text-center lg:mb-12">
+            {eyebrow ? (
+              <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-pl-gold-dk">{eyebrow}</p>
+            ) : null}
+            <h2 className="mt-2 font-sans text-[clamp(28px,4.2vw,42px)] font-bold leading-[1.12] tracking-tight text-pl-coal">
+              {titleNode}
+            </h2>
+            {verTodosHref ? (
+              <a
+                href={verTodosHref}
+                className="mt-5 inline-block text-[12px] tracking-[0.2em] uppercase text-pl-gold-dk hover:text-pl-red transition-colors"
+              >
+                Ver todos
+              </a>
+            ) : null}
+          </div>
+        ) : (
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-12">
+            <SectionTitle eyebrow={eyebrow} title={titleNode} />
+            {verTodosHref ? (
+              <a
+                href={verTodosHref}
+                className="shrink-0 text-[12px] tracking-[0.2em] uppercase text-pl-gold hover:text-pl-red transition-colors sm:pb-1"
+              >
+                Ver todos
+              </a>
+            ) : null}
+          </div>
+        )}
 
         <div className="relative">
           {pageCount > 1 ? (
@@ -597,27 +626,27 @@ const BooksSlideCarousel = ({
               <button
                 type="button"
                 onClick={() => goToPage(page - 1)}
-                className={`${carouselArrowClass} left-0 lg:-left-2`}
+                className={`${carouselArrowClass} ${isNovedades ? "left-0 lg:-left-1" : "left-0 lg:-left-2"}`}
                 aria-label="Anterior"
               >
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden>
+                <svg width={arrowIconSize} height={arrowIconSize} viewBox="0 0 14 14" fill="none" aria-hidden>
                   <path d="M9 2L4 7l5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               </button>
               <button
                 type="button"
                 onClick={() => goToPage(page + 1)}
-                className={`${carouselArrowClass} right-0 lg:-right-2`}
+                className={`${carouselArrowClass} ${isNovedades ? "right-0 lg:-right-1" : "right-0 lg:-right-2"}`}
                 aria-label="Siguiente"
               >
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden>
+                <svg width={arrowIconSize} height={arrowIconSize} viewBox="0 0 14 14" fill="none" aria-hidden>
                   <path d="M5 2l5 5-5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               </button>
             </>
           ) : null}
 
-          <div className="overflow-hidden px-10 sm:px-12">
+          <div className={`overflow-hidden ${isNovedades ? "px-9 sm:px-11 lg:px-14" : "px-10 sm:px-12"}`}>
             {pageTransition === "fade" ? (
               <div
                 style={{
@@ -626,7 +655,7 @@ const BooksSlideCarousel = ({
                   transition: "opacity 0.4s ease, transform 0.4s cubic-bezier(0.2,0.7,0.2,1)",
                 }}
               >
-                <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className={gridClass}>
                   {currentChunk.map((b) => (
                     <BookCard key={b.id} book={b} />
                   ))}
@@ -639,7 +668,7 @@ const BooksSlideCarousel = ({
               >
                 {chunks.map((chunk, i) => (
                   <div key={i} className="w-full shrink-0 min-w-0">
-                    <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div className={gridClass}>
                       {chunk.map((b) => (
                         <BookCard key={b.id} book={b} />
                       ))}
@@ -650,7 +679,7 @@ const BooksSlideCarousel = ({
             )}
           </div>
 
-          {pageCount > 1 ? (
+          {showDots && pageCount > 1 ? (
             <div className="flex justify-center gap-1.5 mt-10">
               {Array.from({ length: pageCount }).map((_, i) => (
                 <button
@@ -689,40 +718,24 @@ const FeaturedHeroSlider = ({ books }) => {
   const go = (delta) => setIdx((i) => ((i + delta) % n + n) % n);
 
   return (
-    <section className="relative overflow-hidden py-16 lg:py-24">
-      {/* Paleta Psicología Libros: carbón, rojo, oro, marfil — sin verdes */}
-      <div
-        className="absolute inset-0 bg-gradient-to-br from-pl-coal via-[#1f1514] to-pl-coal"
-        aria-hidden
-      />
-      <div
-        className="pointer-events-none absolute inset-0 bg-gradient-to-t from-pl-red/18 via-transparent to-pl-gold/6"
-        aria-hidden
-      />
+    <section className="relative overflow-hidden border-y border-pl-coal/[0.06] bg-gradient-to-b from-pl-ivory via-pl-white to-pl-beige/25 py-16 lg:py-24">
       <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
-        <div className="absolute -top-28 -left-24 h-[460px] w-[460px] rounded-full bg-pl-gold/14 blur-3xl" />
-        <div className="absolute top-1/3 right-[-100px] h-[400px] w-[400px] rounded-full bg-pl-red/15 blur-3xl" />
-        <div className="absolute bottom-[-40px] left-1/4 h-[340px] w-[340px] rounded-full bg-pl-ivory/8 blur-3xl" />
-        <div
-          className="absolute inset-0 opacity-[0.06]"
-          style={{
-            backgroundImage: "radial-gradient(circle at 20% 30%, rgba(248,244,234,0.9) 0.5px, transparent 0.6px)",
-            backgroundSize: "26px 26px",
-          }}
-        />
+        <div className="absolute -top-16 right-1/4 h-72 w-72 rounded-full bg-pl-gold/10 blur-3xl" />
+        <div className="absolute bottom-0 left-0 h-64 w-64 rounded-full bg-pl-red/[0.06] blur-3xl" />
+        <div className="absolute top-1/2 left-1/2 h-96 w-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-pl-beige/40 blur-3xl" />
       </div>
 
       <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-10">
         <div className="mb-10 flex flex-col justify-between gap-4 sm:mb-14 sm:flex-row sm:items-end">
           <div>
-            <span className="text-[11px] font-medium uppercase tracking-[0.28em] text-pl-ivory/75">Selección</span>
-            <h2 className="font-display mt-2 text-[32px] tracking-tight text-pl-ivory sm:text-4xl lg:text-[44px]">
-              Libros <em className="font-normal italic text-pl-gold">destacados</em>
+            <span className="text-[11px] font-medium uppercase tracking-[0.28em] text-pl-gold-dk">Selección</span>
+            <h2 className="font-display mt-2 text-[32px] tracking-tight text-pl-coal sm:text-4xl lg:text-[44px]">
+              Libros <em className="font-normal italic text-pl-red">destacados</em>
             </h2>
           </div>
           <a
             href="catalogo.html"
-            className="shrink-0 text-[12px] uppercase tracking-[0.2em] text-pl-gold/95 transition-colors hover:text-pl-ivory"
+            className="shrink-0 text-[12px] uppercase tracking-[0.2em] text-pl-gold-dk transition-colors hover:text-pl-red"
           >
             Ver todos
           </a>
@@ -734,20 +747,20 @@ const FeaturedHeroSlider = ({ books }) => {
               <button
                 type="button"
                 onClick={() => go(-1)}
-                className="absolute left-0 top-1/2 z-20 flex h-14 w-14 -translate-x-1 -translate-y-1/2 items-center justify-center text-pl-ivory/35 transition-colors hover:text-pl-gold lg:h-16 lg:w-16 lg:-translate-x-6"
+                className="absolute left-0 top-1/2 z-20 flex h-12 w-12 -translate-x-1 -translate-y-1/2 items-center justify-center text-pl-coal/35 transition-colors hover:text-pl-coal lg:h-14 lg:w-14 lg:-translate-x-4"
                 aria-label="Anterior"
               >
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3" aria-hidden>
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3" aria-hidden>
                   <path d="M15 6l-6 6 6 6" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </button>
               <button
                 type="button"
                 onClick={() => go(1)}
-                className="absolute right-0 top-1/2 z-20 flex h-14 w-14 translate-x-1 -translate-y-1/2 items-center justify-center text-pl-ivory/35 transition-colors hover:text-pl-gold lg:h-16 lg:w-16 lg:translate-x-6"
+                className="absolute right-0 top-1/2 z-20 flex h-12 w-12 translate-x-1 -translate-y-1/2 items-center justify-center text-pl-coal/35 transition-colors hover:text-pl-coal lg:h-14 lg:w-14 lg:translate-x-4"
                 aria-label="Siguiente"
               >
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3" aria-hidden>
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3" aria-hidden>
                   <path d="M9 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </button>
@@ -771,7 +784,7 @@ const FeaturedHeroSlider = ({ books }) => {
                       style={{ perspective: "880px" }}
                     >
                       <div
-                        className="shadow-2xl shadow-black/40 transition-transform duration-500 group-hover/el-cover:scale-[1.02]"
+                        className="shadow-xl shadow-pl-coal/12 transition-transform duration-500 group-hover/el-cover:scale-[1.02]"
                         style={{ transform: "rotateY(-7deg) rotateX(3deg)" }}
                       >
                         <BookCover book={b} large />
@@ -779,18 +792,18 @@ const FeaturedHeroSlider = ({ books }) => {
                     </a>
                   </div>
                   <div className="order-1 px-1 text-center lg:order-2 lg:text-left">
-                    <p className="text-[11px] font-medium uppercase tracking-[0.28em] text-pl-ivory/88 sm:text-xs">
+                    <p className="text-[11px] font-medium uppercase tracking-[0.28em] text-pl-gray sm:text-xs">
                       {(b.author || "").toUpperCase()}
                     </p>
-                    <h3 className="mt-3 font-sans text-[clamp(28px,5.2vw,54px)] font-bold leading-[1.06] tracking-tight text-pl-ivory">
+                    <h3 className="mt-3 font-sans text-[clamp(28px,5.2vw,54px)] font-bold leading-[1.06] tracking-tight text-pl-coal">
                       {b.title}
                     </h3>
-                    <p className="mt-5 font-display text-[clamp(22px,3.6vw,36px)] font-semibold tabular-nums tracking-tight text-pl-ivory">
+                    <p className="mt-5 font-display text-[clamp(22px,3.6vw,36px)] font-semibold tabular-nums tracking-tight text-pl-gold">
                       {typeof window.formatPrecioGs === "function" ? window.formatPrecioGs(b.price) : b.price}
                     </p>
                     <a
                       href={`libro.html?id=${b.id}`}
-                      className="mt-8 inline-flex items-center gap-2 rounded-full bg-white px-8 py-3.5 text-[14px] font-semibold tracking-wide text-pl-coal shadow-lg shadow-black/25 transition-colors hover:bg-pl-ivory"
+                      className="mt-8 inline-flex items-center gap-2 rounded-full border border-pl-coal/10 bg-pl-white px-8 py-3.5 text-[14px] font-semibold tracking-wide text-pl-coal shadow-md shadow-pl-coal/5 transition-colors hover:border-pl-gold/40 hover:bg-pl-ivory"
                     >
                       Ver libro
                       <span className="inline-flex text-pl-red" aria-hidden>
@@ -813,7 +826,7 @@ const FeaturedHeroSlider = ({ books }) => {
                   aria-current={i === idx ? "true" : undefined}
                   onClick={() => setIdx(i)}
                   className={`h-2 rounded-full transition-all duration-300 ${
-                    i === idx ? "w-8 bg-pl-red" : "w-2 bg-pl-ivory/35 hover:bg-pl-ivory/55"
+                    i === idx ? "w-8 bg-pl-red" : "w-2 bg-pl-coal/15 hover:bg-pl-coal/30"
                   }`}
                 />
               ))}
@@ -840,17 +853,20 @@ const CatalogPreviewCarousel = () => {
     []
   );
   if (!catalog.length) return null;
+  const perSlide = 5;
   return (
     <BooksSlideCarousel
-      eyebrow="Catálogo"
-      titleNode={<>Explorá el <em className="font-normal italic text-pl-red">catálogo</em></>}
+      eyebrow=""
+      titleNode={<>Más del <em className="font-display font-normal italic text-pl-red">catálogo</em></>}
       books={catalog}
-      perPage={8}
+      perPage={perSlide}
       verTodosHref="catalogo.html"
-      autoRotate={catalog.length > 8}
-      rotateMs={5600}
-      sectionClassName="bg-pl-beige/30"
-      pageTransition="fade"
+      autoRotate={catalog.length > perSlide}
+      rotateMs={5200}
+      sectionClassName="bg-pl-white"
+      pageTransition="slide"
+      variant="novedades"
+      showDots={catalog.length > perSlide}
     />
   );
 };
