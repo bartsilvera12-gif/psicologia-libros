@@ -145,7 +145,7 @@ const BookCard = ({ book }) => {
         <div className="mt-5 flex items-end justify-between gap-3">
           <div className="shrink-0">
             <div className="text-[10px] tracking-[0.22em] uppercase text-pl-gray/70">Precio</div>
-            <div className="font-sans tabular-nums font-semibold text-pl-coal text-[20px] mt-0.5 leading-tight whitespace-nowrap">
+            <div className="font-display tabular-nums font-semibold text-pl-coal text-[20px] mt-0.5 leading-tight whitespace-nowrap">
               {typeof window.formatPrecioGs === "function" ? window.formatPrecioGs(book.price) : book.price}
             </div>
           </div>

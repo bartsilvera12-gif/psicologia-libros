@@ -601,7 +601,7 @@ const AdminBooks = ({ books, categories, onRefresh, onToast }) => {
                     {(b.status||"").replace("_"," ")}
                   </span>
                 </td>
-                <td className="px-4 py-3 text-gray-500 text-[12px] font-sans tabular-nums">{typeof window.formatPrecioGs === "function" ? window.formatPrecioGs(b.price) : b.price}</td>
+                <td className="px-4 py-3 text-gray-600 text-[12px] font-display tabular-nums">{typeof window.formatPrecioGs === "function" ? window.formatPrecioGs(b.price) : b.price}</td>
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-1">
                     <button onClick={()=>setModal(b)} className="p-1.5 text-gray-400 hover:text-pl-coal transition-colors" title="Editar"><IcoEdit /></button>

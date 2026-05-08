@@ -181,7 +181,7 @@ const BookDetailPage = () => {
                     <div className="flex items-baseline gap-4">
                       <div>
                         <div className="text-[10px] tracking-[0.25em] uppercase text-pl-gray/55 mb-1">Precio</div>
-                        <div className="font-sans tabular-nums font-semibold text-pl-coal text-[34px] leading-none tracking-tight">
+                        <div className="font-display tabular-nums font-semibold text-pl-coal text-[34px] leading-none tracking-tight">
                           {typeof window.formatPrecioGs === "function" ? window.formatPrecioGs(book.price) : book.price}
                         </div>
                       </div>
