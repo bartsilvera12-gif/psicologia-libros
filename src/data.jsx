@@ -9,8 +9,8 @@ const waLink = (msg) => `${WA_BASE}?text=${encodeURIComponent(msg)}`;
 const CONTACT = {
   whatsapp: WHATSAPP_NUMBER,
   email: "contacto@psicologialibros.com",
-  instagram: "https://instagram.com/psicologialibros",
-  facebook: "https://facebook.com/psicologialibros",
+  instagram: "https://instagram.com/psicologialibrosyuncafe",
+  facebook: "https://facebook.com/PsicologiaLibrosYUnCafe",
   city: "Asunción, Paraguay",
 };
 

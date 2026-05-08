@@ -742,14 +742,14 @@ const Contact = () => (
             <span className="mt-0.5 text-pl-gold"><IconInstagram /></span>
             <div>
               <div className="text-[10px] tracking-[0.25em] uppercase text-pl-ivory/50">Instagram</div>
-              <div className="text-[14px] text-pl-ivory group-hover:text-pl-gold transition-colors">@psicologialibros</div>
+              <div className="text-[14px] text-pl-ivory group-hover:text-pl-gold transition-colors">@psicologialibrosyuncafe</div>
             </div>
           </a>
           <a href={CONTACT.facebook} target="_blank" rel="noreferrer" className="flex items-start gap-3 group">
             <span className="mt-0.5 text-pl-gold"><IconFacebook /></span>
             <div>
               <div className="text-[10px] tracking-[0.25em] uppercase text-pl-ivory/50">Facebook</div>
-              <div className="text-[14px] text-pl-ivory group-hover:text-pl-gold transition-colors">/psicologialibros</div>
+              <div className="text-[14px] text-pl-ivory group-hover:text-pl-gold transition-colors">Psicología Libros &amp; Un Café</div>
             </div>
           </a>
           <div className="flex items-start gap-3">
