@@ -222,7 +222,7 @@ const VitrineBook = ({ book, fb, slot, isCenter }) => {
   };
 
   const handleClick = () => {
-    if (book) window.location.href = `catalogo.html?cat=${book.category}`;
+    if (book) window.location.href = `libro.html?id=${book.id}`;
   };
 
   return (
@@ -256,7 +256,7 @@ const VitrineBook = ({ book, fb, slot, isCenter }) => {
           {author && <span style={{ fontSize:9, color:"rgba(255,255,255,0.55)" }}>por {author}</span>}
           {book && (
             <span style={{ marginTop:5, padding:"4px 12px", background:VIT_ACC[pal]||"#C9A24A", color:"#fff", fontSize:8, letterSpacing:"0.18em", textTransform:"uppercase", display:"block" }}>
-              Ver catálogo →
+              Ver libro →
             </span>
           )}
         </div>

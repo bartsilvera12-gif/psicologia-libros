@@ -111,18 +111,25 @@ const StatusPill = ({ status }) => {
 
 // === Book card ===
 const BookCard = ({ book }) => {
-  const msg = `Hola, quiero consultar por el libro "${book.title}" de Psicología Libros.`;
+  const msg       = `Hola, me interesa el libro "${book.title}" de Psicología Libros. ¿Me podés dar más información?`;
+  const detailHref = `libro.html?id=${book.id}`;
   return (
-    <article className="group bg-pl-white border border-pl-coal/8 lift shadow-card hover:shadow-card-hv hover:border-pl-gold/40 p-4 flex flex-col">
-      <BookCover book={book} />
-      <div className="pt-4 flex flex-col flex-1">
+    <article className="group bg-pl-white border border-pl-coal/8 lift shadow-card hover:shadow-card-hv hover:border-pl-gold/40 flex flex-col overflow-hidden">
+      {/* Portada — clickable */}
+      <a href={detailHref} className="block">
+        <BookCover book={book} />
+      </a>
+      <div className="p-4 pt-4 flex flex-col flex-1">
         <div className="flex items-center justify-between gap-2">
           <span className="eyebrow !text-[10px]">{catName(book.category)}</span>
           <StatusPill status={book.status} />
         </div>
-        <h3 className="font-display text-pl-coal text-[22px] leading-[1.15] mt-3 tracking-tight">
-          {book.title}
-        </h3>
+        {/* Título — clickable */}
+        <a href={detailHref} className="group/title">
+          <h3 className="font-display text-pl-coal text-[22px] leading-[1.15] mt-3 tracking-tight group-hover/title:text-pl-red transition-colors">
+            {book.title}
+          </h3>
+        </a>
         <p className="text-pl-gray text-[13px] mt-1.5 italic">por {book.author}</p>
         <div className="mt-4 gold-rule-short" />
         <div className="flex-1" />
@@ -133,10 +140,16 @@ const BookCard = ({ book }) => {
               {book.price}
             </div>
           </div>
-          <a href={waLink(msg)} target="_blank" rel="noreferrer"
-             className="shrink-0 inline-flex items-center gap-2 px-4 py-2.5 bg-pl-red text-white text-[12px] tracking-wide hover:bg-pl-red-dk transition-colors">
-            <IconWhatsapp size={15} /> Consultar
-          </a>
+          <div className="flex items-center gap-2 shrink-0">
+            <a href={detailHref}
+               className="inline-flex items-center gap-1.5 px-3 py-2.5 border border-pl-coal/20 text-pl-coal text-[11px] tracking-wide hover:border-pl-gold hover:text-pl-gold-dk transition-colors">
+              Ver más
+            </a>
+            <a href={waLink(msg)} target="_blank" rel="noreferrer"
+               className="inline-flex items-center gap-1.5 px-3 py-2.5 bg-pl-red text-white text-[11px] tracking-wide hover:bg-pl-red-dk transition-colors">
+              <IconWhatsapp size={14} /> Consultar
+            </a>
+          </div>
         </div>
       </div>
     </article>
