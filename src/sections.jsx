@@ -402,9 +402,9 @@ const Hero = () => (
           {/* Cita — compacta; posición como al inicio (-bottom/-left) para no competir con las métricas */}
           <div className="absolute -bottom-3 -left-3 bg-pl-coal text-pl-ivory px-4 py-3.5 max-w-[168px] shadow-card hidden lg:block z-[1]"
                style={{ animation: "fadeSlideIn 1.1s 0.7s both" }}>
-            <span className="font-sans text-pl-gold text-[22px] leading-none block opacity-90">"</span>
-            <p className="font-sans text-[12px] leading-snug mt-0.5 text-pl-ivory/95">Sabiduría en cada página</p>
-            <div className="mt-2.5 text-[8px] tracking-[0.26em] uppercase text-pl-gold font-medium">Psicología Libros</div>
+            <span className="font-display text-pl-gold text-[22px] leading-none block opacity-90">"</span>
+            <p className="font-display italic text-[12px] leading-snug mt-0.5 text-pl-ivory/95">Sabiduría en cada página</p>
+            <div className="mt-2.5 text-[8px] tracking-[0.26em] uppercase text-pl-gold font-medium font-sans">Psicología Libros</div>
           </div>
         </div>
 

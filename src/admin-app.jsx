@@ -971,7 +971,7 @@ const AdminVitrine = ({ books, onRefresh, onToast }) => {
                     <>
                       <div style={{ position:"absolute", inset:8, border:"1px solid rgba(201,162,74,0.4)" }} />
                       <div style={{ position:"absolute", inset:0, display:"flex", alignItems:"center", justifyContent:"center", padding:"0 6px", textAlign:"center" }}>
-                        <span style={{ fontFamily:"Lora,Georgia,serif", fontSize:10, lineHeight:1.3, color:VITRINE_PAL_TXT[pal] }}>{short||book.title}</span>
+                        <span style={{ fontFamily:"'EB Garamond',Georgia,serif", fontSize:10, lineHeight:1.3, color:VITRINE_PAL_TXT[pal] }}>{short||book.title}</span>
                       </div>
                     </>
                   ) : (
