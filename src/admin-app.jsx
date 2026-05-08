@@ -436,8 +436,10 @@ const BookForm = ({ book, categories, onSave, onClose }) => {
           <button
             type="button"
             onClick={addImgUrl}
-            style={{ background: "linear-gradient(135deg,#a855f7,#ec4899)", borderRadius: 10, width: 42, height: 42, flexShrink: 0 }}
-            className="flex items-center justify-center text-white text-[22px] font-light leading-none hover:opacity-90 transition-opacity shadow-sm">
+            style={{ background: "#111111", borderRadius: 10, width: 42, height: 42, flexShrink: 0 }}
+            className="flex items-center justify-center text-white text-[22px] font-light leading-none hover:bg-pl-gold-dk transition-colors shadow-sm"
+            onMouseEnter={e=>e.currentTarget.style.background="#A4842F"}
+            onMouseLeave={e=>e.currentTarget.style.background="#111111"}>
             +
           </button>
         </div>
