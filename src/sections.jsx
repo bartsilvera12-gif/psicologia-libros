@@ -179,11 +179,11 @@ const LogoSVG = ({ size = 280 }) => (
 
 // === Vitrina del hero ===
 const VITRINE_FALLBACK = [
-  { pal:"i",    short:"Trauma\n& duelo",     title:"Trauma & Duelo",      author:"" },
-  { pal:"b",    short:"Neuro-\npsicología",  title:"Neuropsicología",     author:"" },
-  { pal:"coal", short:"La mente\nhumana",    title:"La Mente Humana",     author:"" },
-  { pal:"g",    short:"Mind-\nfulness",      title:"Mindfulness",         author:"" },
-  { pal:"r",    short:"Salud\nmental",       title:"Salud Mental",        author:"" },
+  { pal:"r",    short:"Trauma\n& Duelo",      title:"Trauma & Duelo",      author:"" },
+  { pal:"b",    short:"Neuro-\npsicología",   title:"Neuropsicología",     author:"" },
+  { pal:"coal", short:"La Mente\nHumana",     title:"La Mente Humana",     author:"" },
+  { pal:"g",    short:"Mind-\nfulness",       title:"Mindfulness",         author:"" },
+  { pal:"p",    short:"Salud\nMental",        title:"Salud Mental",        author:"" },
 ];
 const VIT_SLOTS = [
   { pos:"absolute", style:{ left:"10%",  bottom:0, transform:"rotate(-10deg)", zIndex:1 }, w:100, h:150 },
@@ -192,9 +192,10 @@ const VIT_SLOTS = [
   { pos:"absolute", style:{ right:"28%", bottom:0, transform:"rotate(4deg)",   zIndex:2 }, w:100, h:152 },
   { pos:"absolute", style:{ right:"10%", bottom:0, transform:"rotate(10deg)",  zIndex:1 }, w:100, h:150 },
 ];
-const VIT_BG  = { coal:"#1c1c1c", r:"#4a0d10", b:"#1d2a3a", i:"#efe6d4", g:"#2d3530", p:"#2a2030" };
+const VIT_BG  = { coal:"#111111", r:"#7a0d12", b:"#0e2640", i:"#efe6d4", g:"#122b1a", p:"#2b0e4a" };
 const VIT_TXT = { coal:"#F8F4EA", r:"#F8F4EA", b:"#F8F4EA", i:"#2b2418", g:"#F8F4EA", p:"#F8F4EA" };
-const VIT_LBL = { coal:"rgba(201,162,74,0.6)", r:"rgba(201,162,74,0.55)", b:"rgba(201,162,74,0.55)", i:"rgba(91,74,34,0.55)", g:"rgba(201,162,74,0.55)", p:"rgba(201,162,74,0.55)" };
+const VIT_LBL = { coal:"rgba(201,162,74,0.65)", r:"rgba(229,180,100,0.6)", b:"rgba(160,190,230,0.5)", i:"rgba(91,74,34,0.55)", g:"rgba(120,190,120,0.45)", p:"rgba(190,140,220,0.5)" };
+const VIT_ACC = { coal:"#C9A24A", r:"#e8a060", b:"#7aaedc", i:"#9a7a30", g:"#6bbf6b", p:"#b080d8" };
 
 const VitrineBook = ({ book, fb, slot, isCenter }) => {
   const [hov, setHov] = React.useState(false);
@@ -202,43 +203,63 @@ const VitrineBook = ({ book, fb, slot, isCenter }) => {
   const short = (book?.cover?.short || fb.short).replace(/\\n/g,"\n");
   const title = book?.title || fb.title;
   const author= book?.author || fb.author;
-  const msg   = book ? `Hola, quiero consultar por el libro "${title}" de Psicología Libros.` : null;
 
-  const wrapStyle = slot.pos === "relative"
-    ? { position:"relative", ...slot.style, ...(isCenter ? { animation:"logoFloat 5s ease-in-out infinite" } : {}) }
-    : { position:"absolute", ...slot.style };
+  const baseTransform = slot.style.transform || "";
+
+  const wrapStyle = {
+    position: slot.pos === "relative" ? "relative" : "absolute",
+    ...slot.style,
+    transition: "transform 0.32s cubic-bezier(0.34,1.56,0.64,1), filter 0.3s ease, z-index 0s",
+    animation: (slot.pos === "relative" && isCenter && !hov) ? "logoFloat 5s ease-in-out infinite" : "none",
+    ...(hov ? {
+      transform: baseTransform ? `${baseTransform} scale(1.22) translateY(-18px)` : "scale(1.22) translateY(-18px)",
+      zIndex: 20,
+      filter: "drop-shadow(0 24px 48px rgba(0,0,0,0.5))",
+    } : {
+      transform: baseTransform || undefined,
+    }),
+    cursor: book ? "pointer" : "default",
+  };
+
+  const handleClick = () => {
+    if (book) window.location.href = `catalogo.html?cat=${book.category}`;
+  };
 
   return (
     <div style={wrapStyle}
          onMouseEnter={() => setHov(true)}
-         onMouseLeave={() => setHov(false)}>
+         onMouseLeave={() => setHov(false)}
+         onClick={handleClick}>
       <div className={`hero-book ${isCenter ? "shadow-card-hv" : "shadow-card"}`}
-           style={{ width:slot.w, height:slot.h, background:VIT_BG[pal]||"#1c1c1c", position:"relative", cursor: book ? "pointer" : "default" }}>
-        <div style={{ position:"absolute", inset:14, border:`1px solid ${VIT_LBL[pal]||"rgba(201,162,74,0.45)"}` }} />
+           style={{ width:slot.w, height:slot.h, background:VIT_BG[pal]||"#111111", position:"relative" }}>
+        {/* Inner border */}
+        <div style={{ position:"absolute", inset:10, border:`1px solid ${VIT_LBL[pal]||"rgba(201,162,74,0.45)"}` }} />
+        {/* Corner accents */}
+        <div style={{ position:"absolute", top:6, left:6, width:10, height:10, borderTop:`1px solid ${VIT_ACC[pal]||"#C9A24A"}`, borderLeft:`1px solid ${VIT_ACC[pal]||"#C9A24A"}`, opacity:0.7 }} />
+        <div style={{ position:"absolute", bottom:6, right:6, width:10, height:10, borderBottom:`1px solid ${VIT_ACC[pal]||"#C9A24A"}`, borderRight:`1px solid ${VIT_ACC[pal]||"#C9A24A"}`, opacity:0.7 }} />
         {/* Texto portada */}
-        <div style={{ position:"absolute", inset:0, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:6, padding:"0 10px", textAlign:"center",
-                      opacity: hov ? 0 : 1, transition:"opacity 0.2s" }}>
-          <span style={{ fontSize:9, letterSpacing:"0.2em", textTransform:"uppercase", color:VIT_LBL[pal], opacity:0.9 }}>P·L</span>
+        <div style={{ position:"absolute", inset:0, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:5, padding:"0 12px", textAlign:"center",
+                      opacity: hov ? 0 : 1, transition:"opacity 0.18s" }}>
+          <span style={{ fontSize:8, letterSpacing:"0.28em", textTransform:"uppercase", color:VIT_ACC[pal]||"#C9A24A", opacity:0.85 }}>P·L</span>
+          <div style={{ width:18, height:1, background:VIT_LBL[pal]||"rgba(201,162,74,0.4)" }} />
           <span className="font-display" style={{ fontSize:isCenter?15:12, lineHeight:1.3, color:VIT_TXT[pal] }}>
             {short.split("\n").map((l,i,a) => <React.Fragment key={i}>{l}{i<a.length-1&&<br/>}</React.Fragment>)}
           </span>
         </div>
-        {/* Overlay hover */}
-        {hov && (
-          <div style={{ position:"absolute", inset:0, background:"rgba(0,0,0,0.82)", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:8, padding:"10px 8px", textAlign:"center" }}>
-            <span className="font-display" style={{ fontSize:isCenter?13:11, lineHeight:1.25, color:"#F8F4EA" }}>
-              {title.split(" ").slice(0,6).join(" ")}
+        {/* Overlay hover — aparece sobre el libro ya escalado */}
+        <div style={{ position:"absolute", inset:0, background:"rgba(0,0,0,0.88)", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:7, padding:"12px 10px", textAlign:"center",
+                      opacity: hov ? 1 : 0, transition:"opacity 0.18s", pointerEvents: hov ? "auto" : "none" }}>
+          <span style={{ fontSize:8, letterSpacing:"0.25em", textTransform:"uppercase", color:VIT_ACC[pal]||"#C9A24A" }}>Psicología Libros</span>
+          <span className="font-display" style={{ fontSize:isCenter?13:11, lineHeight:1.3, color:"#F8F4EA" }}>
+            {title.split(" ").slice(0,6).join(" ")}
+          </span>
+          {author && <span style={{ fontSize:9, color:"rgba(255,255,255,0.55)" }}>por {author}</span>}
+          {book && (
+            <span style={{ marginTop:5, padding:"4px 12px", background:VIT_ACC[pal]||"#C9A24A", color:"#fff", fontSize:8, letterSpacing:"0.18em", textTransform:"uppercase", display:"block" }}>
+              Ver catálogo →
             </span>
-            {author && <span style={{ fontSize:9, color:"rgba(201,162,74,0.8)" }}>por {author}</span>}
-            {book && (
-              <a href={waLink(msg)} target="_blank" rel="noreferrer"
-                 style={{ marginTop:4, padding:"4px 10px", background:"#D71920", color:"#fff", fontSize:9, letterSpacing:"0.15em", textTransform:"uppercase", textDecoration:"none", display:"flex", alignItems:"center", gap:4 }}
-                 onClick={e => e.stopPropagation()}>
-                Consultar
-              </a>
-            )}
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );
@@ -376,6 +397,73 @@ const Hero = () => (
     </div>
   </section>
 );
+
+// === Custom Select — reemplaza <select> nativo ===
+const CustomSelect = ({ value, onChange, options = [], className = "" }) => {
+  const [open, setOpen] = React.useState(false);
+  const ref = React.useRef(null);
+
+  React.useEffect(() => {
+    if (!open) return;
+    const handler = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [open]);
+
+  const selected = options.find(o => o.value === value);
+
+  return (
+    <div ref={ref} className={`relative ${className}`} style={{ minWidth: 210 }}>
+      <button
+        type="button"
+        onClick={() => setOpen(o => !o)}
+        className="w-full flex items-center justify-between gap-2 pl-4 pr-3 py-3 border border-pl-coal/15 bg-pl-ivory/50 text-[14px] text-pl-coal hover:border-pl-gold transition-colors focus:outline-none focus:border-pl-gold">
+        <span className="flex items-center gap-2 truncate min-w-0">
+          {selected?.Icon && (() => { const I = selected.Icon; return <span className="shrink-0 text-pl-gold-dk"><I size={13} /></span>; })()}
+          <span className={`truncate ${!selected || selected.value === value ? "text-pl-coal" : "text-pl-gray/70"}`}>
+            {selected?.label || "Seleccionar…"}
+          </span>
+        </span>
+        <span className="shrink-0 text-pl-coal/50" style={{ transition:"transform 0.2s", transform: open ? "rotate(180deg)" : "none", display:"flex" }}>
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+            <path d="M2 4l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </span>
+      </button>
+
+      {open && (
+        <div className="absolute left-0 right-0 top-full bg-white border border-pl-coal/12 border-t-0 shadow-card-hv overflow-y-auto" style={{ zIndex:200, maxHeight:280 }}>
+          {options.map(opt => {
+            const I = opt.Icon;
+            const isSelected = value === opt.value;
+            return (
+              <button
+                key={opt.value}
+                type="button"
+                onClick={() => { onChange(opt.value); setOpen(false); }}
+                className={`w-full flex items-center justify-between px-4 py-2.5 text-[13px] text-left transition-colors
+                  ${isSelected ? "bg-pl-ivory text-pl-coal font-medium" : "text-pl-gray hover:bg-pl-ivory/60 hover:text-pl-coal"}`}>
+                <span className="flex items-center gap-2.5">
+                  {I && (
+                    <span className={`shrink-0 w-5 h-5 flex items-center justify-center ${isSelected ? "text-pl-gold-dk" : "text-pl-coal/30"}`}>
+                      <I size={12} />
+                    </span>
+                  )}
+                  {opt.label}
+                </span>
+                {isSelected && (
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" className="shrink-0 ml-2">
+                    <path d="M2 6l3 3 5-5" stroke="#A4842F" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                )}
+              </button>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+};
 
 // === Category Quick Nav ===
 // linkMode=true → pills van a catalogo.html?cat=XXX (usado en index)
@@ -543,18 +631,16 @@ const CatalogBySections = ({ filter, setFilter }) => {
                 </button>
               )}
             </div>
-            {/* Category select */}
+            {/* Category select — custom dropdown */}
             <div className="flex items-center gap-3 shrink-0">
-              <div className="relative">
-                <select value={filter} onChange={e => setFilter(e.target.value)}
-                        className="appearance-none pl-4 pr-10 py-3 border border-pl-coal/15 bg-pl-ivory/50 text-[14px] text-pl-coal cursor-pointer focus:border-pl-gold outline-none">
-                  <option value="all">Todas las categorías</option>
-                  {CATEGORIES.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-                </select>
-                <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-pl-coal">
-                  <IconChevron size={14} />
-                </span>
-              </div>
+              <CustomSelect
+                value={filter}
+                onChange={setFilter}
+                options={[
+                  { value:"all", label:"Todas las categorías" },
+                  ...(CATEGORIES||[]).map(c => ({ value:c.id, label:c.name, Icon:c.Icon }))
+                ]}
+              />
               {(filter !== "all" || query) && (
                 <button onClick={clear}
                         className="px-4 py-3 text-[12px] tracking-wide text-pl-gray hover:text-pl-red border border-transparent hover:border-pl-red/20 transition-colors whitespace-nowrap">

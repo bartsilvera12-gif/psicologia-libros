@@ -63,11 +63,67 @@ const Input = (props) => (
   <input {...props} className={`w-full border border-gray-200 px-3 py-2.5 text-[13px] bg-white focus:border-pl-gold transition-colors ${props.className || ""}`} />
 );
 
-const Select = ({ children, ...props }) => (
-  <select {...props} className={`w-full border border-gray-200 px-3 py-2.5 text-[13px] bg-white focus:border-pl-gold transition-colors ${props.className || ""}`}>
-    {children}
-  </select>
-);
+/* AdminCustomSelect — dropdown estilizado para el panel admin */
+const AdminCustomSelect = ({ value, onChange, options = [], className = "", disabled = false, placeholder = "Seleccionar…" }) => {
+  const [open, setOpen] = React.useState(false);
+  const ref = React.useRef(null);
+
+  React.useEffect(() => {
+    if (!open) return;
+    const handler = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [open]);
+
+  const selected = options.find(o => String(o.value) === String(value));
+
+  return (
+    <div ref={ref} className={`relative ${className}`}>
+      <button
+        type="button"
+        disabled={disabled}
+        onClick={() => !disabled && setOpen(o => !o)}
+        className={`w-full flex items-center justify-between gap-2 border border-gray-200 px-3 py-2.5 text-[13px] bg-white transition-colors text-left focus:outline-none focus:border-pl-gold
+          ${disabled ? "opacity-60 cursor-not-allowed" : "cursor-pointer hover:border-pl-gold"}`}>
+        <span className="flex items-center gap-2 truncate min-w-0">
+          {selected?.dot && <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ background: selected.dot }} />}
+          <span className={`truncate ${selected ? "text-gray-900" : "text-gray-400"}`}>
+            {selected?.label || placeholder}
+          </span>
+        </span>
+        <svg width="11" height="11" viewBox="0 0 11 11" fill="none" className="shrink-0 text-gray-400"
+             style={{ transition:"transform 0.18s", transform: open ? "rotate(180deg)" : "none" }}>
+          <path d="M2 3.5l3.5 3.5 3.5-3.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      </button>
+      {open && (
+        <div className="absolute left-0 right-0 top-full bg-white border border-gray-200 border-t-0 shadow-card-hv overflow-y-auto" style={{ zIndex:500, maxHeight:256 }}>
+          {options.map(opt => {
+            const isSelected = String(opt.value) === String(value);
+            return (
+              <button
+                key={String(opt.value)}
+                type="button"
+                onClick={() => { onChange(opt.value); setOpen(false); }}
+                className={`w-full flex items-center justify-between px-3 py-2.5 text-[12px] text-left transition-colors
+                  ${isSelected ? "bg-amber-50 text-gray-900 font-medium" : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"}`}>
+                <span className="flex items-center gap-2">
+                  {opt.dot && <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ background: opt.dot }} />}
+                  <span className="truncate">{opt.label}</span>
+                </span>
+                {isSelected && (
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" className="shrink-0 ml-2">
+                    <path d="M2 6l3 3 5-5" stroke="#A4842F" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                )}
+              </button>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+};
 
 const Textarea = (props) => (
   <textarea {...props} rows={3} className={`w-full border border-gray-200 px-3 py-2.5 text-[13px] bg-white focus:border-pl-gold transition-colors resize-none ${props.className || ""}`} />
@@ -321,30 +377,41 @@ const BookForm = ({ book, categories, onSave, onClose }) => {
         <Field label="Autor"  ><Input value={f.author}      onChange={e=>upd("author",e.target.value)}      placeholder="Nombre del autor" /></Field>
       </div>
       <Field label="Categoría">
-        <Select value={f.category_id} onChange={e=>upd("category_id",e.target.value)}>
-          <option value="">Seleccioná una categoría</option>
-          {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-        </Select>
+        <AdminCustomSelect
+          value={f.category_id}
+          onChange={v => upd("category_id", v)}
+          placeholder="Seleccioná una categoría"
+          options={[
+            { value:"", label:"Seleccioná una categoría" },
+            ...categories.map(c => ({ value:c.id, label:c.name }))
+          ]}
+        />
       </Field>
       <Field label="Descripción"><Textarea value={f.description} onChange={e=>upd("description",e.target.value)} placeholder="Descripción breve (opcional)" /></Field>
       <div className="grid grid-cols-2 gap-4">
         <Field label="Precio" hint="Dejar vacío = Consultar precio"><Input value={f.price} onChange={e=>upd("price",e.target.value)} placeholder="Ej: Gs. 150.000" /></Field>
         <Field label="Estado">
-          <Select value={f.status} onChange={e=>upd("status",e.target.value)}>
-            {STATUSES.map(s => <option key={s} value={s}>{s.replace("_"," ")}</option>)}
-          </Select>
+          <AdminCustomSelect
+            value={f.status}
+            onChange={v => upd("status", v)}
+            options={STATUSES.map(s => ({ value:s, label:s.replace("_"," ") }))}
+          />
         </Field>
       </div>
       <div className="grid grid-cols-2 gap-4">
         <Field label="Color portada">
-          <Select value={f.cover_palette} onChange={e=>upd("cover_palette",e.target.value)}>
-            <option value="coal">Negro (coal)</option>
-            <option value="r">Rojo (r)</option>
-            <option value="b">Azul (b)</option>
-            <option value="i">Marfil (i)</option>
-            <option value="g">Verde (g)</option>
-            <option value="p">Púrpura (p)</option>
-          </Select>
+          <AdminCustomSelect
+            value={f.cover_palette}
+            onChange={v => upd("cover_palette", v)}
+            options={[
+              { value:"coal", label:"Negro",   dot:"#111111" },
+              { value:"r",    label:"Rojo",     dot:"#7a0d12" },
+              { value:"b",    label:"Azul",     dot:"#0e2640" },
+              { value:"i",    label:"Marfil",   dot:"#c2b48a" },
+              { value:"g",    label:"Verde",    dot:"#122b1a" },
+              { value:"p",    label:"Púrpura",  dot:"#2b0e4a" },
+            ]}
+          />
         </Field>
         <Field label="Texto portada" hint="Texto corto para la portada"><Input value={f.cover_short} onChange={e=>upd("cover_short",e.target.value)} placeholder="Auto (usa el título)" /></Field>
       </div>
@@ -416,10 +483,16 @@ const AdminBooks = ({ books, categories, onRefresh, onToast }) => {
           <input value={search} onChange={e=>{setSearch(e.target.value);setPage(1);}} placeholder="Buscar título, autor…"
                  className="text-[13px] outline-none w-[220px]" />
         </div>
-        <Select value={catF} onChange={e=>{setCatF(e.target.value);setPage(1);}} className="w-auto py-2">
-          <option value="">Todas las categorías</option>
-          {categories.map(c=><option key={c.id} value={c.id}>{c.name}</option>)}
-        </Select>
+        <AdminCustomSelect
+          value={catF}
+          onChange={v => { setCatF(v); setPage(1); }}
+          placeholder="Todas las categorías"
+          options={[
+            { value:"", label:"Todas las categorías" },
+            ...categories.map(c => ({ value:c.id, label:c.name }))
+          ]}
+          className="w-[220px]"
+        />
         <span className="text-[12px] text-gray-400">{filtered.length} resultado{filtered.length!==1?"s":""}</span>
       </div>
 
@@ -551,9 +624,11 @@ const CatForm = ({ cat, onSave, onClose }) => {
       <Field label="Descripción"><Textarea value={f.description} onChange={e=>upd("description",e.target.value)} placeholder="Descripción breve" /></Field>
       <div className="grid grid-cols-2 gap-4">
         <Field label="Ícono">
-          <Select value={f.icon_name} onChange={e=>upd("icon_name",e.target.value)}>
-            {ICON_OPTIONS.map(i=><option key={i} value={i}>{i}</option>)}
-          </Select>
+          <AdminCustomSelect
+            value={f.icon_name}
+            onChange={v => upd("icon_name", v)}
+            options={ICON_OPTIONS.map(i => ({ value:i, label:i }))}
+          />
         </Field>
         <Field label="Orden"><Input type="number" value={f.sort_order} onChange={e=>upd("sort_order",e.target.value)} /></Field>
       </div>
@@ -842,10 +917,15 @@ const AdminVitrine = ({ books, onRefresh, onToast }) => {
                   )}
                 </div>
               </div>
-              <Select value={book?.id || ""} onChange={e => setSlot(i, e.target.value)} className="text-[12px] py-2">
-                <option value="">— Vacío —</option>
-                {activeBooks.map(b => <option key={b.id} value={b.id}>{b.title}</option>)}
-              </Select>
+              <AdminCustomSelect
+                value={book?.id ? String(book.id) : ""}
+                onChange={v => setSlot(i, v)}
+                placeholder="— Vacío —"
+                options={[
+                  { value:"", label:"— Vacío —" },
+                  ...activeBooks.map(b => ({ value:String(b.id), label:b.title }))
+                ]}
+              />
             </div>
           );
         })}
