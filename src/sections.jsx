@@ -383,24 +383,24 @@ const Hero = () => (
             <HeroVitrine />
 
             {/* Stats */}
-            <div className="mt-8 pt-6 border-t border-pl-coal/8 grid grid-cols-3 text-center">
+            <div className="relative z-10 mt-8 pt-6 border-t border-pl-coal/8 grid grid-cols-3 text-center">
               <div>
-                <div className="font-display text-pl-coal text-[30px] tracking-tight leading-none">+1.000</div>
+                <div className="font-sans tabular-nums font-semibold text-pl-coal text-[30px] tracking-tight leading-none">+1.000</div>
                 <div className="text-[10px] tracking-[0.22em] uppercase text-pl-gray mt-1.5">Títulos</div>
               </div>
               <div className="border-x border-pl-coal/8">
-                <div className="font-display text-pl-coal text-[30px] tracking-tight leading-none">12</div>
+                <div className="font-sans tabular-nums font-semibold text-pl-coal text-[30px] tracking-tight leading-none">12</div>
                 <div className="text-[10px] tracking-[0.22em] uppercase text-pl-gray mt-1.5">Categorías</div>
               </div>
               <div>
-                <div className="font-display text-pl-coal text-[30px] tracking-tight leading-none">100%</div>
+                <div className="font-sans tabular-nums font-semibold text-pl-coal text-[30px] tracking-tight leading-none">100%</div>
                 <div className="text-[10px] tracking-[0.22em] uppercase text-pl-gray mt-1.5">Especializado</div>
               </div>
             </div>
           </div>
 
-          {/* Quote panel superpuesto */}
-          <div className="absolute -bottom-5 -left-5 bg-pl-coal text-pl-ivory p-7 max-w-[240px] shadow-card-hv hidden lg:block"
+          {/* Quote panel — desplazado hacia la izquierda (fuera del bloque blanco) para no tapar +1.000 */}
+          <div className="absolute -bottom-5 left-0 -translate-x-[62%] lg:-translate-x-[72%] xl:-translate-x-[78%] bg-pl-coal text-pl-ivory p-7 max-w-[240px] shadow-card-hv hidden lg:block z-[1]"
                style={{ animation: "fadeSlideIn 1.1s 0.7s both" }}>
             <span className="font-display text-pl-gold text-[36px] leading-none">"</span>
             <p className="font-display italic text-[16px] leading-snug mt-1">Sabiduría en cada página</p>

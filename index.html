@@ -9,7 +9,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -28,7 +28,7 @@
             'pl-white':  '#FFFFFF',
           },
           fontFamily: {
-            display: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+            display: ['"Lora"', 'Georgia', 'serif'],
             sans: ['Inter', 'system-ui', 'sans-serif'],
           },
           boxShadow: {
@@ -46,9 +46,13 @@
       background: #F8F4EA;
       color: #111111;
       font-family: 'Inter', system-ui, sans-serif;
+      font-variant-numeric: lining-nums;
       -webkit-font-smoothing: antialiased;
     }
-    .font-display { font-family: 'Cormorant Garamond', Georgia, serif; }
+    .font-display {
+      font-family: 'Lora', Georgia, serif;
+      font-variant-numeric: lining-nums;
+    }
 
     /* Subtle paper texture for ivory backgrounds */
     .paper-bg {
@@ -122,7 +126,7 @@
 
     /* Decorative serif quote mark */
     .quote-mark {
-      font-family: 'Cormorant Garamond', serif;
+      font-family: 'Lora', serif;
       font-size: 120px;
       line-height: 0.8;
       color: #C9A24A;
