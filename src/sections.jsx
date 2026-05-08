@@ -854,7 +854,11 @@ const Footer = () => (
         </div>
       </div>
       <div className="mt-14 pt-8 border-t border-pl-ivory/10 flex flex-col md:flex-row md:items-center md:justify-between gap-5">
-        <div className="text-[12px] text-pl-ivory/55">© {new Date().getFullYear()} Psicología Libros. Todos los derechos reservados.</div>
+        <div className="text-[12px] text-pl-ivory/55 flex items-center gap-4 flex-wrap">
+          <span>© {new Date().getFullYear()} Psicología Libros. Todos los derechos reservados.</span>
+          <span className="text-pl-ivory/30">·</span>
+          <span>Desarrollado por <a href="https://neura.com.py" target="_blank" rel="noreferrer" className="text-pl-gold/70 hover:text-pl-gold transition-colors">Neura</a></span>
+        </div>
         <div className="text-[11px] text-pl-ivory/50 max-w-2xl leading-relaxed">
           El contenido de los libros es informativo y formativo. No reemplaza la atención de un profesional de la salud mental.
         </div>
