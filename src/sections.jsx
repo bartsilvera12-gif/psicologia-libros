@@ -506,74 +506,298 @@ const CategoryQuickNav = ({ filter = "all", onPick, linkMode = false }) => (
   </div>
 );
 
-// === Featured Carousel (4 books, auto-rotates) ===
-const FeaturedCarousel = () => {
-  const featured = BOOKS.filter(b => b.featured);
-  const perPage  = 4;
-  const pages    = Math.max(1, Math.ceil(featured.length / perPage));
-  const [page, setPage]           = React.useState(0);
-  const [visible, setVisible]     = React.useState(true);
+// === Carrusel horizontal (estilo slider; flechas a los lados, “Ver todos” arriba) ===
+const BooksSlideCarousel = ({
+  eyebrow,
+  titleNode,
+  books,
+  perPage,
+  verTodosHref,
+  autoRotate = true,
+  rotateMs = 5200,
+  sectionClassName = "bg-pl-white",
+}) => {
+  const chunks = React.useMemo(() => {
+    const list = Array.isArray(books) ? books : [];
+    if (!list.length) return [];
+    const out = [];
+    for (let i = 0; i < list.length; i += perPage) out.push(list.slice(i, i + perPage));
+    return out;
+  }, [books, perPage]);
 
-  const goTo = React.useCallback((idx) => {
-    setVisible(false);
-    setTimeout(() => {
-      setPage(idx);
-      setVisible(true);
-    }, 380);
-  }, []);
+  const pageCount = chunks.length;
+  const [page, setPage] = React.useState(0);
 
   React.useEffect(() => {
-    const t = setInterval(() => goTo((page + 1) % pages), 4800);
-    return () => clearInterval(t);
-  }, [page, pages, goTo]);
+    setPage(0);
+  }, [pageCount]);
 
-  const current = featured.slice(page * perPage, page * perPage + perPage);
+  const go = React.useCallback(
+    (idx) => setPage(((idx % pageCount) + pageCount) % pageCount),
+    [pageCount]
+  );
+
+  React.useEffect(() => {
+    if (!autoRotate || pageCount <= 1) return;
+    const t = setInterval(() => setPage((p) => (p + 1) % pageCount), rotateMs);
+    return () => clearInterval(t);
+  }, [autoRotate, pageCount, rotateMs]);
+
+  if (!pageCount) return null;
+
+  const carouselArrowClass =
+    "flex absolute top-1/2 z-20 -translate-y-1/2 w-9 h-9 sm:w-10 sm:h-10 items-center justify-center " +
+    "bg-pl-white/95 border border-pl-coal/15 text-pl-coal shadow-sm hover:border-pl-gold hover:text-pl-gold transition-colors";
 
   return (
-    <section className="py-20 lg:py-28 bg-pl-white">
+    <section className={`py-20 lg:py-28 ${sectionClassName}`}>
       <div className="max-w-7xl mx-auto px-6 lg:px-10">
-        <div className="flex items-end justify-between mb-12">
-          <SectionTitle
-            eyebrow="Selección"
-            title={<>Libros <em className="font-normal italic text-pl-red">destacados</em></>}
-          />
-          {/* Dot indicators + arrows */}
-          <div className="flex items-center gap-3 shrink-0">
-            <button onClick={() => goTo((page - 1 + pages) % pages)}
-                    className="w-9 h-9 border border-pl-coal/20 flex items-center justify-center hover:border-pl-gold hover:text-pl-gold transition-colors"
-                    aria-label="Anterior">
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                <path d="M9 2L4 7l5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </button>
-            <div className="flex items-center gap-1.5">
-              {Array.from({ length: pages }).map((_, i) => (
-                <button key={i} onClick={() => goTo(i)}
-                        className={`transition-all duration-300 rounded-none ${i === page ? "w-7 h-2 bg-pl-red" : "w-2 h-2 bg-pl-coal/20 hover:bg-pl-gold"}`}
-                        aria-label={`Página ${i + 1}`} />
-              ))}
-            </div>
-            <button onClick={() => goTo((page + 1) % pages)}
-                    className="w-9 h-9 border border-pl-coal/20 flex items-center justify-center hover:border-pl-gold hover:text-pl-gold transition-colors"
-                    aria-label="Siguiente">
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                <path d="M5 2l5 5-5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </button>
-          </div>
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-12">
+          <SectionTitle eyebrow={eyebrow} title={titleNode} />
+          {verTodosHref ? (
+            <a
+              href={verTodosHref}
+              className="shrink-0 text-[12px] tracking-[0.2em] uppercase text-pl-gold hover:text-pl-red transition-colors sm:pb-1"
+            >
+              Ver todos
+            </a>
+          ) : null}
         </div>
 
-        <div style={{
-          opacity: visible ? 1 : 0,
-          transform: visible ? "translateX(0)" : "translateX(20px)",
-          transition: "opacity 0.4s ease, transform 0.4s cubic-bezier(0.2,0.7,0.2,1)"
-        }}>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {current.map(b => <BookCard key={b.id} book={b} />)}
+        <div className="relative">
+          {pageCount > 1 ? (
+            <>
+              <button
+                type="button"
+                onClick={() => go(page - 1)}
+                className={`${carouselArrowClass} left-0 lg:-left-2`}
+                aria-label="Anterior"
+              >
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden>
+                  <path d="M9 2L4 7l5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </button>
+              <button
+                type="button"
+                onClick={() => go(page + 1)}
+                className={`${carouselArrowClass} right-0 lg:-right-2`}
+                aria-label="Siguiente"
+              >
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden>
+                  <path d="M5 2l5 5-5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </button>
+            </>
+          ) : null}
+
+          <div className="overflow-hidden px-10 sm:px-12">
+            <div
+              className="flex transition-transform duration-[600ms] ease-[cubic-bezier(0.33,1,0.68,1)] will-change-transform"
+              style={{ transform: `translate3d(-${page * 100}%,0,0)` }}
+            >
+              {chunks.map((chunk, i) => (
+                <div key={i} className="w-full shrink-0 min-w-0">
+                  <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    {chunk.map((b) => (
+                      <BookCard key={b.id} book={b} />
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
+
+          {pageCount > 1 ? (
+            <div className="flex justify-center gap-1.5 mt-10">
+              {Array.from({ length: pageCount }).map((_, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => go(i)}
+                  className={`transition-all duration-300 rounded-none ${
+                    i === page ? "w-7 h-2 bg-pl-red" : "w-2 h-2 bg-pl-coal/20 hover:bg-pl-gold"
+                  }`}
+                  aria-label={`Página ${i + 1}`}
+                />
+              ))}
+            </div>
+          ) : null}
         </div>
       </div>
     </section>
+  );
+};
+
+// === Destacados — slider estilo El Lector (imagen | texto + CTA, flechas en los bordes, puntos abajo) ===
+const FeaturedHeroSlider = ({ books }) => {
+  const n = books.length;
+  const [idx, setIdx] = React.useState(0);
+
+  React.useEffect(() => {
+    setIdx(0);
+  }, [n]);
+
+  React.useEffect(() => {
+    if (n <= 1) return;
+    const t = setInterval(() => setIdx((i) => (i + 1) % n), 6500);
+    return () => clearInterval(t);
+  }, [n]);
+
+  const go = (delta) => setIdx((i) => ((i + delta) % n + n) % n);
+
+  return (
+    <section className="relative overflow-hidden py-16 lg:py-24">
+      {/* Fondo tipo vitrina El Lector */}
+      <div className="absolute inset-0 bg-gradient-to-br from-[#0d4a52] via-[#0a3540] to-[#061a20]" aria-hidden />
+      <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
+        <div className="absolute -top-32 -left-32 h-[480px] w-[480px] rounded-full bg-pink-200/12 blur-3xl" />
+        <div className="absolute top-1/4 right-[-80px] h-[420px] w-[420px] rounded-full bg-cyan-100/8 blur-3xl" />
+        <div className="absolute bottom-[-60px] left-1/3 h-[360px] w-[360px] rounded-full bg-indigo-950/35 blur-3xl" />
+        <div className="absolute inset-0 opacity-[0.07]" style={{
+          backgroundImage: "radial-gradient(circle at 20% 30%, white 0.5px, transparent 0.6px)",
+          backgroundSize: "28px 28px",
+        }} />
+      </div>
+
+      <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-10">
+        <div className="mb-10 flex flex-col justify-between gap-4 sm:mb-14 sm:flex-row sm:items-end">
+          <div>
+            <span className="text-[11px] font-medium uppercase tracking-[0.28em] text-white/70">Selección</span>
+            <h2 className="font-display mt-2 text-[32px] tracking-tight text-white sm:text-4xl lg:text-[44px]">
+              Libros <em className="font-normal italic text-[#fbbf24]">destacados</em>
+            </h2>
+          </div>
+          <a
+            href="catalogo.html"
+            className="shrink-0 text-[12px] uppercase tracking-[0.2em] text-white/90 transition-colors hover:text-white"
+          >
+            Ver todos
+          </a>
+        </div>
+
+        <div className="relative">
+          {n > 1 ? (
+            <>
+              <button
+                type="button"
+                onClick={() => go(-1)}
+                className="absolute left-0 top-1/2 z-20 flex h-14 w-14 -translate-x-1 -translate-y-1/2 items-center justify-center text-white/30 transition-colors hover:text-white/95 lg:h-16 lg:w-16 lg:-translate-x-6"
+                aria-label="Anterior"
+              >
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3" aria-hidden>
+                  <path d="M15 6l-6 6 6 6" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
+              <button
+                type="button"
+                onClick={() => go(1)}
+                className="absolute right-0 top-1/2 z-20 flex h-14 w-14 translate-x-1 -translate-y-1/2 items-center justify-center text-white/30 transition-colors hover:text-white/95 lg:h-16 lg:w-16 lg:translate-x-6"
+                aria-label="Siguiente"
+              >
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3" aria-hidden>
+                  <path d="M9 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
+            </>
+          ) : null}
+
+          <div className="mx-10 overflow-hidden sm:mx-14 lg:mx-20">
+            <div
+              className="flex will-change-transform transition-transform duration-[700ms] ease-[cubic-bezier(0.25,0.46,0.45,0.94)]"
+              style={{ transform: `translate3d(-${idx * 100}%,0,0)` }}
+            >
+              {books.map((b) => (
+                <div
+                  key={b.id}
+                  className="grid w-full shrink-0 min-w-0 grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-16"
+                >
+                  <div className="order-2 flex justify-center lg:order-1 lg:justify-end">
+                    <a
+                      href={`libro.html?id=${b.id}`}
+                      className="group/el-cover block w-full max-w-[280px] lg:max-w-[300px]"
+                      style={{ perspective: "880px" }}
+                    >
+                      <div
+                        className="shadow-2xl shadow-black/40 transition-transform duration-500 group-hover/el-cover:scale-[1.02]"
+                        style={{ transform: "rotateY(-7deg) rotateX(3deg)" }}
+                      >
+                        <BookCover book={b} large />
+                      </div>
+                    </a>
+                  </div>
+                  <div className="order-1 px-1 text-center lg:order-2 lg:text-left">
+                    <p className="text-[11px] font-medium uppercase tracking-[0.28em] text-white/85 sm:text-xs">
+                      {(b.author || "").toUpperCase()}
+                    </p>
+                    <h3 className="mt-3 font-sans text-[clamp(28px,5.2vw,54px)] font-bold leading-[1.06] tracking-tight text-white">
+                      {b.title}
+                    </h3>
+                    <p className="mt-5 font-display text-[clamp(22px,3.6vw,36px)] font-semibold tabular-nums tracking-tight text-white">
+                      {typeof window.formatPrecioGs === "function" ? window.formatPrecioGs(b.price) : b.price}
+                    </p>
+                    <a
+                      href={`libro.html?id=${b.id}`}
+                      className="mt-8 inline-flex items-center gap-2 rounded-full bg-white px-8 py-3.5 text-[14px] font-semibold tracking-wide text-pl-coal shadow-lg shadow-black/25 transition-colors hover:bg-pl-ivory"
+                    >
+                      Ver libro
+                      <span className="inline-flex text-[#ea580c]" aria-hidden>
+                        <IconArrow size={16} />
+                      </span>
+                    </a>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {n > 1 ? (
+            <div className="mt-12 flex justify-center gap-2">
+              {books.map((_, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  aria-label={`Diapositiva ${i + 1}`}
+                  aria-current={i === idx ? "true" : undefined}
+                  onClick={() => setIdx(i)}
+                  className={`h-2 rounded-full transition-all duration-300 ${
+                    i === idx ? "w-8 bg-orange-500" : "w-2 bg-white/35 hover:bg-white/55"
+                  }`}
+                />
+              ))}
+            </div>
+          ) : null}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const FeaturedCarousel = () => {
+  const featured = React.useMemo(
+    () => BOOKS.filter((b) => b.featured && b.is_active !== false),
+    []
+  );
+  if (!featured.length) return null;
+  return <FeaturedHeroSlider books={featured} />;
+};
+
+const CatalogPreviewCarousel = () => {
+  const catalog = React.useMemo(
+    () => BOOKS.filter((b) => !b.featured && b.is_active !== false),
+    []
+  );
+  if (!catalog.length) return null;
+  return (
+    <BooksSlideCarousel
+      eyebrow="Catálogo"
+      titleNode={<>Explorá el <em className="font-normal italic text-pl-red">catálogo</em></>}
+      books={catalog}
+      perPage={8}
+      verTodosHref="catalogo.html"
+      autoRotate={catalog.length > 8}
+      rotateMs={5600}
+      sectionClassName="bg-pl-beige/30"
+    />
   );
 };
 
@@ -992,6 +1216,6 @@ const Footer = () => (
 
 Object.assign(window, {
   Header, LogoSVG, Hero,
-  CategoryQuickNav, FeaturedCarousel, CatalogBySections,
+  CategoryQuickNav, FeaturedCarousel, CatalogPreviewCarousel, CatalogBySections,
   About, Benefits, FAQSection, Contact, Footer, ScrollTopBtn,
 });

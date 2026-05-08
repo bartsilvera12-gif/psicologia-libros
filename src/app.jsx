@@ -43,6 +43,7 @@ const App = () => {
       <main>
         <Hero />
         <FeaturedCarousel />
+        <CatalogPreviewCarousel />
         <About />
         <Benefits />
         <Contact />

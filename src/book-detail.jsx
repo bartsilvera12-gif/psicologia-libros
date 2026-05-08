@@ -18,6 +18,86 @@ const IcoPin = ({ size = 14 }) => (
   </svg>
 );
 
+/* ── Portada: carrusel si hay varias imágenes ───────── */
+const bookCoverImageUrls = (book) => {
+  const u = [];
+  if (book.image_urls && book.image_urls.length) u.push(...book.image_urls);
+  else if (book.image_url) u.push(book.image_url);
+  return u.map(String).filter(Boolean);
+};
+
+const BookCoverGallery = ({ book }) => {
+  const urls = React.useMemo(() => bookCoverImageUrls(book), [book]);
+  const [idx, setIdx] = React.useState(0);
+
+  React.useEffect(() => { setIdx(0); }, [book.id]);
+
+  if (urls.length <= 1) {
+    return (
+      <div className="relative">
+        <div className="absolute -bottom-3 -right-3 inset-0 bg-pl-coal/8" style={{ zIndex: 0 }} />
+        <div className="relative" style={{ zIndex: 1 }}>
+          <BookCover book={book} large={true} />
+        </div>
+      </div>
+    );
+  }
+
+  const n = urls.length;
+  const prev = () => setIdx((i) => (i - 1 + n) % n);
+  const next = () => setIdx((i) => (i + 1) % n);
+
+  return (
+    <div className="space-y-4">
+      <div className="relative group">
+        <div className="absolute -bottom-3 -right-3 inset-0 bg-pl-coal/8" style={{ zIndex: 0 }} />
+        <div className="relative z-[1] aspect-[2/3] overflow-hidden bg-pl-coal/5 book-cover">
+          <img
+            src={urls[idx]}
+            alt={book.title ? `${book.title} — imagen ${idx + 1} de ${n}` : "Portada"}
+            className="w-full h-full object-cover transition-opacity duration-300"
+          />
+        </div>
+        <button
+          type="button"
+          onClick={prev}
+          className="absolute left-2 top-1/2 z-[2] -translate-y-1/2 w-10 h-10 flex items-center justify-center bg-pl-white/95 border border-pl-coal/15 text-pl-coal shadow-sm hover:border-pl-gold hover:text-pl-gold transition-colors"
+          aria-label="Imagen anterior"
+        >
+          <svg width="16" height="16" viewBox="0 0 14 14" fill="none" aria-hidden>
+            <path d="M9 2L4 7l5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </button>
+        <button
+          type="button"
+          onClick={next}
+          className="absolute right-2 top-1/2 z-[2] -translate-y-1/2 w-10 h-10 flex items-center justify-center bg-pl-white/95 border border-pl-coal/15 text-pl-coal shadow-sm hover:border-pl-gold hover:text-pl-gold transition-colors"
+          aria-label="Imagen siguiente"
+        >
+          <svg width="16" height="16" viewBox="0 0 14 14" fill="none" aria-hidden>
+            <path d="M5 2l5 5-5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </button>
+      </div>
+      <div className="flex gap-2 justify-center flex-wrap">
+        {urls.map((url, i) => (
+          <button
+            key={i}
+            type="button"
+            onClick={() => setIdx(i)}
+            className={`w-12 h-[4.5rem] sm:w-14 sm:h-20 overflow-hidden border-2 transition-colors shrink-0 ${
+              i === idx ? "border-pl-gold ring-1 ring-pl-gold/40" : "border-pl-coal/10 hover:border-pl-coal/25 opacity-80 hover:opacity-100"
+            }`}
+            aria-label={`Ver imagen ${i + 1} de ${n}`}
+          >
+            <img src={url} alt="" className="w-full h-full object-cover" />
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 /* ── Componente principal ───────────────────────────── */
 const BookDetailPage = () => {
   const [book,     setBook]     = React.useState(null);
@@ -109,11 +189,7 @@ const BookDetailPage = () => {
               <div className="anim-cover lg:sticky lg:top-10">
                 {/* Portada grande */}
                 <div className="relative">
-                  {/* Sombra decorativa detrás */}
-                  <div className="absolute -bottom-3 -right-3 inset-0 bg-pl-coal/8" style={{ zIndex:0 }} />
-                  <div className="relative" style={{ zIndex:1 }}>
-                    <BookCover book={book} large={true} />
-                  </div>
+                  <BookCoverGallery book={book} />
                 </div>
 
                 {/* Link categoría */}
