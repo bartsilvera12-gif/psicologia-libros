@@ -147,75 +147,74 @@ const BookDetailPage = () => {
 
                 {/* Título */}
                 <h1 className="font-display text-pl-coal leading-[1.02] tracking-tight"
-                    style={{ fontSize:"clamp(38px,5vw,62px)" }}>
+                    style={{ fontSize:"clamp(36px,4.5vw,58px)" }}>
                   {book.title}
                 </h1>
 
                 {/* Autor */}
-                <p className="mt-4 font-display italic text-pl-gray text-[22px] leading-tight">
+                <p className="mt-3 font-display italic text-pl-gray text-[20px] leading-tight">
                   por {book.author}
                 </p>
 
                 {/* Separador dorado */}
-                <div className="my-8 flex items-center gap-4">
-                  <div className="flex-1 h-px bg-pl-gold/40" />
-                  <div className="w-1.5 h-1.5 rounded-full bg-pl-gold" />
-                  <div className="flex-1 h-px bg-pl-gold/20" />
+                <div className="my-7 flex items-center gap-4">
+                  <div className="flex-1 h-px bg-pl-gold/35" />
+                  <div className="w-1.5 h-1.5 rounded-full bg-pl-gold/70" />
+                  <div className="flex-1 h-px bg-pl-gold/15" />
                 </div>
 
-                {/* Descripción */}
+                {/* Sinopsis */}
                 {book.description ? (
-                  <div className="mb-10">
-                    <div className="text-[10px] tracking-[0.28em] uppercase text-pl-gray/60 font-medium mb-3">Sobre este libro</div>
-                    <p className="text-pl-coal/80 text-[17px] leading-[1.75]">{book.description}</p>
+                  <div className="mb-9">
+                    <div className="text-[10px] tracking-[0.28em] uppercase text-pl-gray/55 font-medium mb-3">Sinopsis</div>
+                    <p className="text-pl-coal/75 text-[16px] leading-[1.8]">{book.description}</p>
                   </div>
                 ) : (
-                  <div className="mb-10 text-pl-gray/60 text-[15px] italic">
+                  <div className="mb-9 text-pl-gray/55 text-[15px] italic leading-relaxed">
                     Consultanos por WhatsApp para más información sobre este título.
                   </div>
                 )}
 
-                {/* Panel precio + estado */}
-                <div className="bg-pl-white border border-pl-coal/8 shadow-card p-6 mb-8 relative overflow-hidden">
-                  {/* Gold accent corner */}
-                  <div className="absolute top-0 right-0 w-20 h-px bg-pl-gold" />
-                  <div className="absolute top-0 right-0 w-px h-20 bg-pl-gold/50" />
-
-                  <div className="flex items-end justify-between gap-6 flex-wrap">
-                    <div>
-                      <div className="text-[10px] tracking-[0.28em] uppercase text-pl-gray/60 mb-1.5">Precio</div>
-                      <div className="font-display text-pl-coal leading-none" style={{ fontSize:"clamp(32px,4vw,48px)" }}>
-                        {book.price}
+                {/* Precio + estado — integrado, sin caja blanca */}
+                <div className="mb-7 pt-6 border-t border-pl-coal/8">
+                  <div className="flex items-center justify-between gap-4 flex-wrap">
+                    <div className="flex items-baseline gap-4">
+                      <div>
+                        <div className="text-[10px] tracking-[0.25em] uppercase text-pl-gray/55 mb-1">Precio</div>
+                        <div className="font-display text-pl-coal text-[34px] leading-none tracking-tight">
+                          {book.price}
+                        </div>
                       </div>
                     </div>
                     <StatusPill status={book.status} />
                   </div>
+                  <div className="mt-5 gold-rule-short" />
                 </div>
 
                 {/* CTAs */}
                 <div className="flex flex-col sm:flex-row gap-3">
                   <a href={waHref} target="_blank" rel="noreferrer"
-                     className="flex-1 inline-flex items-center justify-center gap-3 px-8 py-5 bg-pl-red text-white text-[16px] font-medium tracking-wide hover:bg-pl-red-dk transition-colors group">
-                    <IconWhatsapp size={22} />
+                     className="flex-1 inline-flex items-center justify-center gap-3 px-8 py-4 bg-pl-red text-white text-[15px] font-medium tracking-wide hover:bg-pl-red-dk transition-colors">
+                    <IconWhatsapp size={20} />
                     Consultar por WhatsApp
                   </a>
                   <a href="catalogo.html"
-                     className="inline-flex items-center justify-center gap-2 px-8 py-5 border border-pl-coal/20 text-pl-coal text-[13px] tracking-wide hover:border-pl-coal hover:bg-pl-coal hover:text-pl-ivory transition-all">
+                     className="inline-flex items-center justify-center gap-2 px-7 py-4 border border-pl-coal/18 text-pl-coal text-[13px] tracking-wide hover:border-pl-coal hover:bg-pl-coal hover:text-pl-ivory transition-all">
                     Ver catálogo
                   </a>
                 </div>
 
-                {/* Garantías */}
-                <div className="mt-8 grid sm:grid-cols-3 gap-4">
+                {/* Info pills */}
+                <div className="mt-6 flex flex-wrap gap-2">
                   {[
-                    { icon: <IcoLibro size={16} />, text: "Librería especializada" },
-                    { icon: <IcoChat  size={16} />, text: "Consulta por WhatsApp" },
-                    { icon: <IcoPin   size={16} />, text: "Asunción, Paraguay" },
+                    { icon: <IcoLibro size={11} />, text: "Librería especializada" },
+                    { icon: <IcoChat  size={11} />, text: "Consulta por WhatsApp" },
+                    { icon: <IcoPin   size={11} />, text: "Asunción, Paraguay" },
                   ].map((item, i) => (
-                    <div key={i} className="flex items-center gap-3 px-4 py-3.5 border border-pl-coal/8 text-[12px] text-pl-gray">
-                      <span className="text-pl-gold-dk shrink-0">{item.icon}</span>
+                    <span key={i} className="inline-flex items-center gap-1.5 px-3 py-1.5 border border-pl-coal/8 text-[10px] tracking-wide text-pl-gray/70">
+                      <span className="text-pl-gold-dk">{item.icon}</span>
                       {item.text}
-                    </div>
+                    </span>
                   ))}
                 </div>
               </div>

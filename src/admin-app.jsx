@@ -125,8 +125,8 @@ const AdminCustomSelect = ({ value, onChange, options = [], className = "", disa
   );
 };
 
-const Textarea = (props) => (
-  <textarea {...props} rows={3} className={`w-full border border-gray-200 px-3 py-2.5 text-[13px] bg-white focus:border-pl-gold transition-colors resize-none ${props.className || ""}`} />
+const Textarea = ({ resizable = false, ...props }) => (
+  <textarea {...props} rows={props.rows || 3} className={`w-full border border-gray-200 px-3 py-2.5 text-[13px] bg-white focus:border-pl-gold transition-colors leading-relaxed ${resizable ? "resize-y" : "resize-none"} ${props.className || ""}`} />
 );
 
 const Btn = ({ children, variant = "primary", size = "md", ...props }) => {
@@ -387,7 +387,10 @@ const BookForm = ({ book, categories, onSave, onClose }) => {
           ]}
         />
       </Field>
-      <Field label="Descripción"><Textarea value={f.description} onChange={e=>upd("description",e.target.value)} placeholder="Descripción breve (opcional)" /></Field>
+      <Field label="Sinopsis" hint="Texto que aparece en la página de detalle del libro. Podés escribir varios párrafos.">
+        <Textarea value={f.description} onChange={e=>upd("description",e.target.value)}
+                  rows={6} resizable={true} placeholder="Escribí una sinopsis del libro: de qué trata, a quién va dirigido, qué temas aborda…" />
+      </Field>
       <div className="grid grid-cols-2 gap-4">
         <Field label="Precio" hint="Dejar vacío = Consultar precio"><Input value={f.price} onChange={e=>upd("price",e.target.value)} placeholder="Ej: Gs. 150.000" /></Field>
         <Field label="Estado">

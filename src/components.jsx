@@ -80,7 +80,7 @@ const BookCover = ({ book, large = false }) => {
       {/* Title */}
       <div className="absolute inset-0 flex items-center justify-center px-6">
         <div className="font-display text-center leading-[1.05] tracking-tight whitespace-pre-line text-[clamp(20px,3.4vw,34px)]">
-          {book.cover.short}
+          {(book.cover.short || "").replace(/\\n/g, "\n")}
         </div>
       </div>
       {/* Bottom author */}
