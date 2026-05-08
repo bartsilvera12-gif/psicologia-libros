@@ -574,7 +574,7 @@ const BooksSlideCarousel = ({
 
   const isNovedades = variant === "novedades";
   const gridClass = isNovedades
-    ? "grid grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6 [&>*]:min-w-0"
+    ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6 [&>*]:min-w-0"
     : "grid sm:grid-cols-2 lg:grid-cols-4 gap-6";
 
   const carouselArrowClass = isNovedades
@@ -587,8 +587,8 @@ const BooksSlideCarousel = ({
   const currentChunk = chunks[page] || [];
 
   return (
-    <section className={`py-16 lg:py-24 ${sectionClassName}`}>
-      <div className="max-w-7xl mx-auto px-6 lg:px-10">
+    <section className={`overflow-x-hidden py-16 lg:py-24 ${sectionClassName}`}>
+      <div className="mx-auto min-w-0 w-full max-w-7xl px-4 sm:px-6 lg:px-10">
         {isNovedades ? (
           <div className="mb-10 text-center lg:mb-12">
             {eyebrow ? (
@@ -620,7 +620,7 @@ const BooksSlideCarousel = ({
           </div>
         )}
 
-        <div className="relative">
+        <div className="relative min-w-0 w-full">
           {pageCount > 1 ? (
             <>
               <button
@@ -646,7 +646,7 @@ const BooksSlideCarousel = ({
             </>
           ) : null}
 
-          <div className={`overflow-hidden ${isNovedades ? "px-9 sm:px-11 lg:px-14" : "px-10 sm:px-12"}`}>
+          <div className={`min-w-0 overflow-hidden ${isNovedades ? "px-2 sm:px-9 lg:px-12" : "px-8 sm:px-10 lg:px-12"}`}>
             {pageTransition === "fade" ? (
               <div
                 style={{

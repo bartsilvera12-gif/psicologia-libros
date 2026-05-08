@@ -123,7 +123,7 @@ const BookCard = ({ book }) => {
   const msg       = `Hola, me interesa el libro "${book.title}" de Psicología Libros. ¿Me podés dar más información?`;
   const detailHref = `libro.html?id=${book.id}`;
   return (
-    <article className="group bg-pl-white border border-pl-coal/8 lift shadow-card hover:shadow-card-hv hover:border-pl-gold/40 flex flex-col overflow-hidden">
+    <article className="group min-w-0 w-full bg-pl-white border border-pl-coal/8 lift shadow-card hover:shadow-card-hv hover:border-pl-gold/40 flex flex-col overflow-hidden">
       {/* Portada — clickable */}
       <a href={detailHref} className="block">
         <BookCover book={book} />
