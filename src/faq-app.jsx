@@ -118,15 +118,9 @@ const FAQPageApp = () => {
                 {/* Stats */}
                 <div className="bg-pl-white border border-pl-coal/8 p-5 shadow-card">
                   <div className="text-[10px] tracking-[0.22em] uppercase text-pl-gold-dk font-medium mb-4">Información</div>
-                  <div className="grid grid-cols-2 text-center divide-x divide-pl-coal/8">
-                    <div className="px-2">
-                      <div className="font-display text-pl-coal text-[28px] leading-none">{faqs.length}</div>
-                      <div className="text-[10px] tracking-[0.15em] uppercase text-pl-gray mt-1.5">Respuestas</div>
-                    </div>
-                    <div className="px-2">
-                      <div className="font-display text-pl-coal text-[28px] leading-none">WA</div>
-                      <div className="text-[10px] tracking-[0.15em] uppercase text-pl-gray mt-1.5">Consulta</div>
-                    </div>
+                  <div className="text-center">
+                    <div className="font-display text-pl-coal text-[36px] leading-none">{faqs.length}</div>
+                    <div className="text-[10px] tracking-[0.15em] uppercase text-pl-gray mt-1.5">Respuestas</div>
                   </div>
                 </div>
 
