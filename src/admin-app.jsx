@@ -39,6 +39,9 @@ const Toast = ({ msg, type = "ok", onDone }) => {
   );
 };
 
+const getAdminModalMount = () =>
+  (typeof document !== "undefined" && document.getElementById("admin-modal-root")) || document.body;
+
 const Modal = ({ title, onClose, children, wide = false }) =>
   ReactDOM.createPortal(
     (
@@ -58,7 +61,7 @@ const Modal = ({ title, onClose, children, wide = false }) =>
         </div>
       </div>
     ),
-    document.body
+    getAdminModalMount()
   );
 
 const Field = ({ label, children, hint }) => (
@@ -1215,7 +1218,7 @@ const AdminApp = () => {
       </aside>
 
       {/* Main */}
-      <div className="flex-1 min-w-0 flex flex-col" style={{ background:"#EFE6D4" }}>
+      <div className="flex-1 min-w-0 flex flex-col min-h-0" style={{ background:"#EFE6D4" }}>
         {/* Topbar */}
         <div className="h-14 bg-white border-b border-[#E0D5C0] flex items-center justify-between px-8 shrink-0" style={{ boxShadow:"0 1px 0 rgba(17,17,17,0.04), 0 4px 16px -8px rgba(17,17,17,0.08)" }}>
           <div className="flex items-center gap-3">
@@ -1234,19 +1237,23 @@ const AdminApp = () => {
             </div>
           </div>
         </div>
-        {/* Content */}
-        <main className="flex-1 overflow-y-auto p-8">
-          {loading ? <Spinner /> : (
-            <>
-              {tab==="dash"       && <AdminDashboard  books={books} categories={categories} />}
-              {tab==="books"      && <AdminBooks       books={books} categories={categories} onRefresh={loadAll} onToast={showToast} />}
-              {tab==="destacados" && <AdminDestacados  books={books} onRefresh={loadAll} onToast={showToast} />}
-              {tab==="vitrina"    && <AdminVitrine     books={books} onRefresh={loadAll} onToast={showToast} />}
-              {tab==="cats"       && <AdminCategories  categories={categories} books={books} onRefresh={loadAll} onToast={showToast} />}
-              {tab==="faqs"       && <AdminFAQs        faqs={faqs} onRefresh={loadAll} onToast={showToast} />}
-            </>
-          )}
-        </main>
+        {/* Área contenido + overlay modales (centrado en esta zona, no en el sidebar) */}
+        <div className="flex-1 min-h-0 relative">
+          <main className="h-full overflow-y-auto p-8">
+            {loading ? <Spinner /> : (
+              <>
+                {tab==="dash"       && <AdminDashboard  books={books} categories={categories} />}
+                {tab==="books"      && <AdminBooks       books={books} categories={categories} onRefresh={loadAll} onToast={showToast} />}
+                {tab==="destacados" && <AdminDestacados  books={books} onRefresh={loadAll} onToast={showToast} />}
+                {tab==="vitrina"    && <AdminVitrine     books={books} onRefresh={loadAll} onToast={showToast} />}
+                {tab==="cats"       && <AdminCategories  categories={categories} books={books} onRefresh={loadAll} onToast={showToast} />}
+                {tab==="faqs"       && <AdminFAQs        faqs={faqs} onRefresh={loadAll} onToast={showToast} />}
+              </>
+            )}
+          </main>
+          {/* pointer-events-none: sin modal no tapa la tabla; el backdrop del modal reactiva eventos */}
+          <div id="admin-modal-root" className="absolute inset-0 z-[100] pointer-events-none" />
+        </div>
       </div>
 
       {toast && <Toast key={toast.key} msg={toast.msg} type={toast.type} onDone={()=>setToast(null)} />}
