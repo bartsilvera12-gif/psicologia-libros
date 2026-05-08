@@ -110,20 +110,13 @@ const StatusPill = ({ status }) => {
 };
 
 // === Book card ===
-const BookCard = ({ book, featured = false }) => {
+const BookCard = ({ book }) => {
   const msg = `Hola, quiero consultar por el libro "${book.title}" de Psicología Libros.`;
   return (
-    <article className={`group bg-pl-white border border-pl-coal/8 lift shadow-card hover:shadow-card-hv hover:border-pl-gold/40 ${featured ? "p-5" : "p-4"}`}>
-      <div className="relative">
-        <BookCover book={book} large={featured} />
-        {featured && (
-          <div className="absolute top-3 left-3 bg-pl-ivory/95 border border-pl-gold/40 px-2.5 py-1 text-[10px] tracking-[0.22em] uppercase text-pl-gold-dk">
-            Recomendado
-          </div>
-        )}
-      </div>
-      <div className="pt-5">
-        <div className="flex items-center justify-between gap-3">
+    <article className="group bg-pl-white border border-pl-coal/8 lift shadow-card hover:shadow-card-hv hover:border-pl-gold/40 p-4 flex flex-col">
+      <BookCover book={book} />
+      <div className="pt-4 flex flex-col flex-1">
+        <div className="flex items-center justify-between gap-2">
           <span className="eyebrow !text-[10px]">{catName(book.category)}</span>
           <StatusPill status={book.status} />
         </div>
@@ -131,28 +124,18 @@ const BookCard = ({ book, featured = false }) => {
           {book.title}
         </h3>
         <p className="text-pl-gray text-[13px] mt-1.5 italic">por {book.author}</p>
-
-        <div className="my-4 gold-rule-short" />
-
-        <p className={`text-pl-gray text-[14px] leading-relaxed ${featured ? "" : "line-clamp-3"}`}>
-          {book.description}
-        </p>
-
+        <div className="mt-4 gold-rule-short" />
+        <div className="flex-1" />
         <div className="mt-5 flex items-end justify-between gap-3">
           <div>
             <div className="text-[10px] tracking-[0.22em] uppercase text-pl-gray/70">Precio</div>
-            <div className="font-display text-pl-coal text-[20px] mt-0.5">
+            <div className="font-display text-pl-coal text-[20px] mt-0.5 leading-tight">
               {book.price}
             </div>
           </div>
-          <a
-            href={waLink(msg)}
-            target="_blank" rel="noreferrer"
-            aria-label={`Consultar por WhatsApp el libro ${book.title}`}
-            className="inline-flex items-center gap-2 px-4 py-2.5 bg-pl-red text-white text-[12px] tracking-wide hover:bg-pl-red-dk transition-colors"
-          >
-            <IconWhatsapp size={15} />
-            Consultar
+          <a href={waLink(msg)} target="_blank" rel="noreferrer"
+             className="shrink-0 inline-flex items-center gap-2 px-4 py-2.5 bg-pl-red text-white text-[12px] tracking-wide hover:bg-pl-red-dk transition-colors">
+            <IconWhatsapp size={15} /> Consultar
           </a>
         </div>
       </div>
