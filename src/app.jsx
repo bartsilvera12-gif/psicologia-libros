@@ -38,7 +38,7 @@ const App = () => {
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen w-full max-w-[100vw] overflow-x-hidden">
       <Header active={active} />
       <main>
         <Hero />

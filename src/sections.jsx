@@ -663,15 +663,16 @@ const BooksSlideCarousel = ({
               </div>
             ) : (
               <div
-                className="flex w-full transition-transform duration-[600ms] ease-[cubic-bezier(0.33,1,0.68,1)] will-change-transform"
+                className="flex w-full min-w-0 transition-transform duration-[600ms] ease-[cubic-bezier(0.33,1,0.68,1)] will-change-transform"
                 style={{ transform: `translate3d(-${page * 100}%,0,0)` }}
               >
                 {chunks.map((chunk, i) => (
                   <div
                     key={i}
-                    className="box-border min-w-0 shrink-0 basis-full flex-[0_0_100%] max-w-full"
+                    className="box-border min-w-0 shrink-0 max-w-full"
+                    style={{ flex: "0 0 100%", width: "100%", minWidth: "100%" }}
                   >
-                    <div className={`${gridClass} max-w-full`}>
+                    <div className={`${gridClass} w-full max-w-full`}>
                       {chunk.map((b) => (
                         <BookCard key={b.id} book={b} />
                       ))}
@@ -777,15 +778,16 @@ const FeaturedHeroSlider = ({ books }) => {
             </>
           ) : null}
 
-          <div className="mx-10 overflow-hidden sm:mx-14 lg:mx-20">
+          <div className="mx-10 min-w-0 overflow-hidden sm:mx-14 lg:mx-20">
             <div
-              className="flex will-change-transform transition-transform duration-[700ms] ease-[cubic-bezier(0.25,0.46,0.45,0.94)]"
+              className="flex w-full min-w-0 will-change-transform transition-transform duration-[700ms] ease-[cubic-bezier(0.25,0.46,0.45,0.94)]"
               style={{ transform: `translate3d(-${idx * 100}%,0,0)` }}
             >
               {books.map((b) => (
                 <div
                   key={b.id}
-                  className="grid w-full shrink-0 min-w-0 grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-16"
+                  className="grid min-w-0 shrink-0 grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-16"
+                  style={{ flex: "0 0 100%", width: "100%", minWidth: "100%" }}
                 >
                   <div className="order-2 flex justify-center lg:order-1 lg:justify-end">
                     <a

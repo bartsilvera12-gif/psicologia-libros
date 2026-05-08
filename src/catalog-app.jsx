@@ -138,7 +138,7 @@ const CatalogPage = () => {
     : null;
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen w-full max-w-[100vw] overflow-x-hidden">
       <Header active="" homePath="index.html" />
 
       <main>
@@ -351,7 +351,7 @@ const CatalogPage = () => {
                         Ver todos ({sec.books.length}) <IconArrow size={12} />
                       </button>
                     </div>
-                    <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                    <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 [&>*]:min-w-0">
                       {sec.books.slice(0, 4).map(b => <BookCard key={b.id} book={b} />)}
                     </div>
                     {sec.books.length > 4 && (
@@ -368,7 +368,7 @@ const CatalogPage = () => {
             </div>
 
           ) : filtered.length > 0 ? (
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 [&>*]:min-w-0">
               {filtered.map(b => <BookCard key={b.id} book={b} />)}
             </div>
 

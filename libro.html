@@ -41,8 +41,10 @@
   </script>
 
   <style>
-    html { scroll-behavior: smooth; }
+    html { scroll-behavior: smooth; overflow-x: hidden; max-width: 100%; }
     body {
+      overflow-x: hidden;
+      max-width: 100%;
       background: #F8F4EA;
       color: #111111;
       font-family: 'Inter', system-ui, sans-serif;
@@ -99,13 +101,13 @@
   <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
 </head>
 <body>
-  <div id="root"></div>
+  <div id="root" class="overflow-x-hidden max-w-full"></div>
 
-  <script type="text/babel" src="src/icons.jsx"></script>
-  <script type="text/babel" src="src/data.jsx"></script>
-  <script type="text/babel" src="src/supabase.jsx"></script>
-  <script type="text/babel" src="src/components.jsx"></script>
-  <script type="text/babel" src="src/sections.jsx"></script>
-  <script type="text/babel" src="src/book-detail.jsx"></script>
+  <script type="text/babel" src="src/icons.jsx?v=5"></script>
+  <script type="text/babel" src="src/data.jsx?v=5"></script>
+  <script type="text/babel" src="src/supabase.jsx?v=5"></script>
+  <script type="text/babel" src="src/components.jsx?v=5"></script>
+  <script type="text/babel" src="src/sections.jsx?v=5"></script>
+  <script type="text/babel" src="src/book-detail.jsx?v=5"></script>
 </body>
 </html>
