@@ -8,7 +8,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -27,7 +27,7 @@
             'pl-white':  '#FFFFFF',
           },
           fontFamily: {
-            display: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+            display: ['"Lora"', 'Georgia', 'serif'],
             sans: ['Inter', 'system-ui', 'sans-serif'],
           },
           boxShadow: {
@@ -39,8 +39,8 @@
     }
   </script>
   <style>
-    body { background:#EFE6D4; font-family:'Inter',sans-serif; -webkit-font-smoothing:antialiased; }
-    .font-display { font-family:'Cormorant Garamond',Georgia,serif; }
+    body { background:#EFE6D4; font-family:'Inter',sans-serif; font-variant-numeric:lining-nums; -webkit-font-smoothing:antialiased; }
+    .font-display { font-family:'Lora',Georgia,serif; font-variant-numeric:lining-nums; }
     ::-webkit-scrollbar { width:6px; height:6px; }
     ::-webkit-scrollbar-track { background:#EFE6D4; }
     ::-webkit-scrollbar-thumb { background:#D4C5A8; border-radius:3px; }
@@ -60,15 +60,26 @@
     .badge-yellow { background:#fef9c3; color:#854d0e; }
     .badge-gray   { background:#f3f4f6; color:#374151; }
     .table-row:hover { background:#FAF6EE; }
-    #admin-modal-root .modal-backdrop { pointer-events:auto; }
+    /* Modal a nivel viewport: overlay en toda la pantalla; caja anclada arriba para que no se corte abajo */
     .modal-backdrop {
-      position:absolute; inset:0;
-      margin:0; padding:1.25rem;
+      position:fixed; left:0; top:0; right:0; bottom:0;
+      z-index:150;
+      margin:0; padding:1rem 1rem 1.25rem;
       box-sizing:border-box;
       background:rgba(17,17,17,0.72);
-      display:flex; align-items:center; justify-content:center;
+      display:flex; align-items:flex-start; justify-content:center;
+      overflow-y:auto; overflow-x:hidden;
+      -webkit-overflow-scrolling:touch;
     }
-    .modal { background:#ffffff; width:100%; max-width:580px; max-height:min(88vh,100%); overflow-y:auto; box-shadow:0 20px 60px rgba(0,0,0,0.4); }
+    .modal {
+      background:#ffffff; width:100%; max-width:580px;
+      max-height:calc(100dvh - 2rem);
+      min-height:0;
+      overflow-x:hidden; overflow-y:auto;
+      box-shadow:0 20px 60px rgba(0,0,0,0.4);
+      flex-shrink:0;
+      margin-top:max(0.5rem, env(safe-area-inset-top, 0px));
+    }
     .modal-wide { max-width:720px; }
     .modal input, .modal textarea, .modal select { border-radius:0 !important; }
     input:focus,select:focus,textarea:focus { outline:1px solid #C9A24A; outline-offset:0; }

@@ -39,15 +39,12 @@ const Toast = ({ msg, type = "ok", onDone }) => {
   );
 };
 
-const getAdminModalMount = () =>
-  (typeof document !== "undefined" && document.getElementById("admin-modal-root")) || document.body;
-
 const Modal = ({ title, onClose, children, wide = false }) =>
   ReactDOM.createPortal(
     (
       <div className="modal-backdrop" onClick={e => e.target === e.currentTarget && onClose()}>
         <div className={`modal fade-in${wide ? " modal-wide" : ""}`}>
-          <div className="flex items-center justify-between px-6 py-4" style={{ background:"#111111", borderBottom:"2px solid #C9A24A" }}>
+          <div className="flex items-center justify-between px-6 py-4 shrink-0" style={{ background:"#111111", borderBottom:"2px solid #C9A24A" }}>
             <h3 className="font-display text-white text-[22px] tracking-tight">{title}</h3>
             <button onClick={onClose}
                     className="w-8 h-8 flex items-center justify-center transition-colors"
@@ -61,7 +58,7 @@ const Modal = ({ title, onClose, children, wide = false }) =>
         </div>
       </div>
     ),
-    getAdminModalMount()
+    document.body
   );
 
 const Field = ({ label, children, hint }) => (
@@ -241,7 +238,7 @@ const StatCard = ({ label, value, sub, color = "gold", icon }) => {
       <div className="flex items-start justify-between gap-2">
         <div className="flex-1 min-w-0">
           <div className="text-[10px] tracking-[0.22em] uppercase font-medium mb-2" style={{ color: s.text }}>{label}</div>
-          <div className="font-display text-pl-coal text-[38px] leading-none">{value}</div>
+          <div className="font-sans tabular-nums text-pl-coal text-[38px] font-semibold leading-none tracking-tight">{value}</div>
           {sub && <div className="text-[11px] mt-2" style={{ color: s.text, opacity:0.7 }}>{sub}</div>}
         </div>
         {icon && (
@@ -342,7 +339,7 @@ const AdminDashboard = ({ books, categories }) => {
           ].map(s => (
             <div key={s.label} className="flex items-center gap-3 p-3 bg-[#FAF6EE]">
               <span className={`badge ${s.cls}`}>{s.label}</span>
-              <span className="font-display text-pl-coal text-[22px] leading-none">{s.count}</span>
+              <span className="font-sans tabular-nums font-semibold text-pl-coal text-[22px] leading-none">{s.count}</span>
             </div>
           ))}
         </div>
@@ -352,11 +349,10 @@ const AdminDashboard = ({ books, categories }) => {
 };
 
 /* ── LIBROS ─────────────────────────────────────── */
-const PALETTES = ["coal","r","b","i","g","p"];
 const STATUSES = ["disponible","consultar","agotado","por_encargo"];
 
 const BookForm = ({ book, categories, onSave, onClose }) => {
-  const def = book || { title:"", author:"", category_id:"", description:"", price:"", status:"consultar", cover_palette:"coal", cover_short:"", featured:false, is_active:true, image_urls:[] };
+  const def = book || { title:"", author:"", category_id:"", description:"", price:"", status:"consultar", featured:false, is_active:true, image_urls:[] };
   const [f, setF] = React.useState({
     title:         def.title,
     author:        def.author,
@@ -364,8 +360,6 @@ const BookForm = ({ book, categories, onSave, onClose }) => {
     description:   def.description || "",
     price:         def.price === "Consultar precio" ? "" : (def.price || ""),
     status:        def.status || "consultar",
-    cover_palette: def.cover?.palette || def.cover_palette || "coal",
-    cover_short:   def.cover?.short   || def.cover_short   || "",
     featured:      def.featured || false,
     is_active:     def.is_active !== false,
     image_urls:    def.image_urls || (def.image_url ? [def.image_url] : []),
@@ -396,8 +390,8 @@ const BookForm = ({ book, categories, onSave, onClose }) => {
         description:   f.description.trim(),
         price:         f.price.trim() || "Consultar precio",
         status:        f.status,
-        cover_palette: f.cover_palette,
-        cover_short:   f.cover_short.trim() || f.title.trim(),
+        cover_palette: book?.cover?.palette || book?.cover_palette || "coal",
+        cover_short:   f.title.trim(),
         featured:      f.featured,
         is_active:     f.is_active,
         image_url: f.image_urls.length > 0 ? JSON.stringify(f.image_urls) : null,
@@ -479,23 +473,6 @@ const BookForm = ({ book, categories, onSave, onClose }) => {
           />
         </Field>
       </div>
-      <div className="grid grid-cols-2 gap-4">
-        <Field label="Color portada">
-          <AdminCustomSelect
-            value={f.cover_palette}
-            onChange={v => upd("cover_palette", v)}
-            options={[
-              { value:"coal", label:"Negro",   dot:"#111111" },
-              { value:"r",    label:"Rojo",     dot:"#7a0d12" },
-              { value:"b",    label:"Azul",     dot:"#0e2640" },
-              { value:"i",    label:"Marfil",   dot:"#c2b48a" },
-              { value:"g",    label:"Verde",    dot:"#122b1a" },
-              { value:"p",    label:"Púrpura",  dot:"#2b0e4a" },
-            ]}
-          />
-        </Field>
-        <Field label="Texto portada" hint="Texto corto para la portada"><Input value={f.cover_short} onChange={e=>upd("cover_short",e.target.value)} placeholder="Auto (usa el título)" /></Field>
-      </div>
       <div className="flex items-center gap-6 mb-5">
         <label className="flex items-center gap-2 cursor-pointer select-none">
           <input type="checkbox" checked={f.featured} onChange={e=>upd("featured",e.target.checked)} className="w-4 h-4 accent-[#C9A24A]" />
@@ -574,7 +551,7 @@ const AdminBooks = ({ books, categories, onRefresh, onToast }) => {
           ]}
           className="w-[220px]"
         />
-        <span className="text-[12px] text-gray-400">{filtered.length} resultado{filtered.length!==1?"s":""}</span>
+        <span className="text-[12px] text-gray-400"><span className="font-sans tabular-nums font-medium text-pl-coal/80">{filtered.length}</span> resultado{filtered.length!==1?"s":""}</span>
       </div>
 
       {/* Tabla */}
@@ -769,7 +746,7 @@ const AdminCategories = ({ categories, books, onRefresh, onToast }) => {
                 <td className="px-5 py-3 text-gray-500 max-w-[200px] truncate">{c.desc}</td>
                 <td className="px-5 py-3 text-gray-400 font-mono text-[11px]">{c.icon_name || "—"}</td>
                 <td className="px-5 py-3">
-                  <span className="font-display text-[18px] text-pl-coal">{countBooks(c.id)}</span>
+                  <span className="font-sans tabular-nums font-semibold text-[18px] text-pl-coal">{countBooks(c.id)}</span>
                 </td>
                 <td className="px-5 py-3">
                   <div className="flex items-center gap-1">
@@ -992,7 +969,7 @@ const AdminVitrine = ({ books, onRefresh, onToast }) => {
                     <>
                       <div style={{ position:"absolute", inset:8, border:"1px solid rgba(201,162,74,0.4)" }} />
                       <div style={{ position:"absolute", inset:0, display:"flex", alignItems:"center", justifyContent:"center", padding:"0 6px", textAlign:"center" }}>
-                        <span style={{ fontFamily:"Cormorant Garamond,Georgia,serif", fontSize:10, lineHeight:1.3, color:VITRINE_PAL_TXT[pal] }}>{short||book.title}</span>
+                        <span style={{ fontFamily:"Lora,Georgia,serif", fontSize:10, lineHeight:1.3, color:VITRINE_PAL_TXT[pal] }}>{short||book.title}</span>
                       </div>
                     </>
                   ) : (
@@ -1237,9 +1214,8 @@ const AdminApp = () => {
             </div>
           </div>
         </div>
-        {/* Área contenido + overlay modales (centrado en esta zona, no en el sidebar) */}
-        <div className="flex-1 min-h-0 relative">
-          <main className="h-full overflow-y-auto p-8">
+        <div className="flex-1 min-h-0 flex flex-col">
+          <main className="flex-1 min-h-0 overflow-y-auto p-8">
             {loading ? <Spinner /> : (
               <>
                 {tab==="dash"       && <AdminDashboard  books={books} categories={categories} />}
@@ -1251,8 +1227,6 @@ const AdminApp = () => {
               </>
             )}
           </main>
-          {/* pointer-events-none: sin modal no tapa la tabla; el backdrop del modal reactiva eventos */}
-          <div id="admin-modal-root" className="absolute inset-0 z-[100] pointer-events-none" />
         </div>
       </div>
 
