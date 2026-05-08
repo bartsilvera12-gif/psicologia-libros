@@ -767,22 +767,19 @@ const About = () => (
 
       <div className="lg:col-span-5 relative">
         <div className="bg-pl-white p-8 shadow-card relative">
-          <div className="space-y-3">
-            {[["coal","i","r"],["b","g","coal"],["i","p","b"]].map((row, ri) => (
-              <div key={ri} className="grid grid-cols-3 gap-3">
-                {row.map((p, ci) => (
-                  <div key={ci} className={`typo-cover ${p === "coal" ? "" : p} aspect-[2/3]`}>
-                    <div className="frame" />
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <span className="text-[10px] tracking-[0.3em] uppercase opacity-70" style={p==="i"?{color:"#5b4a22"}:{color:"#C9A24A"}}>P · L</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ))}
+          <div className="relative overflow-hidden aspect-[3/4] border border-pl-coal/[0.07]">
+            <img
+              src="https://images.unsplash.com/photo-1526243741027-4448ffdaa074?auto=format&fit=crop&w=960&q=85"
+              alt="Estanterías de libros en una librería"
+              className="h-full w-full object-cover object-center"
+              loading="lazy"
+              decoding="async"
+            />
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-pl-coal/25 via-pl-coal/[0.02] to-transparent" aria-hidden />
+            <div className="pointer-events-none absolute inset-4 border border-pl-gold/35 md:inset-5" aria-hidden />
           </div>
-          <div className="mt-8 pt-6 border-t border-pl-gold/30 flex items-center justify-between">
-            <div className="font-display italic text-pl-coal text-[20px]">Sabiduría en cada página</div>
+          <div className="mt-8 pt-6 border-t border-pl-gold/30 flex items-center justify-between gap-4">
+            <div className="font-display italic text-pl-coal text-[18px] sm:text-[20px] leading-snug">Sabiduría en cada página</div>
             <GoldDot />
           </div>
         </div>
