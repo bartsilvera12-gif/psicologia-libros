@@ -382,29 +382,29 @@ const Hero = () => (
             {/* Libros en abanico — tomados de los destacados */}
             <HeroVitrine />
 
-            {/* Stats */}
-            <div className="relative z-10 mt-8 pt-6 border-t border-pl-coal/8 grid grid-cols-3 text-center">
-              <div>
-                <div className="font-sans tabular-nums font-semibold text-pl-coal text-[30px] tracking-tight leading-none">+1.000</div>
+            {/* Stats — números en Inter para distinguir 1 de I */}
+            <div className="relative z-10 mt-8 pt-6 border-t border-pl-coal/8 grid grid-cols-3 text-center gap-1">
+              <div className="min-w-0 px-1">
+                <div className="font-sans tabular-nums font-semibold text-pl-coal text-[26px] sm:text-[28px] tracking-tight leading-none">+1.000</div>
                 <div className="text-[10px] tracking-[0.22em] uppercase text-pl-gray mt-1.5">Títulos</div>
               </div>
-              <div className="border-x border-pl-coal/8">
-                <div className="font-sans tabular-nums font-semibold text-pl-coal text-[30px] tracking-tight leading-none">12</div>
+              <div className="border-x border-pl-coal/8 min-w-0 px-1">
+                <div className="font-sans tabular-nums font-semibold text-pl-coal text-[26px] sm:text-[28px] tracking-tight leading-none">12</div>
                 <div className="text-[10px] tracking-[0.22em] uppercase text-pl-gray mt-1.5">Categorías</div>
               </div>
-              <div>
-                <div className="font-sans tabular-nums font-semibold text-pl-coal text-[30px] tracking-tight leading-none">100%</div>
+              <div className="min-w-0 px-1">
+                <div className="font-sans tabular-nums font-semibold text-pl-coal text-[26px] sm:text-[28px] tracking-tight leading-none">100%</div>
                 <div className="text-[10px] tracking-[0.22em] uppercase text-pl-gray mt-1.5">Especializado</div>
               </div>
             </div>
           </div>
 
-          {/* Quote panel — desplazado hacia la izquierda (fuera del bloque blanco) para no tapar +1.000 */}
-          <div className="absolute -bottom-5 left-0 -translate-x-[62%] lg:-translate-x-[72%] xl:-translate-x-[78%] bg-pl-coal text-pl-ivory p-7 max-w-[240px] shadow-card-hv hidden lg:block z-[1]"
+          {/* Cita — compacta; posición como al inicio (-bottom/-left) para no competir con las métricas */}
+          <div className="absolute -bottom-3 -left-3 bg-pl-coal text-pl-ivory px-4 py-3.5 max-w-[168px] shadow-card hidden lg:block z-[1]"
                style={{ animation: "fadeSlideIn 1.1s 0.7s both" }}>
-            <span className="font-display text-pl-gold text-[36px] leading-none">"</span>
-            <p className="font-display italic text-[16px] leading-snug mt-1">Sabiduría en cada página</p>
-            <div className="mt-4 text-[10px] tracking-[0.28em] uppercase text-pl-gold">Psicología Libros</div>
+            <span className="font-sans text-pl-gold text-[22px] leading-none block opacity-90">"</span>
+            <p className="font-sans text-[12px] leading-snug mt-0.5 text-pl-ivory/95">Sabiduría en cada página</p>
+            <div className="mt-2.5 text-[8px] tracking-[0.26em] uppercase text-pl-gold font-medium">Psicología Libros</div>
           </div>
         </div>
 
