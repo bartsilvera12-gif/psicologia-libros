@@ -177,56 +177,89 @@ const LogoSVG = ({ size = 280 }) => (
   />
 );
 
-// === Vitrina decorativa del hero ===
-const HeroVitrine = () => (
-  <div className="relative h-[220px] flex items-end justify-center">
-    <div className="absolute" style={{ left:"10%", bottom:0, transform:"rotate(-10deg)", zIndex:1 }}>
-      <div className="hero-book typo-cover i w-[100px] h-[150px] shadow-card">
-        <div className="frame" />
-        <div className="absolute inset-0 flex flex-col items-center justify-center gap-1.5 px-3 text-center">
-          <span className="text-[9px] tracking-[0.2em] uppercase" style={{color:"#5b4a22",opacity:0.55}}>P·L</span>
-          <span className="font-display text-[12px] leading-snug" style={{color:"#2b2418"}}>Trauma<br/>&amp; duelo</span>
+// === Vitrina del hero ===
+const VITRINE_FALLBACK = [
+  { pal:"i",    short:"Trauma\n& duelo",     title:"Trauma & Duelo",      author:"" },
+  { pal:"b",    short:"Neuro-\npsicología",  title:"Neuropsicología",     author:"" },
+  { pal:"coal", short:"La mente\nhumana",    title:"La Mente Humana",     author:"" },
+  { pal:"g",    short:"Mind-\nfulness",      title:"Mindfulness",         author:"" },
+  { pal:"r",    short:"Salud\nmental",       title:"Salud Mental",        author:"" },
+];
+const VIT_SLOTS = [
+  { pos:"absolute", style:{ left:"10%",  bottom:0, transform:"rotate(-10deg)", zIndex:1 }, w:100, h:150 },
+  { pos:"absolute", style:{ left:"28%",  bottom:0, transform:"rotate(-4deg)",  zIndex:2 }, w:100, h:152 },
+  { pos:"relative", style:{ zIndex:3 },                                                    w:115, h:172, center:true },
+  { pos:"absolute", style:{ right:"28%", bottom:0, transform:"rotate(4deg)",   zIndex:2 }, w:100, h:152 },
+  { pos:"absolute", style:{ right:"10%", bottom:0, transform:"rotate(10deg)",  zIndex:1 }, w:100, h:150 },
+];
+const VIT_BG  = { coal:"#1c1c1c", r:"#4a0d10", b:"#1d2a3a", i:"#efe6d4", g:"#2d3530", p:"#2a2030" };
+const VIT_TXT = { coal:"#F8F4EA", r:"#F8F4EA", b:"#F8F4EA", i:"#2b2418", g:"#F8F4EA", p:"#F8F4EA" };
+const VIT_LBL = { coal:"rgba(201,162,74,0.6)", r:"rgba(201,162,74,0.55)", b:"rgba(201,162,74,0.55)", i:"rgba(91,74,34,0.55)", g:"rgba(201,162,74,0.55)", p:"rgba(201,162,74,0.55)" };
+
+const VitrineBook = ({ book, fb, slot, isCenter }) => {
+  const [hov, setHov] = React.useState(false);
+  const pal   = book?.cover?.palette || fb.pal;
+  const short = (book?.cover?.short || fb.short).replace(/\\n/g,"\n");
+  const title = book?.title || fb.title;
+  const author= book?.author || fb.author;
+  const msg   = book ? `Hola, quiero consultar por el libro "${title}" de Psicología Libros.` : null;
+
+  const wrapStyle = slot.pos === "relative"
+    ? { position:"relative", ...slot.style, ...(isCenter ? { animation:"logoFloat 5s ease-in-out infinite" } : {}) }
+    : { position:"absolute", ...slot.style };
+
+  return (
+    <div style={wrapStyle}
+         onMouseEnter={() => setHov(true)}
+         onMouseLeave={() => setHov(false)}>
+      <div className={`hero-book ${isCenter ? "shadow-card-hv" : "shadow-card"}`}
+           style={{ width:slot.w, height:slot.h, background:VIT_BG[pal]||"#1c1c1c", position:"relative", cursor: book ? "pointer" : "default" }}>
+        <div style={{ position:"absolute", inset:14, border:`1px solid ${VIT_LBL[pal]||"rgba(201,162,74,0.45)"}` }} />
+        {/* Texto portada */}
+        <div style={{ position:"absolute", inset:0, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:6, padding:"0 10px", textAlign:"center",
+                      opacity: hov ? 0 : 1, transition:"opacity 0.2s" }}>
+          <span style={{ fontSize:9, letterSpacing:"0.2em", textTransform:"uppercase", color:VIT_LBL[pal], opacity:0.9 }}>P·L</span>
+          <span className="font-display" style={{ fontSize:isCenter?15:12, lineHeight:1.3, color:VIT_TXT[pal] }}>
+            {short.split("\n").map((l,i,a) => <React.Fragment key={i}>{l}{i<a.length-1&&<br/>}</React.Fragment>)}
+          </span>
         </div>
+        {/* Overlay hover */}
+        {hov && (
+          <div style={{ position:"absolute", inset:0, background:"rgba(0,0,0,0.82)", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:8, padding:"10px 8px", textAlign:"center" }}>
+            <span className="font-display" style={{ fontSize:isCenter?13:11, lineHeight:1.25, color:"#F8F4EA" }}>
+              {title.split(" ").slice(0,6).join(" ")}
+            </span>
+            {author && <span style={{ fontSize:9, color:"rgba(201,162,74,0.8)" }}>por {author}</span>}
+            {book && (
+              <a href={waLink(msg)} target="_blank" rel="noreferrer"
+                 style={{ marginTop:4, padding:"4px 10px", background:"#D71920", color:"#fff", fontSize:9, letterSpacing:"0.15em", textTransform:"uppercase", textDecoration:"none", display:"flex", alignItems:"center", gap:4 }}
+                 onClick={e => e.stopPropagation()}>
+                Consultar
+              </a>
+            )}
+          </div>
+        )}
       </div>
     </div>
-    <div className="absolute" style={{ left:"28%", bottom:0, transform:"rotate(-4deg)", zIndex:2 }}>
-      <div className="hero-book typo-cover b w-[100px] h-[152px] shadow-card">
-        <div className="frame" />
-        <div className="absolute inset-0 flex flex-col items-center justify-center gap-1.5 px-3 text-center">
-          <span className="text-[9px] tracking-[0.2em] uppercase text-pl-gold opacity-55">P·L</span>
-          <span className="font-display text-[12px] leading-snug text-pl-ivory">Neuro-<br/>psicología</span>
-        </div>
-      </div>
+  );
+};
+
+const HeroVitrine = () => {
+  const vitrine = React.useMemo(() => {
+    const books = (window.BOOKS || []).filter(b => b.vitrine_order != null && b.is_active !== false);
+    const slots = [null,null,null,null,null];
+    books.forEach(b => { if (b.vitrine_order >= 1 && b.vitrine_order <= 5) slots[b.vitrine_order-1] = b; });
+    return slots;
+  }, []);
+
+  return (
+    <div className="relative h-[220px] flex items-end justify-center">
+      {VIT_SLOTS.map((slot, i) => (
+        <VitrineBook key={i} book={vitrine[i]} fb={VITRINE_FALLBACK[i]} slot={slot} isCenter={!!slot.center} />
+      ))}
     </div>
-    <div className="relative" style={{ zIndex:3 }}>
-      <div className="hero-book typo-cover w-[115px] h-[172px] shadow-card-hv" style={{ animation:"logoFloat 5s ease-in-out infinite" }}>
-        <div className="frame" />
-        <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 px-3 text-center">
-          <span className="text-[9px] tracking-[0.22em] uppercase text-pl-gold opacity-60">P·L</span>
-          <span className="font-display text-[15px] leading-snug text-pl-ivory">La mente<br/>humana</span>
-        </div>
-      </div>
-    </div>
-    <div className="absolute" style={{ right:"28%", bottom:0, transform:"rotate(4deg)", zIndex:2 }}>
-      <div className="hero-book typo-cover g w-[100px] h-[152px] shadow-card">
-        <div className="frame" />
-        <div className="absolute inset-0 flex flex-col items-center justify-center gap-1.5 px-3 text-center">
-          <span className="text-[9px] tracking-[0.2em] uppercase text-pl-gold opacity-55">P·L</span>
-          <span className="font-display text-[12px] leading-snug text-pl-ivory">Mind-<br/>fulness</span>
-        </div>
-      </div>
-    </div>
-    <div className="absolute" style={{ right:"10%", bottom:0, transform:"rotate(10deg)", zIndex:1 }}>
-      <div className="hero-book typo-cover r w-[100px] h-[150px] shadow-card">
-        <div className="frame" />
-        <div className="absolute inset-0 flex flex-col items-center justify-center gap-1.5 px-3 text-center">
-          <span className="text-[9px] tracking-[0.2em] uppercase text-pl-gold opacity-55">P·L</span>
-          <span className="font-display text-[12px] leading-snug text-pl-ivory">Salud<br/>mental</span>
-        </div>
-      </div>
-    </div>
-  </div>
-);
+  );
+};
 
 // === Hero ===
 const Hero = () => (

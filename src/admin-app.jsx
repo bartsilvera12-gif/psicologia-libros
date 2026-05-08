@@ -755,6 +755,181 @@ const AdminFAQs = ({ faqs, onRefresh, onToast }) => {
   );
 };
 
+/* ── VITRINA ────────────────────────────────────── */
+const VITRINE_PAL_BG = { coal:"#1c1c1c", r:"#4a0d10", b:"#1d2a3a", i:"#efe6d4", g:"#2d3530", p:"#2a2030" };
+const VITRINE_PAL_TXT= { coal:"#F8F4EA", r:"#F8F4EA", b:"#F8F4EA", i:"#2b2418", g:"#F8F4EA", p:"#F8F4EA" };
+
+const AdminVitrine = ({ books, onRefresh, onToast }) => {
+  const activeBooks = books.filter(b => b.is_active !== false);
+  const initial = [1,2,3,4,5].map(i => books.find(b => b.vitrine_order === i) || null);
+  const [slots, setSlots] = React.useState(initial);
+  const [saving, setSaving] = React.useState(false);
+  const [noCol, setNoCol]   = React.useState(false);
+
+  React.useEffect(() => {
+    const updated = [1,2,3,4,5].map(i => books.find(b => b.vitrine_order === i) || null);
+    setSlots(updated);
+  }, [books]);
+
+  const setSlot = (i, bookId) => {
+    const book = activeBooks.find(b => String(b.id) === String(bookId)) || null;
+    setSlots(prev => { const n=[...prev]; n[i]=book; return n; });
+  };
+
+  const save = async () => {
+    setSaving(true);
+    try {
+      // Limpiar vitrine_order de todos los libros que estaban en vitrina
+      const prevVitrine = books.filter(b => b.vitrine_order != null);
+      await Promise.all(prevVitrine.map(b => window.updatePLBook(b.id, { vitrine_order: null })));
+      // Asignar nuevos
+      await Promise.all(slots.map((b, i) => b ? window.updatePLBook(b.id, { vitrine_order: i+1 }) : Promise.resolve()));
+      onRefresh();
+      onToast("Vitrina guardada");
+    } catch(e) {
+      if (e.message.includes("vitrine_order") || e.message.includes("column")) {
+        setNoCol(true);
+        onToast("Falta crear la columna en Supabase (ver instrucciones)", "err");
+      } else {
+        onToast(e.message, "err");
+      }
+    }
+    setSaving(false);
+  };
+
+  return (
+    <div className="fade-in">
+      <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
+        <div>
+          <div className="text-[10px] tracking-[0.28em] uppercase text-pl-gold-dk font-medium mb-1">Hero</div>
+          <h1 className="font-display text-pl-coal text-[32px] leading-tight">Vitrina</h1>
+        </div>
+        <Btn variant="primary" onClick={save} disabled={saving}>
+          {saving ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"/> : "Guardar vitrina"}
+        </Btn>
+      </div>
+
+      {noCol && (
+        <div className="mb-6 bg-amber-50 border border-amber-200 p-5">
+          <div className="text-[12px] font-semibold text-amber-800 mb-2">Paso requerido — ejecutá este SQL en tu Supabase:</div>
+          <code className="block bg-amber-100 text-amber-900 text-[12px] px-4 py-3 font-mono select-all">
+            ALTER TABLE pl_books ADD COLUMN vitrine_order integer;
+          </code>
+          <div className="text-[11px] text-amber-700 mt-2">Supabase → SQL Editor → pegá el comando → Run</div>
+        </div>
+      )}
+
+      <div className="grid grid-cols-5 gap-4 mb-6">
+        {slots.map((book, i) => {
+          const pal = book?.cover?.palette || "coal";
+          const short = (book?.cover?.short || "").replace(/\\n/g,"\n");
+          return (
+            <div key={i} className="bg-white border border-gray-200 p-4">
+              <div className="text-[10px] tracking-[0.2em] uppercase text-gray-400 mb-3 font-medium">Slot {i+1}{i===2?" (centro)":""}</div>
+              <div className="flex justify-center mb-4">
+                <div style={{ width:72, height:108, background: book ? (VITRINE_PAL_BG[pal]||"#1c1c1c") : "#f3f4f6", position:"relative", flexShrink:0 }}>
+                  {book ? (
+                    <>
+                      <div style={{ position:"absolute", inset:8, border:"1px solid rgba(201,162,74,0.4)" }} />
+                      <div style={{ position:"absolute", inset:0, display:"flex", alignItems:"center", justifyContent:"center", padding:"0 6px", textAlign:"center" }}>
+                        <span style={{ fontFamily:"Cormorant Garamond,Georgia,serif", fontSize:10, lineHeight:1.3, color:VITRINE_PAL_TXT[pal] }}>{short||book.title}</span>
+                      </div>
+                    </>
+                  ) : (
+                    <div style={{ position:"absolute", inset:0, display:"flex", alignItems:"center", justifyContent:"center" }}>
+                      <span style={{ fontSize:22, color:"#d1d5db" }}>+</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+              <Select value={book?.id || ""} onChange={e => setSlot(i, e.target.value)} className="text-[12px] py-2">
+                <option value="">— Vacío —</option>
+                {activeBooks.map(b => <option key={b.id} value={b.id}>{b.title}</option>)}
+              </Select>
+            </div>
+          );
+        })}
+      </div>
+      <p className="text-[12px] text-gray-400">Los libros de la vitrina aparecen en el hero de la página de inicio. Al pasar el cursor se muestra el título completo y un botón para consultar.</p>
+    </div>
+  );
+};
+
+/* ── DESTACADOS ─────────────────────────────────── */
+const AdminDestacados = ({ books, onRefresh, onToast }) => {
+  const [saving, setSaving] = React.useState(null);
+  const featured = books.filter(b => b.featured && b.is_active !== false);
+  const palBg = { coal:"#1c1c1c", r:"#4a0d10", b:"#1d2a3a", i:"#efe6d4", g:"#2d3530", p:"#2a2030" };
+  const palTxt= { coal:"#F8F4EA", r:"#F8F4EA", b:"#F8F4EA", i:"#2b2418", g:"#F8F4EA", p:"#F8F4EA" };
+
+  const toggle = async (book) => {
+    setSaving(book.id);
+    try {
+      await window.updatePLBook(book.id, { featured: !book.featured });
+      onRefresh();
+      onToast(book.featured ? "Quitado de destacados" : "Agregado a destacados");
+    } catch(e) { onToast(e.message, "err"); }
+    setSaving(null);
+  };
+
+  return (
+    <div className="fade-in">
+      <div className="mb-6">
+        <div className="text-[10px] tracking-[0.28em] uppercase text-pl-gold-dk font-medium mb-1">Carrusel</div>
+        <h1 className="font-display text-pl-coal text-[32px] leading-tight">Libros destacados</h1>
+      </div>
+
+      {featured.length > 0 && (
+        <div className="bg-white border border-gray-200 p-5 mb-6">
+          <div className="text-[11px] tracking-[0.2em] uppercase text-gray-400 mb-4 font-medium">Actualmente en el carrusel ({featured.length})</div>
+          <div className="flex flex-wrap gap-3">
+            {featured.map(b => {
+              const pal = b.cover?.palette || "coal";
+              return (
+                <div key={b.id} className="flex items-center gap-2 bg-gray-50 border border-gray-200 pr-3 py-2 pl-2">
+                  <div style={{ width:32, height:46, background:palBg[pal], position:"relative", flexShrink:0 }}>
+                    <div style={{ position:"absolute", inset:4, border:"1px solid rgba(201,162,74,0.4)" }} />
+                  </div>
+                  <div>
+                    <div className="text-[12px] font-medium text-pl-coal">{b.title}</div>
+                    <div className="text-[11px] text-gray-400">{b.author}</div>
+                  </div>
+                  <button onClick={()=>toggle(b)} disabled={saving===b.id}
+                          className="ml-2 text-gray-400 hover:text-pl-red transition-colors">
+                    {saving===b.id ? <div className="w-3 h-3 border border-gray-300 border-t-gray-600 rounded-full animate-spin"/> : <IcoX />}
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      <div className="bg-white border border-gray-200">
+        <div className="px-5 py-3 border-b border-gray-100 bg-gray-50 text-[10px] tracking-[0.18em] uppercase text-gray-400 font-medium">
+          Todos los libros — hacé clic en ⭐ para agregar/quitar del carrusel
+        </div>
+        {books.filter(b => b.is_active !== false).map(b => (
+          <div key={b.id} className="table-row flex items-center gap-4 px-5 py-3 border-b border-gray-50 last:border-0">
+            <div style={{ width:28, height:40, background:palBg[b.cover?.palette||"coal"], flexShrink:0 }} />
+            <div className="flex-1 min-w-0">
+              <div className="text-[13px] font-medium text-pl-coal truncate">{b.title}</div>
+              <div className="text-[11px] text-gray-400">{b.author}</div>
+            </div>
+            <button onClick={()=>toggle(b)} disabled={saving===b.id}
+                    className={`shrink-0 w-8 h-8 flex items-center justify-center transition-colors ${b.featured ? "text-pl-gold" : "text-gray-300 hover:text-pl-gold"}`}
+                    title={b.featured ? "Quitar de destacados" : "Agregar a destacados"}>
+              {saving===b.id
+                ? <div className="w-4 h-4 border-2 border-gray-300 border-t-pl-gold rounded-full animate-spin"/>
+                : <IcoStar />}
+            </button>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 /* ── APP PRINCIPAL ──────────────────────────────── */
 const AdminApp = () => {
   const [authed,     setAuthed]     = React.useState(!!localStorage.getItem(SESSION_KEY));
@@ -792,11 +967,16 @@ const AdminApp = () => {
 
   if (!authed) return <AdminLogin onLogin={() => setAuthed(true)} />;
 
+  const IcoVitrine = () => <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.6"><path strokeLinecap="round" strokeLinejoin="round" d="M2.25 7.125C2.25 6.504 2.754 6 3.375 6h6c.621 0 1.125.504 1.125 1.125v3.75c0 .621-.504 1.125-1.125 1.125h-6a1.125 1.125 0 0 1-1.125-1.125v-3.75ZM14.25 8.625c0-.621.504-1.125 1.125-1.125h5.25c.621 0 1.125.504 1.125 1.125v8.25c0 .621-.504 1.125-1.125 1.125h-5.25a1.125 1.125 0 0 1-1.125-1.125v-8.25ZM3.75 16.125c0-.621.504-1.125 1.125-1.125h5.25c.621 0 1.125.504 1.125 1.125v2.25c0 .621-.504 1.125-1.125 1.125h-5.25a1.125 1.125 0 0 1-1.125-1.125v-2.25Z"/></svg>;
+  const IcoStar2 = () => <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.6"><path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z"/></svg>;
+
   const NAV = [
-    { id:"dash",   label:"Dashboard",   icon:<IcoDash />  },
-    { id:"books",  label:"Libros",      icon:<IcoBooks /> },
-    { id:"cats",   label:"Categorías",  icon:<IcoCats />  },
-    { id:"faqs",   label:"FAQs",        icon:<IcoFaqs />  },
+    { id:"dash",       label:"Dashboard",   icon:<IcoDash />    },
+    { id:"books",      label:"Libros",      icon:<IcoBooks />   },
+    { id:"destacados", label:"Destacados",  icon:<IcoStar2 />   },
+    { id:"vitrina",    label:"Vitrina",     icon:<IcoVitrine /> },
+    { id:"cats",       label:"Categorías",  icon:<IcoCats />    },
+    { id:"faqs",       label:"FAQs",        icon:<IcoFaqs />    },
   ];
 
   return (
@@ -839,10 +1019,12 @@ const AdminApp = () => {
       <main className="flex-1 min-w-0 p-8 overflow-y-auto">
         {loading ? <Spinner /> : (
           <>
-            {tab==="dash"  && <AdminDashboard books={books} categories={categories} />}
-            {tab==="books" && <AdminBooks books={books} categories={categories} onRefresh={loadAll} onToast={showToast} />}
-            {tab==="cats"  && <AdminCategories categories={categories} books={books} onRefresh={loadAll} onToast={showToast} />}
-            {tab==="faqs"  && <AdminFAQs faqs={faqs} onRefresh={loadAll} onToast={showToast} />}
+            {tab==="dash"       && <AdminDashboard  books={books} categories={categories} />}
+            {tab==="books"      && <AdminBooks       books={books} categories={categories} onRefresh={loadAll} onToast={showToast} />}
+            {tab==="destacados" && <AdminDestacados  books={books} onRefresh={loadAll} onToast={showToast} />}
+            {tab==="vitrina"    && <AdminVitrine     books={books} onRefresh={loadAll} onToast={showToast} />}
+            {tab==="cats"       && <AdminCategories  categories={categories} books={books} onRefresh={loadAll} onToast={showToast} />}
+            {tab==="faqs"       && <AdminFAQs        faqs={faqs} onRefresh={loadAll} onToast={showToast} />}
           </>
         )}
       </main>

@@ -55,8 +55,9 @@ const mapBook = (row) => ({
     palette: row.cover_palette || "coal",
     short:   row.cover_short   || row.title,
   },
-  featured:  row.featured  || false,
-  is_active: row.is_active !== false,
+  featured:      row.featured      || false,
+  vitrine_order: row.vitrine_order  ?? null,
+  is_active:     row.is_active !== false,
 });
 
 /* ── Mapear fila de pl_categories → formato interno ──────── */
