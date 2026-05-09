@@ -518,7 +518,7 @@ const AdminBooks = ({ books, categories, onRefresh, onToast }) => {
   const handleDelete = async (b) => {
     try {
       await window.updatePLBook(b.id, { is_active: false });
-      onRefresh(); onToast("Libro desactivado");
+      onRefresh(); onToast("Libro eliminado del catálogo");
     } catch(e) { onToast(e.message, "err"); }
     setConfirm(null);
   };
@@ -605,7 +605,7 @@ const AdminBooks = ({ books, categories, onRefresh, onToast }) => {
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-1">
                     <button onClick={()=>setModal(b)} className="p-1.5 text-gray-400 hover:text-pl-coal transition-colors" title="Editar"><IcoEdit /></button>
-                    <button onClick={()=>setConfirm(b)} className="p-1.5 text-gray-400 hover:text-pl-red transition-colors" title="Desactivar"><IcoTrash /></button>
+                    <button onClick={()=>setConfirm(b)} className="p-1.5 text-gray-400 hover:text-pl-red transition-colors" title="Eliminar del catálogo"><IcoTrash /></button>
                   </div>
                 </td>
               </tr>
@@ -638,13 +638,13 @@ const AdminBooks = ({ books, categories, onRefresh, onToast }) => {
         </Modal>
       )}
 
-      {/* Confirm desactivar */}
+      {/* Confirmar eliminación del catálogo (is_active = false) */}
       {confirm && (
-        <Modal title="Desactivar libro" onClose={()=>setConfirm(null)}>
-          <p className="text-[13px] text-gray-600 mb-6">¿Desactivar "<strong>{confirm.title}</strong>"? No se eliminará, solo dejará de verse en el catálogo.</p>
+        <Modal title="Eliminar libro" onClose={()=>setConfirm(null)}>
+          <p className="text-[13px] text-gray-600 mb-6">¿Eliminar «<strong>{confirm.title}</strong>» del catálogo? El registro se mantiene en el sistema, pero el libro dejará de mostrarse en el sitio.</p>
           <div className="flex justify-end gap-3">
             <Btn variant="outline" onClick={()=>setConfirm(null)}>Cancelar</Btn>
-            <Btn variant="danger" onClick={()=>handleDelete(confirm)}>Desactivar</Btn>
+            <Btn variant="danger" onClick={()=>handleDelete(confirm)}>Eliminar</Btn>
           </div>
         </Modal>
       )}
