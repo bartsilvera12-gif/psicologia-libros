@@ -662,23 +662,28 @@ const BooksSlideCarousel = ({
                 </div>
               </div>
             ) : (
-              <div
-                className="flex w-full min-w-0 transition-transform duration-[600ms] ease-[cubic-bezier(0.33,1,0.68,1)] will-change-transform"
-                style={{ transform: `translate3d(-${page * 100}%,0,0)` }}
-              >
-                {chunks.map((chunk, i) => (
-                  <div
-                    key={i}
-                    className="box-border min-w-0 shrink-0 max-w-full"
-                    style={{ flex: "0 0 100%", width: "100%", minWidth: "100%" }}
-                  >
-                    <div className={`${gridClass} w-full max-w-full`}>
-                      {chunk.map((b) => (
-                        <BookCard key={b.id} book={b} />
-                      ))}
+              <div className="w-full min-w-0 overflow-hidden">
+                <div
+                  className="flex transition-transform duration-[600ms] ease-[cubic-bezier(0.33,1,0.68,1)] will-change-transform"
+                  style={{
+                    width: `${pageCount * 100}%`,
+                    transform: `translate3d(-${pageCount > 0 ? (page * 100) / pageCount : 0}%,0,0)`,
+                  }}
+                >
+                  {chunks.map((chunk, i) => (
+                    <div
+                      key={i}
+                      className="box-border shrink-0"
+                      style={{ width: `${pageCount > 0 ? 100 / pageCount : 100}%` }}
+                    >
+                      <div className={`${gridClass} w-full max-w-full`}>
+                        {chunk.map((b) => (
+                          <BookCard key={b.id} book={b} />
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             )}
           </div>
@@ -780,14 +785,17 @@ const FeaturedHeroSlider = ({ books }) => {
 
           <div className="mx-10 min-w-0 overflow-hidden sm:mx-14 lg:mx-20">
             <div
-              className="flex w-full min-w-0 will-change-transform transition-transform duration-[700ms] ease-[cubic-bezier(0.25,0.46,0.45,0.94)]"
-              style={{ transform: `translate3d(-${idx * 100}%,0,0)` }}
+              className="flex will-change-transform transition-transform duration-[700ms] ease-[cubic-bezier(0.25,0.46,0.45,0.94)]"
+              style={{
+                width: `${n * 100}%`,
+                transform: `translate3d(-${n > 0 ? (idx * 100) / n : 0}%,0,0)`,
+              }}
             >
               {books.map((b) => (
                 <div
                   key={b.id}
-                  className="grid min-w-0 shrink-0 grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-16"
-                  style={{ flex: "0 0 100%", width: "100%", minWidth: "100%" }}
+                  className="grid shrink-0 grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-16"
+                  style={{ width: `${n > 0 ? 100 / n : 100}%` }}
                 >
                   <div className="order-2 flex justify-center lg:order-1 lg:justify-end">
                     <a
