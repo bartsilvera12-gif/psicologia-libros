@@ -158,10 +158,10 @@ const CatalogPage = () => {
             <div className="absolute bottom-0 left-0 w-7 h-7 border-b border-l border-pl-gold/30 mb-4 ml-6 hidden lg:block" />
             <div className="absolute bottom-0 right-0 w-7 h-7 border-b border-r border-pl-gold/30 mb-4 mr-6 hidden lg:block" />
           </div>
-          <div className="max-w-7xl mx-auto px-6 lg:px-10 relative">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 relative">
 
             {/* Breadcrumb */}
-            <div className="flex items-center gap-2 mb-5">
+            <div className="flex items-center gap-2 mb-4 sm:mb-5">
               <a href="index.html" className="inline-flex items-center gap-1.5 text-[11px] tracking-[0.18em] uppercase text-pl-gray hover:text-pl-red transition-colors">
                 <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
                   <path d="M9 2L4 7l5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -184,7 +184,7 @@ const CatalogPage = () => {
               {/* Columna izquierda: título + búsqueda + chips */}
               <div className="lg:col-span-2">
                 <div className="eyebrow mb-3">Catálogo completo</div>
-                <h1 className="font-display text-pl-coal text-[36px] sm:text-[44px] leading-[1.05] tracking-tight mb-1">
+                <h1 className="font-display text-pl-coal text-[28px] sm:text-[36px] lg:text-[44px] leading-[1.05] tracking-tight mb-1">
                   {catLabel
                     ? <>{catLabel.name.split(" ")[0]} <em className="font-normal italic text-pl-red">{catLabel.name.split(" ").slice(1).join(" ")}</em></>
                     : <>Todos los <em className="font-normal italic text-pl-red">libros</em></>}
@@ -318,7 +318,7 @@ const CatalogPage = () => {
         </div>
 
         {/* ── Contenido ── */}
-        <div className="max-w-7xl mx-auto px-6 lg:px-10 py-10 lg:py-14">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-10 py-6 sm:py-10 lg:py-14">
           <div className="flex items-center justify-between mb-7 flex-wrap gap-3">
             <div className="text-[13px] text-pl-gray">
               <span className="text-pl-coal font-semibold text-[18px] font-display">
@@ -351,7 +351,7 @@ const CatalogPage = () => {
                         Ver todos ({sec.books.length}) <IconArrow size={12} />
                       </button>
                     </div>
-                    <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 [&>*]:min-w-0">
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5 [&>*]:min-w-0">
                       {sec.books.slice(0, 4).map(b => <BookCard key={b.id} book={b} />)}
                     </div>
                     {sec.books.length > 4 && (
@@ -368,7 +368,7 @@ const CatalogPage = () => {
             </div>
 
           ) : filtered.length > 0 ? (
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 [&>*]:min-w-0">
+            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6 [&>*]:min-w-0">
               {filtered.map(b => <BookCard key={b.id} book={b} />)}
             </div>
 

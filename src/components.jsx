@@ -129,48 +129,48 @@ const BookCard = ({ book }) => {
         <BookCover book={book} />
       </a>
 
-      <div className="p-4 flex flex-col flex-1">
+      <div className="p-2.5 sm:p-4 flex flex-col flex-1">
         {/* Category + status */}
-        <div className="flex items-center justify-between gap-2">
-          <span className="eyebrow !text-[10px]">{catName(book.category)}</span>
+        <div className="flex items-center justify-between gap-1">
+          <span className="eyebrow !text-[9px] sm:!text-[10px] truncate">{catName(book.category)}</span>
           <StatusPill status={book.status} />
         </div>
 
         {/* Title */}
-        <a href={detailHref} className="group/title mt-3 block">
-          <h3 className="font-display text-pl-coal text-[20px] leading-[1.15] tracking-tight group-hover/title:text-pl-red transition-colors">
+        <a href={detailHref} className="group/title mt-2 sm:mt-3 block">
+          <h3 className="font-display text-pl-coal text-[15px] sm:text-[18px] lg:text-[20px] leading-[1.15] tracking-tight group-hover/title:text-pl-red transition-colors line-clamp-3">
             {book.title}
           </h3>
         </a>
-        <p className="text-pl-gray text-[12px] mt-1 italic">por {book.author}</p>
+        <p className="text-pl-gray text-[11px] sm:text-[12px] mt-1 italic truncate">por {book.author}</p>
 
-        <div className="mt-3 gold-rule-short" />
+        <div className="mt-2 sm:mt-3 gold-rule-short" />
         <div className="flex-1" />
 
         {/* Price */}
-        <div className="mt-4">
-          <div className="text-[9px] tracking-[0.22em] uppercase text-pl-gray/60">Precio</div>
-          <div className="font-display tabular-nums font-semibold text-pl-coal text-[19px] mt-0.5 leading-tight">
+        <div className="mt-3 sm:mt-4">
+          <div className="text-[8px] sm:text-[9px] tracking-[0.18em] uppercase text-pl-gray/60">Precio</div>
+          <div className="font-display tabular-nums font-semibold text-pl-coal text-[15px] sm:text-[18px] lg:text-[19px] mt-0.5 leading-tight">
             {typeof window.formatPrecioGs === "function" ? window.formatPrecioGs(book.price) : book.price}
           </div>
         </div>
 
-        {/* Actions — always in a single row */}
-        <div className="mt-3 grid grid-cols-2 gap-2">
+        {/* Actions */}
+        <div className="mt-2 sm:mt-3 grid grid-cols-2 gap-1.5 sm:gap-2">
           <button
             type="button"
             onClick={() => window.PL_cartAdd?.(book)}
-            className="inline-flex items-center justify-center px-3 py-2.5 border border-pl-coal/20 text-pl-coal text-[11px] tracking-wide hover:border-pl-gold hover:text-pl-red transition-colors"
+            className="inline-flex items-center justify-center px-1.5 sm:px-3 py-2 sm:py-2.5 border border-pl-coal/20 text-pl-coal text-[9px] sm:text-[11px] tracking-wide hover:border-pl-gold hover:text-pl-red transition-colors"
           >
-            Agregar al carrito
+            + Carrito
           </button>
           <a
             href={waLink(msg)}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center justify-center gap-1.5 px-3 py-2.5 bg-pl-red text-white text-[11px] tracking-wide hover:bg-pl-red-dk transition-colors"
+            className="inline-flex items-center justify-center gap-1 sm:gap-1.5 px-1.5 sm:px-3 py-2 sm:py-2.5 bg-pl-red text-white text-[9px] sm:text-[11px] tracking-wide hover:bg-pl-red-dk transition-colors"
           >
-            <IconWhatsapp size={13} /> Consultar
+            <IconWhatsapp size={11} /> Consultar
           </a>
         </div>
       </div>

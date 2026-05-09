@@ -390,7 +390,7 @@ const HeroVitrine = () => {
   }, []);
 
   return (
-    <div className="relative h-[220px] flex items-end justify-center">
+    <div className="relative h-[160px] sm:h-[200px] lg:h-[220px] flex items-end justify-center">
       {VIT_SLOTS.map((slot, i) => (
         <VitrineBook key={i} book={vitrine[i]} fb={VITRINE_FALLBACK[i]} slot={slot} isCenter={!!slot.center} />
       ))}
@@ -443,8 +443,8 @@ const Hero = () => (
       <div className="absolute top-[12%] bottom-[12%] left-1/2 w-px bg-gradient-to-b from-transparent via-pl-gold/15 to-transparent hidden lg:block" />
     </div>
 
-    <div className="max-w-7xl mx-auto px-6 lg:px-10 w-full py-16 lg:py-20">
-      <div className="grid lg:grid-cols-2 gap-10 lg:gap-20 items-center">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 w-full py-10 sm:py-14 lg:py-20">
+      <div className="grid lg:grid-cols-2 gap-8 lg:gap-20 items-center">
 
         {/* ── Columna izquierda: Logo ── */}
         <div className="flex flex-col items-center"
@@ -452,18 +452,18 @@ const Hero = () => (
 
           <div style={{ animation: "logoFloat 6s ease-in-out infinite, glowPulse 4s ease-in-out infinite" }}>
             <img src="logosinfondo2.png" alt="Psicología Libros"
-                 style={{ width: 340, height: 340, objectFit: "contain", display: "block" }} />
+                 className="w-[200px] h-[200px] sm:w-[280px] sm:h-[280px] lg:w-[340px] lg:h-[340px] object-contain block" />
           </div>
 
-          <div className="mt-8 flex flex-wrap justify-center gap-4"
+          <div className="mt-6 flex flex-col sm:flex-row justify-center gap-3 w-full sm:w-auto"
                style={{ animation: "fadeSlideIn 0.8s 0.55s both" }}>
             <a href="catalogo.html"
-               className="inline-flex items-center gap-2 px-8 py-4 bg-pl-coal text-pl-ivory text-[14px] tracking-wide hover:bg-black transition-colors">
+               className="inline-flex items-center justify-center gap-2 px-6 py-3.5 sm:px-8 sm:py-4 bg-pl-coal text-pl-ivory text-[13px] sm:text-[14px] tracking-wide hover:bg-black transition-colors">
               Ver catálogo <IconArrow size={15} />
             </a>
             <a href={waLink("Hola, quiero consultar el catálogo de Psicología Libros.")}
                target="_blank" rel="noreferrer"
-               className="inline-flex items-center gap-2 px-8 py-4 bg-pl-red text-white text-[14px] tracking-wide hover:bg-pl-red-dk transition-colors">
+               className="inline-flex items-center justify-center gap-2 px-6 py-3.5 sm:px-8 sm:py-4 bg-pl-red text-white text-[13px] sm:text-[14px] tracking-wide hover:bg-pl-red-dk transition-colors">
               <IconWhatsapp size={16} /> WhatsApp
             </a>
           </div>
@@ -471,31 +471,31 @@ const Hero = () => (
 
         {/* ── Columna derecha: vitrina de libros ── */}
         <div className="relative" style={{ animation: "fadeSlideIn 0.9s 0.35s both" }}>
-          <div className="bg-pl-white p-8 shadow-card-hv border border-pl-coal/6 relative">
+          <div className="bg-pl-white p-4 sm:p-6 lg:p-8 shadow-card-hv border border-pl-coal/6 relative">
             {/* Gold corner accent */}
             <div className="absolute top-0 right-0 w-20 h-px bg-pl-gold" />
             <div className="absolute top-0 right-0 w-px h-20 bg-pl-gold" />
             <div className="absolute bottom-0 left-0 w-12 h-px bg-pl-gold/40" />
 
             {/* Eyebrow */}
-            <div className="eyebrow mb-6">Catálogo especializado</div>
+            <div className="eyebrow mb-4 sm:mb-6">Catálogo especializado</div>
 
-            {/* Libros en abanico — tomados de los destacados */}
+            {/* Libros en abanico */}
             <HeroVitrine />
 
-            {/* Stats — EB Garamond (coherente con el resto del sitio) */}
-            <div className="relative z-10 mt-8 pt-6 border-t border-pl-coal/8 grid grid-cols-3 text-center gap-1">
+            {/* Stats */}
+            <div className="relative z-10 mt-6 sm:mt-8 pt-4 sm:pt-6 border-t border-pl-coal/8 grid grid-cols-3 text-center gap-1">
               <div className="min-w-0 px-1">
-                <div className="font-display tabular-nums font-normal text-pl-coal text-[26px] sm:text-[28px] tracking-tight leading-none">+1.000</div>
-                <div className="font-display text-[10px] tracking-[0.22em] uppercase text-pl-gray mt-1.5">Títulos</div>
+                <div className="font-display tabular-nums font-normal text-pl-coal text-[22px] sm:text-[26px] lg:text-[28px] tracking-tight leading-none">+1.000</div>
+                <div className="font-display text-[9px] sm:text-[10px] tracking-[0.18em] sm:tracking-[0.22em] uppercase text-pl-gray mt-1.5">Títulos</div>
               </div>
               <div className="border-x border-pl-coal/8 min-w-0 px-1">
-                <div className="font-display tabular-nums font-normal text-pl-coal text-[26px] sm:text-[28px] tracking-tight leading-none">12</div>
-                <div className="font-display text-[10px] tracking-[0.22em] uppercase text-pl-gray mt-1.5">Categorías</div>
+                <div className="font-display tabular-nums font-normal text-pl-coal text-[22px] sm:text-[26px] lg:text-[28px] tracking-tight leading-none">12</div>
+                <div className="font-display text-[9px] sm:text-[10px] tracking-[0.18em] sm:tracking-[0.22em] uppercase text-pl-gray mt-1.5">Categorías</div>
               </div>
               <div className="min-w-0 px-1">
-                <div className="font-display tabular-nums font-normal text-pl-coal text-[26px] sm:text-[28px] tracking-tight leading-none">100%</div>
-                <div className="font-display text-[10px] tracking-[0.22em] uppercase text-pl-gray mt-1.5">Especializado</div>
+                <div className="font-display tabular-nums font-normal text-pl-coal text-[22px] sm:text-[26px] lg:text-[28px] tracking-tight leading-none">100%</div>
+                <div className="font-display text-[9px] sm:text-[10px] tracking-[0.18em] sm:tracking-[0.22em] uppercase text-pl-gray mt-1.5">Especializado</div>
               </div>
             </div>
           </div>
