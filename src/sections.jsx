@@ -271,11 +271,11 @@ const VITRINE_FALLBACK = [
   { pal:"p",    short:"Salud\nMental",        title:"Salud Mental",        author:"", cat:"salud"       },
 ];
 const VIT_SLOTS = [
-  { pos:"absolute", style:{ left:"10%",  bottom:0, transform:"rotate(-10deg)", zIndex:1 }, w:100, h:150 },
-  { pos:"absolute", style:{ left:"28%",  bottom:0, transform:"rotate(-4deg)",  zIndex:2 }, w:100, h:152 },
-  { pos:"relative", style:{ zIndex:3 },                                                    w:115, h:172, center:true },
-  { pos:"absolute", style:{ right:"28%", bottom:0, transform:"rotate(4deg)",   zIndex:2 }, w:100, h:152 },
-  { pos:"absolute", style:{ right:"10%", bottom:0, transform:"rotate(10deg)",  zIndex:1 }, w:100, h:150 },
+  { pos:"absolute", style:{ left:"0%",   bottom:"-24px", transform:"rotate(-14deg)", zIndex:1 }, w:88,  h:132, depth:3 },
+  { pos:"absolute", style:{ left:"20%",  bottom:"-10px", transform:"rotate(-6deg)",  zIndex:2 }, w:102, h:153, depth:2 },
+  { pos:"relative", style:{ zIndex:4 },                                                           w:128, h:192, center:true, depth:0 },
+  { pos:"absolute", style:{ right:"20%", bottom:"-10px", transform:"rotate(6deg)",   zIndex:2 }, w:102, h:153, depth:2 },
+  { pos:"absolute", style:{ right:"0%",  bottom:"-24px", transform:"rotate(14deg)",  zIndex:1 }, w:88,  h:132, depth:3 },
 ];
 const VIT_BG  = { coal:"#111111", r:"#7a0d12", b:"#0e2640", i:"#efe6d4", g:"#122b1a", p:"#2b0e4a" };
 const VIT_TXT = { coal:"#F8F4EA", r:"#F8F4EA", b:"#F8F4EA", i:"#2b2418", g:"#F8F4EA", p:"#F8F4EA" };
@@ -290,18 +290,27 @@ const VitrineBook = ({ book, fb, slot, isCenter }) => {
   const title  = book?.title || fb.title;
   const author = book?.author || fb.author;
   const imgUrl = book ? ((book.image_urls && book.image_urls[0]) || book.image_url || null) : null;
+  const depth  = slot.depth ?? 0; // 0 = center (closest), 3 = outer (furthest)
 
   const baseTransform = slot.style.transform || "";
+  /* Darken side books so the center one pops */
+  const dimOpacity = depth === 0 ? 0 : depth === 1 ? 0.08 : depth === 2 ? 0.22 : 0.38;
+  /* Drop shadow gets softer for far books */
+  const baseShadow = depth === 0
+    ? "drop-shadow(0 20px 40px rgba(0,0,0,0.55))"
+    : depth === 2
+      ? "drop-shadow(0 12px 24px rgba(0,0,0,0.38))"
+      : "drop-shadow(0 8px 16px rgba(0,0,0,0.28))";
 
   const wrapStyle = {
     position: slot.pos === "relative" ? "relative" : "absolute",
     ...slot.style,
     transition: "transform 0.32s cubic-bezier(0.34,1.56,0.64,1), filter 0.3s ease, z-index 0s",
     animation: (slot.pos === "relative" && isCenter && !hov) ? "logoFloat 5s ease-in-out infinite" : "none",
+    filter: hov ? "drop-shadow(0 28px 52px rgba(0,0,0,0.65))" : baseShadow,
     ...(hov ? {
-      transform: baseTransform ? `${baseTransform} scale(1.22) translateY(-18px)` : "scale(1.22) translateY(-18px)",
+      transform: baseTransform ? `${baseTransform} scale(1.18) translateY(-16px)` : "scale(1.18) translateY(-16px)",
       zIndex: 20,
-      filter: "drop-shadow(0 24px 48px rgba(0,0,0,0.5))",
     } : {
       transform: baseTransform || undefined,
     }),
@@ -334,8 +343,12 @@ const VitrineBook = ({ book, fb, slot, isCenter }) => {
             style={{ position:"absolute", inset:0, width:"100%", height:"100%", objectFit:"cover", display:"block" }}
           />
         )}
+        {/* Depth dim overlay — darker for far books */}
+        {dimOpacity > 0 && (
+          <div style={{ position:"absolute", inset:0, background:`rgba(0,0,0,${dimOpacity})`, zIndex:1, pointerEvents:"none" }} />
+        )}
         {/* Inner border */}
-        <div style={{ position:"absolute", inset:10, border:`1px solid ${VIT_LBL[pal]||"rgba(201,162,74,0.45)"}`, pointerEvents:"none" }} />
+        <div style={{ position:"absolute", inset:10, border:`1px solid ${VIT_LBL[pal]||"rgba(201,162,74,0.45)"}`, pointerEvents:"none", zIndex:2 }} />
         {/* Corner accents */}
         <div style={{ position:"absolute", top:6, left:6, width:10, height:10, borderTop:`1px solid ${VIT_ACC[pal]||"#C9A24A"}`, borderLeft:`1px solid ${VIT_ACC[pal]||"#C9A24A"}`, opacity:0.7, pointerEvents:"none" }} />
         <div style={{ position:"absolute", bottom:6, right:6, width:10, height:10, borderBottom:`1px solid ${VIT_ACC[pal]||"#C9A24A"}`, borderRight:`1px solid ${VIT_ACC[pal]||"#C9A24A"}`, opacity:0.7, pointerEvents:"none" }} />
