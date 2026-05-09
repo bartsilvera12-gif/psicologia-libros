@@ -74,6 +74,11 @@ const mapBook = (row) => {
     featured:      row.featured      || false,
     vitrine_order: row.vitrine_order  ?? null,
     is_active:     row.is_active !== false,
+    editorial:     row.editorial || "",
+    soporte:       row.soporte   || "",
+    paginas:       row.paginas   || "",
+    idioma:        row.idioma    || "",
+    tema:          row.tema      || "",
     image_urls: urls,
     image_url:  urls[0] || null,
   };
@@ -139,7 +144,10 @@ const loadPLFaqs = async () => {
 };
 
 /* ── CRUD Libros (admin) ─────────────────────────────────── */
-const createPLBook = async ({ title, author, category_id, description, price, status, cover_palette, cover_short, featured, image_urls = [] }) => {
+const createPLBook = async ({
+  title, author, category_id, description, price, status, cover_palette, cover_short, featured, image_urls = [],
+  editorial, soporte, paginas, idioma, tema,
+}) => {
   const [row] = await plPost("pl_books", {
     title, author, category_id,
     description: description || "",
@@ -150,6 +158,11 @@ const createPLBook = async ({ title, author, category_id, description, price, st
     featured:      featured      || false,
     is_active:     true,
     image_url: image_urls.length > 0 ? JSON.stringify(image_urls) : null,
+    editorial: editorial?.trim() || null,
+    soporte:   soporte?.trim()   || null,
+    paginas:   paginas?.trim()   || null,
+    idioma:    idioma?.trim()    || null,
+    tema:      tema?.trim()      || null,
   });
   return row;
 };

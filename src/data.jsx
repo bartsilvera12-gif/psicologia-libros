@@ -60,6 +60,11 @@ const BOOKS = [
     status: "disponible",
     cover: { palette: "coal", short: "Psicología\nClínica" },
     featured: true,
+    editorial: "Psicología Libros Ediciones",
+    soporte: "Libro impreso",
+    paginas: "320",
+    idioma: "Español",
+    tema: "Psicología clínica",
   },
   {
     id: 2,

@@ -206,7 +206,7 @@ const BookDetailPage = () => {
                 {/* Share / info small */}
                 <div className="mt-5 flex flex-wrap gap-2">
                   {[
-                    { icon: <IcoLibro size={11} />, label: "Libro impreso" },
+                    { icon: <IcoLibro size={11} />, label: book.soporte?.trim() || "Libro impreso" },
                     { icon: <IcoPin   size={11} />, label: "Asunción, Paraguay" },
                   ].map((tag, i) => (
                     <span key={i} className="inline-flex items-center gap-1.5 px-3 py-1.5 border border-pl-coal/10 text-[10px] tracking-wide text-pl-gray/80">
@@ -238,6 +238,32 @@ const BookDetailPage = () => {
                   <div className="w-1.5 h-1.5 rounded-full bg-pl-gold/70" />
                   <div className="flex-1 h-px bg-pl-gold/15" />
                 </div>
+
+                {/* Ficha técnica (editorial, soporte, páginas, autorxs, idioma, tema) */}
+                {(() => {
+                  const specs = [
+                    ["Editorial", book.editorial],
+                    ["Soporte", book.soporte],
+                    ["Páginas", book.paginas],
+                    ["Autorx/s", book.author],
+                    ["Idioma", book.idioma],
+                    ["Tema", book.tema],
+                  ].filter(([, v]) => v != null && String(v).trim() !== "");
+                  if (!specs.length) return null;
+                  return (
+                    <div className="mb-9 border border-pl-coal/10 bg-pl-white/50 px-4 sm:px-5">
+                      {specs.map(([label, val], i) => (
+                        <div
+                          key={label}
+                          className={`flex justify-between gap-6 py-3 text-[14px] leading-snug ${i > 0 ? "border-t border-dotted border-pl-coal/20" : ""}`}
+                        >
+                          <span className="text-pl-coal font-medium shrink-0">{label}</span>
+                          <span className="text-pl-gray text-right">{String(val).trim()}</span>
+                        </div>
+                      ))}
+                    </div>
+                  );
+                })()}
 
                 {/* Sinopsis */}
                 {book.description ? (

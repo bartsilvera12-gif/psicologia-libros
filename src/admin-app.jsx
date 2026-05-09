@@ -352,7 +352,10 @@ const AdminDashboard = ({ books, categories }) => {
 const STATUSES = ["disponible","consultar","agotado","por_encargo"];
 
 const BookForm = ({ book, categories, onSave, onClose }) => {
-  const def = book || { title:"", author:"", category_id:"", description:"", price:"", status:"consultar", featured:false, is_active:true, image_urls:[] };
+  const def = book || {
+    title:"", author:"", category_id:"", description:"", price:"", status:"consultar", featured:false, is_active:true, image_urls:[],
+    editorial:"", soporte:"", paginas:"", idioma:"", tema:"",
+  };
   const [f, setF] = React.useState({
     title:         def.title,
     author:        def.author,
@@ -363,6 +366,11 @@ const BookForm = ({ book, categories, onSave, onClose }) => {
     featured:      def.featured || false,
     is_active:     def.is_active !== false,
     image_urls:    def.image_urls || (def.image_url ? [def.image_url] : []),
+    editorial:     def.editorial || "",
+    soporte:       def.soporte   || "",
+    paginas:       def.paginas   || "",
+    idioma:        def.idioma    || "",
+    tema:          def.tema      || "",
   });
   const [imgInput, setImgInput] = React.useState("");
   const [saving, setSaving] = React.useState(false);
@@ -397,6 +405,11 @@ const BookForm = ({ book, categories, onSave, onClose }) => {
         featured:      f.featured,
         is_active:     f.is_active,
         image_url: f.image_urls.length > 0 ? JSON.stringify(f.image_urls) : null,
+        editorial: f.editorial.trim() || null,
+        soporte:   f.soporte.trim()   || null,
+        paginas:   f.paginas.trim()   || null,
+        idioma:    f.idioma.trim()    || null,
+        tema:      f.tema.trim()      || null,
       };
       if (book?.id) { await window.updatePLBook(book.id, payload); }
       else          { await window.createPLBook(payload); }
@@ -422,6 +435,16 @@ const BookForm = ({ book, categories, onSave, onClose }) => {
           ]}
         />
       </Field>
+      <div className="mb-2 text-[11px] tracking-[0.18em] uppercase text-gray-400 font-medium">Ficha del libro</div>
+      <div className="grid grid-cols-2 gap-4">
+        <Field label="Editorial"><Input value={f.editorial} onChange={e=>upd("editorial",e.target.value)} placeholder="Ej: Tres Olas Ediciones" /></Field>
+        <Field label="Soporte"><Input value={f.soporte} onChange={e=>upd("soporte",e.target.value)} placeholder="Ej: Libro impreso, E-book…" /></Field>
+      </div>
+      <div className="grid grid-cols-2 gap-4">
+        <Field label="Páginas"><Input value={f.paginas} onChange={e=>upd("paginas",e.target.value)} placeholder="Ej: 292" /></Field>
+        <Field label="Idioma"><Input value={f.idioma} onChange={e=>upd("idioma",e.target.value)} placeholder="Ej: Español" /></Field>
+      </div>
+      <Field label="Tema"><Input value={f.tema} onChange={e=>upd("tema",e.target.value)} placeholder="Ej: TDA, apego, duelo…" /></Field>
       <Field label="Sinopsis" hint="Texto que aparece en la página de detalle del libro. Podés escribir varios párrafos.">
         <Textarea value={f.description} onChange={e=>upd("description",e.target.value)}
                   rows={6} resizable={true} placeholder="Escribí una sinopsis del libro: de qué trata, a quién va dirigido, qué temas aborda…" />
@@ -508,7 +531,7 @@ const AdminBooks = ({ books, categories, onRefresh, onToast }) => {
     return books.filter(b => {
       if (catF && b.category !== catF) return false;
       if (!q) return true;
-      return [b.title, b.author, b.description].some(s => (s||"").toLowerCase().includes(q));
+      return [b.title, b.author, b.description, b.editorial, b.soporte, b.paginas, b.idioma, b.tema].some(s => (s||"").toLowerCase().includes(q));
     });
   }, [books, search, catF]);
 
