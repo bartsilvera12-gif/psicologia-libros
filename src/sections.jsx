@@ -1,20 +1,35 @@
 // === Toast al agregar al carrito (evento `pl-cart-added` desde cart.jsx) ===
 const CartAddToast = () => {
-  const [show, setShow] = React.useState(false);
-  const [text, setText] = React.useState("");
-  const hideTimer = React.useRef(null);
+  const [show, setShow]       = React.useState(false);
+  const [title, setTitle]     = React.useState("");
+  const [toastKey, setKey]    = React.useState(0);
+  const hideTimer              = React.useRef(null);
 
   React.useEffect(() => {
+    // Inject keyframes once
+    if (!document.getElementById("pl-toast-kf")) {
+      const s = document.createElement("style");
+      s.id = "pl-toast-kf";
+      s.textContent = `
+        @keyframes toastIn {
+          from { opacity:0; transform:translateX(calc(100% + 40px)); }
+          to   { opacity:1; transform:translateX(0); }
+        }
+        @keyframes toastProgress {
+          from { width:100%; }
+          to   { width:0%; }
+        }
+      `;
+      document.head.appendChild(s);
+    }
+
     const onAdded = (e) => {
-      const title = e.detail?.title;
-      const short =
-        title && title.length > 52 ? `${title.slice(0, 49)}…` : title;
-      setText(
-        short ? `«${short}» se agregó al carrito` : "Se agregó al carrito"
-      );
+      const t = e.detail?.title || "";
+      setTitle(t.length > 55 ? t.slice(0, 52) + "…" : t);
+      setKey(k => k + 1);
       setShow(true);
       clearTimeout(hideTimer.current);
-      hideTimer.current = setTimeout(() => setShow(false), 3200);
+      hideTimer.current = setTimeout(() => setShow(false), 3400);
     };
     window.addEventListener("pl-cart-added", onAdded);
     return () => {
@@ -23,16 +38,42 @@ const CartAddToast = () => {
     };
   }, []);
 
-  if (!show || !text) return null;
+  if (!show || !title) return null;
 
   return (
     <div
-      className="fixed bottom-6 left-1/2 z-[200] max-w-[min(92vw,440px)] -translate-x-1/2 px-5 py-3.5 bg-pl-coal text-pl-ivory text-[13px] leading-snug text-center shadow-card-hv border border-pl-gold/30 pointer-events-none"
-      style={{ animation: "fadeSlideIn 0.35s ease both" }}
+      key={toastKey}
       role="status"
       aria-live="polite"
+      className="fixed bottom-5 right-4 sm:right-6 z-[200] w-[min(86vw,300px)] bg-pl-white border border-pl-coal/10 shadow-card-hv pointer-events-none overflow-hidden"
+      style={{ animation: "toastIn 0.44s cubic-bezier(0.2,0.8,0.2,1) both" }}
     >
-      {text}
+      {/* Gold left accent */}
+      <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-pl-gold" />
+
+      <div className="flex items-start gap-3 pl-5 pr-4 py-3.5">
+        {/* Cart icon */}
+        <div className="shrink-0 w-8 h-8 bg-pl-coal flex items-center justify-center text-pl-ivory mt-0.5">
+          <IconCart size={15} />
+        </div>
+
+        <div className="min-w-0 flex-1">
+          <div className="text-[9px] tracking-[0.2em] uppercase text-pl-gold-dk font-medium mb-1">
+            Agregado al carrito
+          </div>
+          <div className="text-pl-coal text-[12px] leading-snug font-medium line-clamp-2">
+            {title}
+          </div>
+        </div>
+      </div>
+
+      {/* Progress bar */}
+      <div className="h-[2px] bg-pl-coal/6">
+        <div
+          className="h-full bg-pl-gold"
+          style={{ animation: "toastProgress 3.4s linear both" }}
+        />
+      </div>
     </div>
   );
 };
