@@ -120,48 +120,58 @@ const StatusPill = ({ status }) => {
 
 // === Book card ===
 const BookCard = ({ book }) => {
-  const msg       = `Hola, me interesa el libro "${book.title}" de Psicología Libros. ¿Me podés dar más información?`;
+  const msg        = `Hola, me interesa el libro "${book.title}" de Psicología Libros. ¿Me podés dar más información?`;
   const detailHref = `libro.html?id=${book.id}`;
   return (
     <article className="group min-w-0 w-full bg-pl-white border border-pl-coal/8 lift shadow-card hover:shadow-card-hv hover:border-pl-gold/40 flex flex-col overflow-hidden">
-      {/* Portada — clickable */}
+      {/* Portada */}
       <a href={detailHref} className="block">
         <BookCover book={book} />
       </a>
-      <div className="p-4 pt-4 flex flex-col flex-1">
+
+      <div className="p-4 flex flex-col flex-1">
+        {/* Category + status */}
         <div className="flex items-center justify-between gap-2">
           <span className="eyebrow !text-[10px]">{catName(book.category)}</span>
           <StatusPill status={book.status} />
         </div>
-        {/* Título — clickable */}
-        <a href={detailHref} className="group/title">
-          <h3 className="font-display text-pl-coal text-[22px] leading-[1.15] mt-3 tracking-tight group-hover/title:text-pl-red transition-colors">
+
+        {/* Title */}
+        <a href={detailHref} className="group/title mt-3 block">
+          <h3 className="font-display text-pl-coal text-[20px] leading-[1.15] tracking-tight group-hover/title:text-pl-red transition-colors">
             {book.title}
           </h3>
         </a>
-        <p className="text-pl-gray text-[13px] mt-1.5 italic">por {book.author}</p>
-        <div className="mt-4 gold-rule-short" />
+        <p className="text-pl-gray text-[12px] mt-1 italic">por {book.author}</p>
+
+        <div className="mt-3 gold-rule-short" />
         <div className="flex-1" />
-        <div className="mt-5 flex flex-col gap-2.5">
-          <div className="flex items-end justify-between gap-3">
-            <div className="shrink-0">
-              <div className="text-[10px] tracking-[0.22em] uppercase text-pl-gray/70">Precio</div>
-              <div className="font-display tabular-nums font-semibold text-pl-coal text-[20px] mt-0.5 leading-tight whitespace-nowrap">
-                {typeof window.formatPrecioGs === "function" ? window.formatPrecioGs(book.price) : book.price}
-              </div>
-            </div>
-            <div className="flex flex-col items-end gap-2 shrink-0">
-              <button type="button"
-                      onClick={() => window.PL_cartAdd?.(book)}
-                      className="inline-flex items-center gap-1.5 px-3.5 py-2 border border-pl-coal/20 text-pl-coal text-[11px] tracking-wide hover:border-pl-gold hover:text-pl-red transition-colors">
-                Agregar al carrito
-              </button>
-              <a href={waLink(msg)} target="_blank" rel="noreferrer"
-                 className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-pl-red text-white text-[12px] tracking-wide hover:bg-pl-red-dk transition-colors">
-                <IconWhatsapp size={14} /> Consultar
-              </a>
-            </div>
+
+        {/* Price */}
+        <div className="mt-4">
+          <div className="text-[9px] tracking-[0.22em] uppercase text-pl-gray/60">Precio</div>
+          <div className="font-display tabular-nums font-semibold text-pl-coal text-[19px] mt-0.5 leading-tight">
+            {typeof window.formatPrecioGs === "function" ? window.formatPrecioGs(book.price) : book.price}
           </div>
+        </div>
+
+        {/* Actions — always in a single row */}
+        <div className="mt-3 grid grid-cols-2 gap-2">
+          <button
+            type="button"
+            onClick={() => window.PL_cartAdd?.(book)}
+            className="inline-flex items-center justify-center px-3 py-2.5 border border-pl-coal/20 text-pl-coal text-[11px] tracking-wide hover:border-pl-gold hover:text-pl-red transition-colors"
+          >
+            Agregar al carrito
+          </button>
+          <a
+            href={waLink(msg)}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center justify-center gap-1.5 px-3 py-2.5 bg-pl-red text-white text-[11px] tracking-wide hover:bg-pl-red-dk transition-colors"
+          >
+            <IconWhatsapp size={13} /> Consultar
+          </a>
         </div>
       </div>
     </article>
