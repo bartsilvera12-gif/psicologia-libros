@@ -363,16 +363,15 @@ const VitrineBook = ({ book, fb, slot, isCenter }) => {
             </span>
           </div>
         )}
-        {/* Overlay hover — aparece sobre el libro ya escalado */}
-        <div style={{ position:"absolute", inset:0, background:"rgba(0,0,0,0.88)", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:7, padding:"12px 10px", textAlign:"center",
-                      opacity: hov ? 1 : 0, transition:"opacity 0.18s", pointerEvents: hov ? "auto" : "none" }}>
-          <span style={{ fontSize:8, letterSpacing:"0.25em", textTransform:"uppercase", color:VIT_ACC[pal]||"#C9A24A" }}>Psicología Libros</span>
-          <span className="font-display" style={{ fontSize:isCenter?13:11, lineHeight:1.3, color:"#F8F4EA" }}>
-            {title.split(" ").slice(0,6).join(" ")}
+        {/* Overlay hover */}
+        <div style={{ position:"absolute", inset:0, background:"rgba(0,0,0,0.88)", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:6, padding:"10px 8px", textAlign:"center",
+                      opacity: hov ? 1 : 0, transition:"opacity 0.18s", pointerEvents: hov ? "auto" : "none", zIndex:5, overflow:"hidden" }}>
+          <span style={{ fontSize:7, letterSpacing:"0.25em", textTransform:"uppercase", color:VIT_ACC[pal]||"#C9A24A", flexShrink:0 }}>Psicología Libros</span>
+          <span className="font-display" style={{ fontSize:isCenter?12:10, lineHeight:1.25, color:"#F8F4EA", overflow:"hidden", display:"-webkit-box", WebkitLineClamp:5, WebkitBoxOrient:"vertical" }}>
+            {title}
           </span>
-          {author && <span style={{ fontSize:9, color:"rgba(255,255,255,0.55)" }}>por {author}</span>}
           {book && (
-            <span style={{ marginTop:5, padding:"4px 12px", background:VIT_ACC[pal]||"#C9A24A", color:"#fff", fontSize:8, letterSpacing:"0.18em", textTransform:"uppercase", display:"block" }}>
+            <span style={{ marginTop:4, padding:"4px 10px", background:VIT_ACC[pal]||"#C9A24A", color:"#fff", fontSize:7, letterSpacing:"0.18em", textTransform:"uppercase", display:"block", flexShrink:0 }}>
               Ver libro →
             </span>
           )}
