@@ -79,9 +79,9 @@ const BookCover = ({ book, large = false }) => {
   return (
     <div className={`${cls} book-cover w-full ${large ? "aspect-[2/3]" : "aspect-[3/4]"}`}>
       <div className="frame" />
-      <div className="absolute top-5 left-0 right-0 flex flex-col items-center gap-1.5">
+      <div className="absolute top-5 left-0 right-0 px-[18px] flex flex-col items-center gap-1.5 overflow-hidden">
         <div className={`w-6 h-px ${isLight ? "bg-pl-gold-dk" : "bg-pl-gold"}`} />
-        <div className={`text-[9px] tracking-[0.3em] uppercase ${isLight ? "text-pl-gold-dk" : "text-pl-gold"}`}>
+        <div className={`text-[9px] tracking-[0.08em] sm:tracking-[0.22em] uppercase whitespace-nowrap ${isLight ? "text-pl-gold-dk" : "text-pl-gold"}`}>
           Psicología · Libros
         </div>
       </div>
@@ -90,8 +90,8 @@ const BookCover = ({ book, large = false }) => {
           {(book.cover.short || "").replace(/\\n/g, "\n")}
         </div>
       </div>
-      <div className="absolute bottom-5 left-0 right-0 flex flex-col items-center gap-1.5">
-        <div className={`text-[9px] tracking-[0.25em] uppercase opacity-80 ${isLight ? "text-[#5b4a22]" : ""}`}>
+      <div className="absolute bottom-5 left-0 right-0 px-[18px] flex flex-col items-center gap-1.5 overflow-hidden">
+        <div className={`text-[9px] tracking-[0.08em] sm:tracking-[0.2em] uppercase opacity-80 whitespace-nowrap overflow-hidden text-ellipsis max-w-full ${isLight ? "text-[#5b4a22]" : ""}`}>
           {book.author}
         </div>
         <div className={`w-3 h-px ${isLight ? "bg-pl-gold-dk" : "bg-pl-gold"}`} />
