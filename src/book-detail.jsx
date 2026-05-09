@@ -245,7 +245,6 @@ const BookDetailPage = () => {
                     ["Editorial", book.editorial],
                     ["Soporte", book.soporte],
                     ["Páginas", book.paginas],
-                    ["Autorx/s", book.author],
                     ["Idioma", book.idioma],
                     ["Tema", book.tema],
                   ].filter(([, v]) => v != null && String(v).trim() !== "");
