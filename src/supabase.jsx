@@ -145,7 +145,7 @@ const loadPLFaqs = async () => {
 
 /* ── CRUD Libros (admin) ─────────────────────────────────── */
 const createPLBook = async ({
-  title, author, category_id, description, price, status, cover_palette, cover_short, featured, image_urls = [],
+  title, author, category_id, description, price, status, cover_palette, cover_short, featured, image_url,
   editorial, soporte, paginas, idioma, tema,
 }) => {
   const [row] = await plPost("pl_books", {
@@ -157,7 +157,7 @@ const createPLBook = async ({
     cover_short:   cover_short   || title,
     featured:      featured      || false,
     is_active:     true,
-    image_url: image_urls.length > 0 ? JSON.stringify(image_urls) : null,
+    image_url:     image_url     || null,
     editorial: editorial?.trim() || null,
     soporte:   soporte?.trim()   || null,
     paginas:   paginas?.trim()   || null,

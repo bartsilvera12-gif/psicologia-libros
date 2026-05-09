@@ -413,13 +413,25 @@ const BookForm = ({ book, categories, onSave, onClose }) => {
   const [saving, setSaving] = React.useState(false);
   const [err, setErr]       = React.useState("");
 
+  /* Ref always holds the latest image_urls — no stale-closure risk in submit */
+  const imageUrlsRef = React.useRef(f.image_urls);
+  React.useEffect(() => { imageUrlsRef.current = f.image_urls; }, [f.image_urls]);
+
   const addImgUrl = () => {
     const url = imgInput.trim();
     if (!url) return;
-    setF(p => ({ ...p, image_urls: p.image_urls.includes(url) ? p.image_urls : [...p.image_urls, url] }));
+    setF(p => {
+      const next = p.image_urls.includes(url) ? p.image_urls : [...p.image_urls, url];
+      imageUrlsRef.current = next;
+      return { ...p, image_urls: next };
+    });
     setImgInput("");
   };
-  const removeImgUrl = (idx) => setF(p => ({ ...p, image_urls: p.image_urls.filter((_, i) => i !== idx) }));
+  const removeImgUrl = (idx) => setF(p => {
+    const next = p.image_urls.filter((_, i) => i !== idx);
+    imageUrlsRef.current = next;
+    return { ...p, image_urls: next };
+  });
 
   const upd = (k, v) => setF(p => ({ ...p, [k]: v }));
 
@@ -442,10 +454,11 @@ const BookForm = ({ book, categories, onSave, onClose }) => {
         featured:      f.featured,
         is_active:     f.is_active,
         image_url: (() => {
+          const latest = imageUrlsRef.current;
           const pending = imgInput.trim();
-          const all = pending && !f.image_urls.includes(pending)
-            ? [...f.image_urls, pending]
-            : f.image_urls;
+          const all = pending && !latest.includes(pending)
+            ? [...latest, pending]
+            : latest;
           return all.length > 0 ? JSON.stringify(all) : null;
         })(),
         editorial: f.editorial.trim() || null,
