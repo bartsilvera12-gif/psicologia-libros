@@ -39,6 +39,48 @@ const Toast = ({ msg, type = "ok", onDone }) => {
   );
 };
 
+/** Miniatura de portada: imagen real si hay URL; si falla la carga o no hay foto, texto sobre paleta tipográfica (como en catálogo). */
+const ADMIN_PAL_BG = { coal:"#1c1c1c", r:"#4a0d10", b:"#1d2a3a", i:"#efe6d4", g:"#2d3530", p:"#2a2030" };
+const ADMIN_PAL_TXT = { coal:"#F8F4EA", r:"#F8F4EA", b:"#F8F4EA", i:"#2b2418", g:"#F8F4EA", p:"#F8F4EA" };
+
+const AdminBookThumb = ({ book, width, height, className = "" }) => {
+  const [imgErr, setImgErr] = React.useState(false);
+  const url = (book.image_urls && book.image_urls[0]) || book.image_url;
+  const pal = book.cover?.palette || "coal";
+  const bg = ADMIN_PAL_BG[pal] || "#1c1c1c";
+  const fg = ADMIN_PAL_TXT[pal] || "#F8F4EA";
+  const label = ((book.cover?.short || book.title || "").replace(/\n/g, " ")).slice(0, 10);
+
+  React.useEffect(() => {
+    setImgErr(false);
+  }, [book.id, url]);
+
+  return (
+    <div
+      className={`overflow-hidden shrink-0 relative ${className}`}
+      style={{ width, height, background: bg }}
+    >
+      {url && !imgErr ? (
+        <img
+          src={url}
+          alt=""
+          className="absolute inset-0 w-full h-full object-cover"
+          onError={() => setImgErr(true)}
+        />
+      ) : null}
+      {(!url || imgErr) && (
+        <div
+          className="absolute inset-0 flex items-center justify-center text-[6px] leading-tight text-center p-0.5 font-medium z-[1]"
+          style={{ color: fg }}
+        >
+          {label}
+        </div>
+      )}
+      <div className="pointer-events-none absolute inset-0 border border-[rgba(201,162,74,0.22)] z-[2]" aria-hidden />
+    </div>
+  );
+};
+
 const Modal = ({ title, onClose, children, wide = false }) =>
   ReactDOM.createPortal(
     (
@@ -267,8 +309,6 @@ const AdminDashboard = ({ books, categories }) => {
 
   const recientes = [...books].sort((a, b) => (b.id > a.id ? 1 : -1)).slice(0, 8);
 
-  const palettes = { coal:"#1c1c1c", r:"#4a0d10", b:"#1d2a3a", i:"#c2b58f", g:"#2d3530", p:"#2a2030" };
-
   return (
     <div className="fade-in">
       <div className="mb-6">
@@ -309,10 +349,7 @@ const AdminDashboard = ({ books, categories }) => {
           <div className="space-y-2">
             {recientes.map(b => (
               <div key={b.id} className="flex items-center gap-3 py-2 border-b border-[#EDE4D0] last:border-0">
-                <div className="w-7 h-9 shrink-0 flex items-center justify-center text-[8px] text-pl-ivory font-medium leading-tight text-center"
-                     style={{ background: palettes[b.cover?.palette] || "#1c1c1c" }}>
-                  {b.cover?.short?.slice(0,4) || b.title?.slice(0,4)}
-                </div>
+                <AdminBookThumb book={b} width={28} height={36} />
                 <div className="flex-1 min-w-0">
                   <div className="text-[12px] text-pl-coal font-medium truncate">{b.title}</div>
                   <div className="text-[11px] text-gray-400 truncate">{b.author}</div>
@@ -550,7 +587,6 @@ const AdminBooks = ({ books, categories, onRefresh, onToast }) => {
     setConfirm(null);
   };
 
-  const palBg = { coal:"#1c1c1c", r:"#4a0d10", b:"#1d2a3a", i:"#c2b58f", g:"#2d3530", p:"#2a2030" };
   const catName = (id) => categories.find(c=>c.id===id)?.name || id;
 
   return (
@@ -600,14 +636,7 @@ const AdminBooks = ({ books, categories, onRefresh, onToast }) => {
             {slice.map(b => (
               <tr key={b.id} className="table-row border-b border-[#EDE4D0] last:border-0">
                 <td className="px-4 py-3">
-                  <div className="w-7 h-9 overflow-hidden shrink-0" style={{ background: palBg[b.cover?.palette] || "#1c1c1c" }}>
-                    {(b.image_urls?.[0] || b.image_url)
-                      ? <img src={b.image_urls?.[0] || b.image_url} alt="" className="w-full h-full object-cover" onError={e=>e.target.style.display="none"} />
-                      : <div className="w-full h-full flex items-center justify-center text-[6px] text-pl-ivory leading-tight text-center p-0.5">
-                          {(b.cover?.short||b.title).slice(0,6)}
-                        </div>
-                    }
-                  </div>
+                  <AdminBookThumb book={b} width={28} height={36} />
                 </td>
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-2">
@@ -1030,8 +1059,6 @@ const AdminVitrine = ({ books, onRefresh, onToast }) => {
 const AdminDestacados = ({ books, onRefresh, onToast }) => {
   const [saving, setSaving] = React.useState(null);
   const featured = books.filter(b => b.featured && b.is_active !== false);
-  const palBg = { coal:"#1c1c1c", r:"#4a0d10", b:"#1d2a3a", i:"#efe6d4", g:"#2d3530", p:"#2a2030" };
-  const palTxt= { coal:"#F8F4EA", r:"#F8F4EA", b:"#F8F4EA", i:"#2b2418", g:"#F8F4EA", p:"#F8F4EA" };
 
   const toggle = async (book) => {
     setSaving(book.id);
@@ -1054,13 +1081,9 @@ const AdminDestacados = ({ books, onRefresh, onToast }) => {
         <div className="bg-white border border-[#E0D5C0] p-5 mb-6">
           <div className="text-[11px] tracking-[0.2em] uppercase text-gray-400 mb-4 font-medium">Actualmente en el carrusel ({featured.length})</div>
           <div className="flex flex-wrap gap-3">
-            {featured.map(b => {
-              const pal = b.cover?.palette || "coal";
-              return (
+            {featured.map(b => (
                 <div key={b.id} className="flex items-center gap-2 bg-[#FAF6EE] border border-[#E0D5C0] pr-3 py-2 pl-2">
-                  <div style={{ width:32, height:46, background:palBg[pal], position:"relative", flexShrink:0 }}>
-                    <div style={{ position:"absolute", inset:4, border:"1px solid rgba(201,162,74,0.4)" }} />
-                  </div>
+                  <AdminBookThumb book={b} width={32} height={46} />
                   <div>
                     <div className="text-[12px] font-medium text-pl-coal">{b.title}</div>
                     <div className="text-[11px] text-gray-400">{b.author}</div>
@@ -1070,8 +1093,7 @@ const AdminDestacados = ({ books, onRefresh, onToast }) => {
                     {saving===b.id ? <div className="w-3 h-3 border border-gray-300 border-t-gray-600 rounded-full animate-spin"/> : <IcoX />}
                   </button>
                 </div>
-              );
-            })}
+            ))}
           </div>
         </div>
       )}
@@ -1091,7 +1113,7 @@ const AdminDestacados = ({ books, onRefresh, onToast }) => {
             {books.filter(b => b.is_active !== false).map(b => (
               <tr key={b.id} className="table-row border-b border-[#EDE4D0] last:border-0">
                 <td className="px-4 py-2.5">
-                  <div style={{ width:24, height:36, background:palBg[b.cover?.palette||"coal"], flexShrink:0 }} />
+                  <AdminBookThumb book={b} width={24} height={36} />
                 </td>
                 <td className="px-4 py-2.5 font-medium text-pl-coal">{b.title}</td>
                 <td className="px-4 py-2.5 text-gray-400 text-[12px]">{b.author}</td>

@@ -192,6 +192,31 @@ const BookDetailPage = () => {
                   <BookCoverGallery book={book} />
                 </div>
 
+                {/* Ficha técnica debajo de la portada */}
+                {(() => {
+                  const specs = [
+                    ["Editorial", book.editorial],
+                    ["Soporte", book.soporte],
+                    ["Páginas", book.paginas],
+                    ["Idioma", book.idioma],
+                    ["Tema", book.tema],
+                  ].filter(([, v]) => v != null && String(v).trim() !== "");
+                  if (!specs.length) return null;
+                  return (
+                    <div className="mt-8 border border-pl-coal/10 bg-pl-white/50 px-4 sm:px-5 w-full">
+                      {specs.map(([label, val], i) => (
+                        <div
+                          key={label}
+                          className={`flex justify-between gap-6 py-3 text-[14px] leading-snug ${i > 0 ? "border-t border-dotted border-pl-coal/20" : ""}`}
+                        >
+                          <span className="text-pl-coal font-medium shrink-0">{label}</span>
+                          <span className="text-pl-gray text-right">{String(val).trim()}</span>
+                        </div>
+                      ))}
+                    </div>
+                  );
+                })()}
+
                 {/* Link categoría */}
                 <div className="mt-8 flex items-center gap-2">
                   <a href={`catalogo.html?cat=${book.category}`}
@@ -238,31 +263,6 @@ const BookDetailPage = () => {
                   <div className="w-1.5 h-1.5 rounded-full bg-pl-gold/70" />
                   <div className="flex-1 h-px bg-pl-gold/15" />
                 </div>
-
-                {/* Ficha técnica (editorial, soporte, páginas, autorxs, idioma, tema) */}
-                {(() => {
-                  const specs = [
-                    ["Editorial", book.editorial],
-                    ["Soporte", book.soporte],
-                    ["Páginas", book.paginas],
-                    ["Idioma", book.idioma],
-                    ["Tema", book.tema],
-                  ].filter(([, v]) => v != null && String(v).trim() !== "");
-                  if (!specs.length) return null;
-                  return (
-                    <div className="mb-9 border border-pl-coal/10 bg-pl-white/50 px-4 sm:px-5">
-                      {specs.map(([label, val], i) => (
-                        <div
-                          key={label}
-                          className={`flex justify-between gap-6 py-3 text-[14px] leading-snug ${i > 0 ? "border-t border-dotted border-pl-coal/20" : ""}`}
-                        >
-                          <span className="text-pl-coal font-medium shrink-0">{label}</span>
-                          <span className="text-pl-gray text-right">{String(val).trim()}</span>
-                        </div>
-                      ))}
-                    </div>
-                  );
-                })()}
 
                 {/* Sinopsis */}
                 {book.description ? (
