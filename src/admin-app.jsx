@@ -416,10 +416,10 @@ const BookForm = ({ book, categories, onSave, onClose }) => {
   const addImgUrl = () => {
     const url = imgInput.trim();
     if (!url) return;
-    upd("image_urls", [...f.image_urls, url]);
+    setF(p => ({ ...p, image_urls: p.image_urls.includes(url) ? p.image_urls : [...p.image_urls, url] }));
     setImgInput("");
   };
-  const removeImgUrl = (idx) => upd("image_urls", f.image_urls.filter((_, i) => i !== idx));
+  const removeImgUrl = (idx) => setF(p => ({ ...p, image_urls: p.image_urls.filter((_, i) => i !== idx) }));
 
   const upd = (k, v) => setF(p => ({ ...p, [k]: v }));
 
@@ -441,7 +441,13 @@ const BookForm = ({ book, categories, onSave, onClose }) => {
         cover_short:   f.title.trim(),
         featured:      f.featured,
         is_active:     f.is_active,
-        image_url: f.image_urls.length > 0 ? JSON.stringify(f.image_urls) : null,
+        image_url: (() => {
+          const pending = imgInput.trim();
+          const all = pending && !f.image_urls.includes(pending)
+            ? [...f.image_urls, pending]
+            : f.image_urls;
+          return all.length > 0 ? JSON.stringify(all) : null;
+        })(),
         editorial: f.editorial.trim() || null,
         soporte:   f.soporte.trim()   || null,
         paginas:   f.paginas.trim()   || null,
