@@ -1,19 +1,26 @@
 // === Toast al agregar al carrito (evento `pl-cart-added` desde cart.jsx) ===
 const CartAddToast = () => {
-  const [show, setShow]       = React.useState(false);
-  const [title, setTitle]     = React.useState("");
-  const [toastKey, setKey]    = React.useState(0);
-  const hideTimer              = React.useRef(null);
+  const [show, setShow]     = React.useState(false);
+  const [leaving, setLeave] = React.useState(false);
+  const [title, setTitle]   = React.useState("");
+  const [toastKey, setKey]  = React.useState(0);
+  const hideTimer           = React.useRef(null);
+  const leaveTimer          = React.useRef(null);
 
   React.useEffect(() => {
-    // Inject keyframes once
     if (!document.getElementById("pl-toast-kf")) {
       const s = document.createElement("style");
       s.id = "pl-toast-kf";
       s.textContent = `
         @keyframes toastIn {
-          from { opacity:0; transform:translateX(calc(100% + 40px)); }
-          to   { opacity:1; transform:translateX(0); }
+          0%   { opacity:0; transform:translateX(calc(100% + 48px)) scale(0.94); }
+          60%  { opacity:1; transform:translateX(-10px) scale(1.01); }
+          80%  { transform:translateX(4px) scale(0.995); }
+          100% { opacity:1; transform:translateX(0) scale(1); }
+        }
+        @keyframes toastOut {
+          0%   { opacity:1; transform:translateX(0) scale(1); }
+          100% { opacity:0; transform:translateX(calc(100% + 48px)) scale(0.94); }
         }
         @keyframes toastProgress {
           from { width:100%; }
@@ -27,14 +34,19 @@ const CartAddToast = () => {
       const t = e.detail?.title || "";
       setTitle(t.length > 55 ? t.slice(0, 52) + "…" : t);
       setKey(k => k + 1);
+      setLeave(false);
       setShow(true);
       clearTimeout(hideTimer.current);
-      hideTimer.current = setTimeout(() => setShow(false), 1800);
+      clearTimeout(leaveTimer.current);
+      // start exit animation at 1.5s, fully unmount at 1.9s
+      hideTimer.current  = setTimeout(() => setLeave(true),          1500);
+      leaveTimer.current = setTimeout(() => { setShow(false); setLeave(false); }, 1900);
     };
     window.addEventListener("pl-cart-added", onAdded);
     return () => {
       window.removeEventListener("pl-cart-added", onAdded);
       clearTimeout(hideTimer.current);
+      clearTimeout(leaveTimer.current);
     };
   }, []);
 
@@ -46,17 +58,19 @@ const CartAddToast = () => {
       role="status"
       aria-live="polite"
       className="fixed bottom-5 right-4 sm:right-6 z-[200] w-[min(86vw,300px)] bg-pl-white border border-pl-coal/10 shadow-card-hv pointer-events-none overflow-hidden"
-      style={{ animation: "toastIn 0.44s cubic-bezier(0.2,0.8,0.2,1) both" }}
+      style={{
+        animation: leaving
+          ? "toastOut 0.38s cubic-bezier(0.4,0,1,1) both"
+          : "toastIn 0.52s cubic-bezier(0.2,0.8,0.2,1) both",
+      }}
     >
       {/* Gold left accent */}
       <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-pl-gold" />
 
       <div className="flex items-start gap-3 pl-5 pr-4 py-3.5">
-        {/* Cart icon */}
         <div className="shrink-0 w-8 h-8 bg-pl-coal flex items-center justify-center text-pl-ivory mt-0.5">
           <IconCart size={15} />
         </div>
-
         <div className="min-w-0 flex-1">
           <div className="text-[9px] tracking-[0.2em] uppercase text-pl-gold-dk font-medium mb-1">
             Agregado al carrito
@@ -71,7 +85,7 @@ const CartAddToast = () => {
       <div className="h-[2px] bg-pl-coal/6">
         <div
           className="h-full bg-pl-gold"
-          style={{ animation: "toastProgress 1.8s linear both" }}
+          style={{ animation: "toastProgress 1.5s linear both" }}
         />
       </div>
     </div>
