@@ -142,17 +142,26 @@ const BookCard = ({ book }) => {
         <p className="text-pl-gray text-[13px] mt-1.5 italic">por {book.author}</p>
         <div className="mt-4 gold-rule-short" />
         <div className="flex-1" />
-        <div className="mt-5 flex items-end justify-between gap-3">
-          <div className="shrink-0">
-            <div className="text-[10px] tracking-[0.22em] uppercase text-pl-gray/70">Precio</div>
-            <div className="font-display tabular-nums font-semibold text-pl-coal text-[20px] mt-0.5 leading-tight whitespace-nowrap">
-              {typeof window.formatPrecioGs === "function" ? window.formatPrecioGs(book.price) : book.price}
+        <div className="mt-5 flex flex-col gap-2.5">
+          <div className="flex items-end justify-between gap-3">
+            <div className="shrink-0">
+              <div className="text-[10px] tracking-[0.22em] uppercase text-pl-gray/70">Precio</div>
+              <div className="font-display tabular-nums font-semibold text-pl-coal text-[20px] mt-0.5 leading-tight whitespace-nowrap">
+                {typeof window.formatPrecioGs === "function" ? window.formatPrecioGs(book.price) : book.price}
+              </div>
+            </div>
+            <div className="flex flex-col items-end gap-2 shrink-0">
+              <button type="button"
+                      onClick={() => window.PL_cartAdd?.(book)}
+                      className="inline-flex items-center gap-1.5 px-3.5 py-2 border border-pl-coal/20 text-pl-coal text-[11px] tracking-wide hover:border-pl-gold hover:text-pl-red transition-colors">
+                Agregar al carrito
+              </button>
+              <a href={waLink(msg)} target="_blank" rel="noreferrer"
+                 className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-pl-red text-white text-[12px] tracking-wide hover:bg-pl-red-dk transition-colors">
+                <IconWhatsapp size={14} /> Consultar
+              </a>
             </div>
           </div>
-          <a href={waLink(msg)} target="_blank" rel="noreferrer"
-             className="shrink-0 inline-flex items-center gap-1.5 px-4 py-2.5 bg-pl-red text-white text-[12px] tracking-wide hover:bg-pl-red-dk transition-colors">
-            <IconWhatsapp size={14} /> Consultar
-          </a>
         </div>
       </div>
     </article>

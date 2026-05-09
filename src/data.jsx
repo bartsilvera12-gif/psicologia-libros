@@ -47,6 +47,17 @@ function formatPrecioGs(raw) {
 }
 window.formatPrecioGs = formatPrecioGs;
 
+/** Monto numérico en guaraníes a partir de texto formateado o bruto, o `null` si no hay cifra (p. ej. «Consultar precio»). */
+function parsePrecioGs(raw) {
+  if (raw == null) return null;
+  const digits = String(raw).replace(/\D/g, "");
+  if (!digits) return null;
+  const n = parseInt(digits, 10);
+  if (!Number.isFinite(n) || n < 0) return null;
+  return n;
+}
+window.parsePrecioGs = parsePrecioGs;
+
 // === Books — 12 entries, mix of featured ===
 // covers use a typographic placeholder palette ('coal' | 'red' | 'blue' | 'ivory' | 'green' | 'plum')
 const BOOKS = [

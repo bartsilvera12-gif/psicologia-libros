@@ -1,15 +1,68 @@
+// === Toast al agregar al carrito (evento `pl-cart-added` desde cart.jsx) ===
+const CartAddToast = () => {
+  const [show, setShow] = React.useState(false);
+  const [text, setText] = React.useState("");
+  const hideTimer = React.useRef(null);
+
+  React.useEffect(() => {
+    const onAdded = (e) => {
+      const title = e.detail?.title;
+      const short =
+        title && title.length > 52 ? `${title.slice(0, 49)}…` : title;
+      setText(
+        short ? `«${short}» se agregó al carrito` : "Se agregó al carrito"
+      );
+      setShow(true);
+      clearTimeout(hideTimer.current);
+      hideTimer.current = setTimeout(() => setShow(false), 3200);
+    };
+    window.addEventListener("pl-cart-added", onAdded);
+    return () => {
+      window.removeEventListener("pl-cart-added", onAdded);
+      clearTimeout(hideTimer.current);
+    };
+  }, []);
+
+  if (!show || !text) return null;
+
+  return (
+    <div
+      className="fixed bottom-6 left-1/2 z-[200] max-w-[min(92vw,440px)] -translate-x-1/2 px-5 py-3.5 bg-pl-coal text-pl-ivory text-[13px] leading-snug text-center shadow-card-hv border border-pl-gold/30 pointer-events-none"
+      style={{ animation: "fadeSlideIn 0.35s ease both" }}
+      role="status"
+      aria-live="polite"
+    >
+      {text}
+    </div>
+  );
+};
+
 // === Header ===
 // homePath: "" para index.html, "index.html" para catalog page
 const Header = ({ active, homePath = "" }) => {
   const [scrolled, setScrolled] = React.useState(false);
   const [open, setOpen]         = React.useState(false);
   const [catOpen, setCatOpen]   = React.useState(false);
+  const [cartN, setCartN]       = React.useState(() =>
+    typeof window.PL_cartCount === "function" ? window.PL_cartCount() : 0
+  );
   const catTimer = React.useRef(null);
 
   React.useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  React.useEffect(() => {
+    const sync = () =>
+      setCartN(typeof window.PL_cartCount === "function" ? window.PL_cartCount() : 0);
+    window.addEventListener("pl-cart-change", sync);
+    window.addEventListener("storage", sync);
+    return () => {
+      window.removeEventListener("pl-cart-change", sync);
+      window.removeEventListener("storage", sync);
+    };
   }, []);
 
   const click = (e, id) => {
@@ -25,6 +78,7 @@ const Header = ({ active, homePath = "" }) => {
   const logoHref = homePath ? homePath : "#inicio";
 
   return (
+    <>
     <header className={`relative z-50 header-blur transition-shadow ${scrolled ? "header-scrolled" : ""}`}>
       <div className="max-w-7xl mx-auto px-6 lg:px-10">
         <div className="flex items-center justify-between h-[78px]">
@@ -113,7 +167,21 @@ const Header = ({ active, homePath = "" }) => {
             ))}
           </nav>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <a href="carrito.html"
+               className={`relative inline-flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 border shrink-0 transition-colors ${
+                 window.location.pathname.includes("carrito")
+                   ? "border-pl-gold text-pl-red bg-pl-white"
+                   : "border-pl-coal/15 text-pl-coal hover:border-pl-gold/50 hover:text-pl-red"
+               }`}
+               aria-label={`Carrito${cartN ? `, ${cartN} artículos` : ""}`}>
+              <IconCart size={20} />
+              {cartN > 0 && (
+                <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full bg-pl-red text-white text-[10px] font-semibold leading-[18px] text-center tabular-nums">
+                  {cartN > 99 ? "99+" : cartN}
+                </span>
+              )}
+            </a>
             <a href={waLink("Hola, quiero consultar el catálogo de Psicología Libros.")}
                target="_blank" rel="noreferrer"
                className="hidden sm:inline-flex items-center gap-2 px-5 py-3 bg-pl-red text-white text-[13px] hover:bg-pl-red-dk transition-colors">
@@ -144,6 +212,12 @@ const Header = ({ active, homePath = "" }) => {
               <a href="faq.html" className="py-3 text-[15px] text-pl-coal border-b border-pl-coal/5">
                 FAQ
               </a>
+              <a href="carrito.html" className="py-3 text-[15px] text-pl-coal border-b border-pl-coal/5 flex items-center justify-between">
+                <span>Carrito</span>
+                {cartN > 0 && (
+                  <span className="text-[11px] tabular-nums px-2 py-0.5 rounded-full bg-pl-red text-white font-medium">{cartN}</span>
+                )}
+              </a>
               <div className="border-b border-pl-coal/5">
                 <div className="py-3 text-[15px] text-pl-coal">Categorías</div>
                 <div className="pb-2 flex flex-col gap-0.5">
@@ -172,6 +246,8 @@ const Header = ({ active, homePath = "" }) => {
         )}
       </div>
     </header>
+    <CartAddToast />
+    </>
   );
 };
 

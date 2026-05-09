@@ -294,15 +294,22 @@ const BookDetailPage = () => {
                 </div>
 
                 {/* CTAs */}
-                <div className="flex flex-col sm:flex-row gap-3">
-                  <a href={waHref} target="_blank" rel="noreferrer"
-                     className="flex-1 inline-flex items-center justify-center gap-3 px-8 py-4 bg-pl-red text-white text-[15px] font-medium tracking-wide hover:bg-pl-red-dk transition-colors">
-                    <IconWhatsapp size={20} />
-                    Consultar por WhatsApp
-                  </a>
+                <div className="flex flex-col gap-3">
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    <a href={waHref} target="_blank" rel="noreferrer"
+                       className="flex-1 inline-flex items-center justify-center gap-3 px-8 py-4 bg-pl-red text-white text-[15px] font-medium tracking-wide hover:bg-pl-red-dk transition-colors">
+                      <IconWhatsapp size={20} />
+                      Consultar por WhatsApp
+                    </a>
+                    <button type="button"
+                            onClick={() => window.PL_cartAdd?.(book)}
+                            className="flex-1 inline-flex items-center justify-center gap-2 px-8 py-4 border border-pl-coal/22 text-pl-coal text-[15px] font-medium tracking-wide hover:border-pl-gold hover:text-pl-red transition-colors">
+                      Agregar al carrito
+                    </button>
+                  </div>
                   <a href="catalogo.html"
-                     className="inline-flex items-center justify-center gap-2 px-7 py-4 border border-pl-coal/18 text-pl-coal text-[13px] tracking-wide hover:border-pl-coal hover:bg-pl-coal hover:text-pl-ivory transition-all">
-                    Ver catálogo
+                     className="inline-flex items-center justify-center gap-2 px-7 py-3.5 border border-transparent text-pl-coal/80 text-[13px] tracking-wide hover:text-pl-red transition-colors">
+                    Ver catálogo completo
                   </a>
                 </div>
 

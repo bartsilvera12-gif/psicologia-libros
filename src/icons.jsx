@@ -193,11 +193,19 @@ const IconBolt = ({ size = 28 }) => (
   </Icon>
 );
 
+const IconCart = ({ size = 22 }) => (
+  <Icon size={size}>
+    <circle cx="9" cy="21" r="1.2"/>
+    <circle cx="19" cy="21" r="1.2"/>
+    <path d="M2 4h3l1.6 10.39A2 2 0 0 0 8.59 16h10.81a2 2 0 0 0 1.98-1.65L22 7H6"/>
+  </Icon>
+);
+
 Object.assign(window, {
   Icon,
   IconWhatsapp, IconSearch, IconArrow, IconMenu, IconClose, IconChevron,
   IconInstagram, IconFacebook, IconMail, IconPin,
   IconBrain, IconHeartLeaf, IconWaves, IconCloud, IconNeurons, IconChat,
   IconSeed, IconChild, IconStethoscope, IconHourglass, IconLink, IconLeaf,
-  IconBook, IconHeadset, IconBolt
+  IconBook, IconHeadset, IconBolt, IconCart
 });
