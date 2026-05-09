@@ -517,9 +517,13 @@ const AdminBooks = ({ books, categories, onRefresh, onToast }) => {
 
   const handleDelete = async (b) => {
     try {
-      await window.updatePLBook(b.id, { is_active: false });
-      onRefresh(); onToast("Libro eliminado del catálogo");
-    } catch(e) { onToast(e.message, "err"); }
+      await window.deletePLBook(b.id);
+      if (typeof window.loadPLBooks === "function") await window.loadPLBooks();
+      onRefresh();
+      onToast("Libro eliminado");
+    } catch (e) {
+      onToast(e.message || "No se pudo eliminar el libro", "err");
+    }
     setConfirm(null);
   };
 
@@ -641,7 +645,7 @@ const AdminBooks = ({ books, categories, onRefresh, onToast }) => {
       {/* Confirmar eliminación del catálogo (is_active = false) */}
       {confirm && (
         <Modal title="Eliminar libro" onClose={()=>setConfirm(null)}>
-          <p className="text-[13px] text-gray-600 mb-6">¿Eliminar «<strong>{confirm.title}</strong>» del catálogo? El registro se mantiene en el sistema, pero el libro dejará de mostrarse en el sitio.</p>
+          <p className="text-[13px] text-gray-600 mb-6">¿Eliminar «<strong>{confirm.title}</strong>» de forma permanente? Esta acción borra el libro en la base de datos y ya no aparecerá en el panel ni en el sitio.</p>
           <div className="flex justify-end gap-3">
             <Btn variant="outline" onClick={()=>setConfirm(null)}>Cancelar</Btn>
             <Btn variant="danger" onClick={()=>handleDelete(confirm)}>Eliminar</Btn>
