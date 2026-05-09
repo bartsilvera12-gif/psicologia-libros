@@ -271,11 +271,11 @@ const VITRINE_FALLBACK = [
   { pal:"p",    short:"Salud\nMental",        title:"Salud Mental",        author:"", cat:"salud"       },
 ];
 const VIT_SLOTS = [
-  { pos:"absolute", style:{ left:"0%",   bottom:"-24px", transform:"rotate(-14deg)", zIndex:1 }, w:88,  h:132, depth:3 },
-  { pos:"absolute", style:{ left:"20%",  bottom:"-10px", transform:"rotate(-6deg)",  zIndex:2 }, w:102, h:153, depth:2 },
-  { pos:"relative", style:{ zIndex:4 },                                                           w:128, h:192, center:true, depth:0 },
-  { pos:"absolute", style:{ right:"20%", bottom:"-10px", transform:"rotate(6deg)",   zIndex:2 }, w:102, h:153, depth:2 },
-  { pos:"absolute", style:{ right:"0%",  bottom:"-24px", transform:"rotate(14deg)",  zIndex:1 }, w:88,  h:132, depth:3 },
+  { pos:"absolute", style:{ left:"10%",  bottom:0, transform:"rotate(-10deg)", zIndex:1 }, w:100, h:150, depth:3 },
+  { pos:"absolute", style:{ left:"28%",  bottom:0, transform:"rotate(-4deg)",  zIndex:2 }, w:100, h:152, depth:2 },
+  { pos:"relative", style:{ zIndex:4 },                                                    w:115, h:172, center:true, depth:0 },
+  { pos:"absolute", style:{ right:"28%", bottom:0, transform:"rotate(4deg)",   zIndex:2 }, w:100, h:152, depth:2 },
+  { pos:"absolute", style:{ right:"10%", bottom:0, transform:"rotate(10deg)",  zIndex:1 }, w:100, h:150, depth:3 },
 ];
 const VIT_BG  = { coal:"#111111", r:"#7a0d12", b:"#0e2640", i:"#efe6d4", g:"#122b1a", p:"#2b0e4a" };
 const VIT_TXT = { coal:"#F8F4EA", r:"#F8F4EA", b:"#F8F4EA", i:"#2b2418", g:"#F8F4EA", p:"#F8F4EA" };
