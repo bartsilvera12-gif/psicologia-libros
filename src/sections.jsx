@@ -272,9 +272,12 @@ const VITRINE_FALLBACK = [
 ];
 const VIT_SLOTS = [
   { pos:"absolute", style:{ left:"10%",  bottom:0, transform:"rotate(-10deg)", zIndex:1 }, w:100, h:150, depth:3 },
-  { pos:"absolute", style:{ left:"28%",  bottom:0, transform:"rotate(-4deg)",  zIndex:2 }, w:100, h:152, depth:2 },
-  { pos:"relative", style:{ zIndex:4 },                                                    w:115, h:172, center:true, depth:0 },
-  { pos:"absolute", style:{ right:"28%", bottom:0, transform:"rotate(4deg)",   zIndex:2 }, w:100, h:152, depth:2 },
+  { pos:"absolute", style:{ left:"28%",  bottom:0, transform:"rotate(-4deg)",  zIndex:2 }, w:100, h:152, depth:2,
+    mobileStyle:{ left:"8%",  bottom:0, transform:"rotate(-10deg)", zIndex:2 }, mw:88, mh:132 },
+  { pos:"relative", style:{ zIndex:4 },                                                    w:115, h:172, center:true, depth:0,
+    mobileStyle:{ zIndex:4 }, mw:110, mh:165 },
+  { pos:"absolute", style:{ right:"28%", bottom:0, transform:"rotate(4deg)",   zIndex:2 }, w:100, h:152, depth:2,
+    mobileStyle:{ right:"8%", bottom:0, transform:"rotate(10deg)",  zIndex:2 }, mw:88, mh:132 },
   { pos:"absolute", style:{ right:"10%", bottom:0, transform:"rotate(10deg)",  zIndex:1 }, w:100, h:150, depth:3 },
 ];
 const VIT_BG  = { coal:"#111111", r:"#7a0d12", b:"#0e2640", i:"#efe6d4", g:"#122b1a", p:"#2b0e4a" };
@@ -290,12 +293,15 @@ const VitrineBook = ({ book, fb, slot, isCenter }) => {
   const title  = book?.title || fb.title;
   const author = book?.author || fb.author;
   const imgUrl = book ? ((book.image_urls && book.image_urls[0]) || book.image_url || null) : null;
-  const depth  = slot.depth ?? 0; // 0 = center (closest), 3 = outer (furthest)
+  const depth  = slot.depth ?? 0;
+  /* Use mobile dimensions/position when viewport < 640px */
+  const isMobile = typeof window !== "undefined" && window.innerWidth < 640;
+  const activeStyle = (isMobile && slot.mobileStyle) ? slot.mobileStyle : slot.style;
+  const w = (isMobile && slot.mw) ? slot.mw : slot.w;
+  const h = (isMobile && slot.mh) ? slot.mh : slot.h;
 
-  const baseTransform = slot.style.transform || "";
-  /* Darken side books so the center one pops */
+  const baseTransform = activeStyle.transform || "";
   const dimOpacity = depth === 0 ? 0 : depth === 1 ? 0.08 : depth === 2 ? 0.22 : 0.38;
-  /* Drop shadow gets softer for far books */
   const baseShadow = depth === 0
     ? "drop-shadow(0 20px 40px rgba(0,0,0,0.55))"
     : depth === 2
@@ -304,7 +310,7 @@ const VitrineBook = ({ book, fb, slot, isCenter }) => {
 
   const wrapStyle = {
     position: slot.pos === "relative" ? "relative" : "absolute",
-    ...slot.style,
+    ...activeStyle,
     transition: "transform 0.32s cubic-bezier(0.34,1.56,0.64,1), filter 0.3s ease, z-index 0s",
     animation: (slot.pos === "relative" && isCenter && !hov) ? "logoFloat 5s ease-in-out infinite" : "none",
     filter: hov ? "drop-shadow(0 28px 52px rgba(0,0,0,0.65))" : baseShadow,
@@ -333,7 +339,7 @@ const VitrineBook = ({ book, fb, slot, isCenter }) => {
          onMouseLeave={() => setHov(false)}
          onClick={handleClick}>
       <div className={`hero-book ${isCenter ? "shadow-card-hv" : "shadow-card"}`}
-           style={{ width:slot.w, height:slot.h, background:VIT_BG[pal]||"#111111", position:"relative" }}>
+           style={{ width:w, height:h, background:VIT_BG[pal]||"#111111", position:"relative" }}>
         {/* Real cover image */}
         {imgUrl && !imgErr && (
           <img
