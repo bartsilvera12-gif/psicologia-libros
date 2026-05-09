@@ -409,7 +409,7 @@ const HeroVitrine = () => {
 
 // === Hero ===
 const Hero = () => (
-  <section id="inicio" className="hero-texture relative min-h-screen flex items-center overflow-hidden">
+  <section id="inicio" className="hero-texture relative sm:min-h-screen flex items-center overflow-hidden">
     {/* ── Fondo decorativo ── */}
     <div className="absolute inset-0 pointer-events-none select-none overflow-hidden">
       {/* Blobs de color */}
@@ -452,7 +452,7 @@ const Hero = () => (
       <div className="absolute top-[12%] bottom-[12%] left-1/2 w-px bg-gradient-to-b from-transparent via-pl-gold/15 to-transparent hidden lg:block" />
     </div>
 
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 w-full py-10 sm:py-14 lg:py-20">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 w-full py-8 sm:py-14 lg:py-20">
       <div className="grid lg:grid-cols-2 gap-8 lg:gap-20 items-center">
 
         {/* ── Columna izquierda: Logo ── */}
@@ -480,7 +480,7 @@ const Hero = () => (
 
         {/* ── Columna derecha: vitrina de libros ── */}
         <div className="relative" style={{ animation: "fadeSlideIn 0.9s 0.35s both" }}>
-          <div className="bg-pl-white p-4 sm:p-6 lg:p-8 shadow-card-hv border border-pl-coal/6 relative">
+          <div className="bg-pl-white p-4 sm:p-6 lg:p-8 shadow-card-hv border border-pl-coal/6 relative overflow-hidden">
             {/* Gold corner accent */}
             <div className="absolute top-0 right-0 w-20 h-px bg-pl-gold" />
             <div className="absolute top-0 right-0 w-px h-20 bg-pl-gold" />
