@@ -447,7 +447,7 @@ const Hero = () => (
       <div className="grid lg:grid-cols-2 gap-10 lg:gap-20 items-center">
 
         {/* ── Columna izquierda: Logo ── */}
-        <div className="flex flex-col items-center lg:items-start"
+        <div className="flex flex-col items-center"
              style={{ animation: "logoReveal 0.95s cubic-bezier(0.2,0.8,0.2,1) both" }}>
 
           <div style={{ animation: "logoFloat 6s ease-in-out infinite, glowPulse 4s ease-in-out infinite" }}>
@@ -455,7 +455,7 @@ const Hero = () => (
                  style={{ width: 340, height: 340, objectFit: "contain", display: "block" }} />
           </div>
 
-          <div className="mt-8 flex flex-wrap justify-center lg:justify-start gap-4"
+          <div className="mt-8 flex flex-wrap justify-center gap-4"
                style={{ animation: "fadeSlideIn 0.8s 0.55s both" }}>
             <a href="catalogo.html"
                className="inline-flex items-center gap-2 px-8 py-4 bg-pl-coal text-pl-ivory text-[14px] tracking-wide hover:bg-black transition-colors">
