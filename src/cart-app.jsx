@@ -45,6 +45,34 @@ function buildWaBody({ lines, books, customer }) {
   return body;
 }
 
+/* Miniatura de portada para el carrito — no usa BookCover (demasiado detalle a 56px) */
+const CartThumb = ({ book }) => {
+  const imgUrl = (book.image_urls && book.image_urls[0]) || book.image_url || null;
+  if (imgUrl) {
+    return (
+      <div className="w-full aspect-[3/4] overflow-hidden bg-pl-coal/5">
+        <img src={imgUrl} alt={book.title} className="w-full h-full object-cover" />
+      </div>
+    );
+  }
+  const palBg  = { coal:"#1c1c1c", r:"#4a0d10", b:"#1d2a3a", i:"#efe6d4", g:"#2d3530", p:"#2a2030" };
+  const palTxt = { coal:"rgba(201,162,74,0.9)", r:"rgba(229,180,100,0.85)", b:"rgba(160,190,230,0.8)",
+                   i:"rgba(91,74,34,0.7)", g:"rgba(120,190,120,0.75)", p:"rgba(190,140,220,0.75)" };
+  const pal  = book.cover?.palette || "coal";
+  const bg   = palBg[pal]  || palBg.coal;
+  const clr  = palTxt[pal] || palTxt.coal;
+  const init = book.title.replace(/[^a-záéíóúüñA-Z\s]/g, "").trim()
+                 .split(/\s+/).slice(0, 2).map(w => w[0]?.toUpperCase() || "").join("");
+  return (
+    <div className="w-full aspect-[3/4] flex items-center justify-center border border-white/5"
+         style={{ background: bg }}>
+      <span style={{ color: clr, fontFamily: "'EB Garamond', serif", fontSize: 18, fontWeight: 500 }}>
+        {init}
+      </span>
+    </div>
+  );
+};
+
 const inputCls =
   "w-full px-4 py-3 border border-pl-coal/15 bg-pl-white text-pl-coal text-[14px] " +
   "placeholder:text-pl-gray/40 focus:outline-none focus:border-pl-gold transition-colors";
@@ -279,7 +307,7 @@ const CartPage = () => {
                           <div className="w-14 shrink-0">
                             {book ? (
                               <a href={`libro.html?id=${book.id}`} className="block">
-                                <BookCover book={book} />
+                                <CartThumb book={book} />
                               </a>
                             ) : (
                               <div className="aspect-[3/4] bg-pl-coal/5 border border-pl-coal/10" />
