@@ -284,10 +284,12 @@ const VIT_ACC = { coal:"#C9A24A", r:"#e8a060", b:"#7aaedc", i:"#9a7a30", g:"#6bb
 
 const VitrineBook = ({ book, fb, slot, isCenter }) => {
   const [hov, setHov] = React.useState(false);
-  const pal   = book?.cover?.palette || fb.pal;
-  const short = (book?.cover?.short || fb.short).replace(/\\n/g,"\n");
-  const title = book?.title || fb.title;
-  const author= book?.author || fb.author;
+  const [imgErr, setImgErr] = React.useState(false);
+  const pal    = book?.cover?.palette || fb.pal;
+  const short  = (book?.cover?.short || fb.short).replace(/\\n/g,"\n");
+  const title  = book?.title || fb.title;
+  const author = book?.author || fb.author;
+  const imgUrl = book ? ((book.image_urls && book.image_urls[0]) || book.image_url || null) : null;
 
   const baseTransform = slot.style.transform || "";
 
@@ -323,20 +325,31 @@ const VitrineBook = ({ book, fb, slot, isCenter }) => {
          onClick={handleClick}>
       <div className={`hero-book ${isCenter ? "shadow-card-hv" : "shadow-card"}`}
            style={{ width:slot.w, height:slot.h, background:VIT_BG[pal]||"#111111", position:"relative" }}>
+        {/* Real cover image */}
+        {imgUrl && !imgErr && (
+          <img
+            src={imgUrl}
+            alt={title}
+            onError={() => setImgErr(true)}
+            style={{ position:"absolute", inset:0, width:"100%", height:"100%", objectFit:"cover", display:"block" }}
+          />
+        )}
         {/* Inner border */}
-        <div style={{ position:"absolute", inset:10, border:`1px solid ${VIT_LBL[pal]||"rgba(201,162,74,0.45)"}` }} />
+        <div style={{ position:"absolute", inset:10, border:`1px solid ${VIT_LBL[pal]||"rgba(201,162,74,0.45)"}`, pointerEvents:"none" }} />
         {/* Corner accents */}
-        <div style={{ position:"absolute", top:6, left:6, width:10, height:10, borderTop:`1px solid ${VIT_ACC[pal]||"#C9A24A"}`, borderLeft:`1px solid ${VIT_ACC[pal]||"#C9A24A"}`, opacity:0.7 }} />
-        <div style={{ position:"absolute", bottom:6, right:6, width:10, height:10, borderBottom:`1px solid ${VIT_ACC[pal]||"#C9A24A"}`, borderRight:`1px solid ${VIT_ACC[pal]||"#C9A24A"}`, opacity:0.7 }} />
-        {/* Texto portada */}
-        <div style={{ position:"absolute", inset:0, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:5, padding:"0 12px", textAlign:"center",
-                      opacity: hov ? 0 : 1, transition:"opacity 0.18s" }}>
-          <span style={{ fontSize:8, letterSpacing:"0.28em", textTransform:"uppercase", color:VIT_ACC[pal]||"#C9A24A", opacity:0.85 }}>P·L</span>
-          <div style={{ width:18, height:1, background:VIT_LBL[pal]||"rgba(201,162,74,0.4)" }} />
-          <span className="font-display" style={{ fontSize:isCenter?15:12, lineHeight:1.3, color:VIT_TXT[pal] }}>
-            {short.split("\n").map((l,i,a) => <React.Fragment key={i}>{l}{i<a.length-1&&<br/>}</React.Fragment>)}
-          </span>
-        </div>
+        <div style={{ position:"absolute", top:6, left:6, width:10, height:10, borderTop:`1px solid ${VIT_ACC[pal]||"#C9A24A"}`, borderLeft:`1px solid ${VIT_ACC[pal]||"#C9A24A"}`, opacity:0.7, pointerEvents:"none" }} />
+        <div style={{ position:"absolute", bottom:6, right:6, width:10, height:10, borderBottom:`1px solid ${VIT_ACC[pal]||"#C9A24A"}`, borderRight:`1px solid ${VIT_ACC[pal]||"#C9A24A"}`, opacity:0.7, pointerEvents:"none" }} />
+        {/* Texto portada — solo cuando no hay imagen real */}
+        {(!imgUrl || imgErr) && (
+          <div style={{ position:"absolute", inset:0, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:5, padding:"0 12px", textAlign:"center",
+                        opacity: hov ? 0 : 1, transition:"opacity 0.18s" }}>
+            <span style={{ fontSize:8, letterSpacing:"0.28em", textTransform:"uppercase", color:VIT_ACC[pal]||"#C9A24A", opacity:0.85 }}>P·L</span>
+            <div style={{ width:18, height:1, background:VIT_LBL[pal]||"rgba(201,162,74,0.4)" }} />
+            <span className="font-display" style={{ fontSize:isCenter?15:12, lineHeight:1.3, color:VIT_TXT[pal] }}>
+              {short.split("\n").map((l,i,a) => <React.Fragment key={i}>{l}{i<a.length-1&&<br/>}</React.Fragment>)}
+            </span>
+          </div>
+        )}
         {/* Overlay hover — aparece sobre el libro ya escalado */}
         <div style={{ position:"absolute", inset:0, background:"rgba(0,0,0,0.88)", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:7, padding:"12px 10px", textAlign:"center",
                       opacity: hov ? 1 : 0, transition:"opacity 0.18s", pointerEvents: hov ? "auto" : "none" }}>
