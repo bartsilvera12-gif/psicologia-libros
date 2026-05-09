@@ -957,8 +957,112 @@ const AdminFAQs = ({ faqs, onRefresh, onToast }) => {
 };
 
 /* ── VITRINA ────────────────────────────────────── */
-const VITRINE_PAL_BG = { coal:"#1c1c1c", r:"#4a0d10", b:"#1d2a3a", i:"#efe6d4", g:"#2d3530", p:"#2a2030" };
-const VITRINE_PAL_TXT= { coal:"#F8F4EA", r:"#F8F4EA", b:"#F8F4EA", i:"#2b2418", g:"#F8F4EA", p:"#F8F4EA" };
+
+/* Selector con buscador para elegir un libro en la vitrina */
+const VitrineBookPicker = ({ books, value, onChange }) => {
+  const [open, setOpen]     = React.useState(false);
+  const [query, setQuery]   = React.useState("");
+  const ref = React.useRef(null);
+
+  React.useEffect(() => {
+    if (!open) return;
+    const handler = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [open]);
+
+  const selected = books.find(b => String(b.id) === String(value)) || null;
+
+  const filtered = query.trim()
+    ? books.filter(b =>
+        b.title.toLowerCase().includes(query.toLowerCase()) ||
+        b.author.toLowerCase().includes(query.toLowerCase())
+      )
+    : books;
+
+  return (
+    <div ref={ref} className="relative">
+      {/* Trigger */}
+      <button
+        type="button"
+        onClick={() => { setOpen(o => !o); setQuery(""); }}
+        className="w-full flex items-center gap-2 border border-[#DDD0B6] px-2.5 py-2 bg-white hover:border-pl-gold transition-colors text-left focus:outline-none focus:border-pl-gold"
+      >
+        {selected ? (
+          <>
+            <AdminBookThumb book={selected} width={24} height={36} />
+            <span className="flex-1 text-[12px] text-gray-800 leading-tight line-clamp-2">{selected.title}</span>
+          </>
+        ) : (
+          <span className="flex-1 text-[12px] text-gray-400">— Vacío —</span>
+        )}
+        <svg width="11" height="11" viewBox="0 0 11 11" fill="none" className="shrink-0 text-gray-400"
+             style={{ transition:"transform 0.18s", transform: open ? "rotate(180deg)" : "none" }}>
+          <path d="M2 3.5l3.5 3.5 3.5-3.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      </button>
+
+      {/* Dropdown */}
+      {open && (
+        <div className="absolute left-0 right-0 top-full bg-white border border-[#DDD0B6] border-t-0 shadow-card-hv" style={{ zIndex:600, width:"280px" }}>
+          {/* Search input */}
+          <div className="p-2 border-b border-[#EEE5D0]">
+            <input
+              autoFocus
+              type="text"
+              value={query}
+              onChange={e => setQuery(e.target.value)}
+              placeholder="Buscar por título o autor…"
+              className="w-full px-3 py-2 border border-[#DDD0B6] text-[12px] bg-[#FAFAF8] focus:outline-none focus:border-pl-gold"
+            />
+          </div>
+
+          {/* Clear option */}
+          <button
+            type="button"
+            onClick={() => { onChange(""); setOpen(false); }}
+            className={`w-full flex items-center px-3 py-2 text-[12px] text-left transition-colors border-b border-[#EEE5D0]
+              ${!value ? "bg-amber-50 text-gray-800 font-medium" : "text-gray-400 hover:bg-gray-50"}`}
+          >
+            — Vacío —
+          </button>
+
+          {/* Book list */}
+          <div style={{ maxHeight:260, overflowY:"auto" }}>
+            {filtered.length === 0 && (
+              <div className="px-3 py-4 text-[12px] text-gray-400 text-center">Sin resultados</div>
+            )}
+            {filtered.map(b => {
+              const isSel = String(b.id) === String(value);
+              return (
+                <button
+                  key={b.id}
+                  type="button"
+                  onClick={() => { onChange(String(b.id)); setOpen(false); setQuery(""); }}
+                  className={`w-full flex items-center gap-3 px-3 py-2.5 text-left transition-colors border-b border-[#F5F0E8] last:border-0
+                    ${isSel ? "bg-amber-50" : "hover:bg-gray-50"}`}
+                >
+                  <AdminBookThumb book={b} width={32} height={48} />
+                  <div className="flex-1 min-w-0">
+                    <div className={`text-[12px] leading-snug ${isSel ? "font-semibold text-gray-900" : "text-gray-800"}`}>
+                      {b.title}
+                    </div>
+                    <div className="text-[11px] text-gray-400 italic mt-0.5">{b.author}</div>
+                  </div>
+                  {isSel && (
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" className="shrink-0">
+                      <path d="M2 6l3 3 5-5" stroke="#A4842F" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
 
 const AdminVitrine = ({ books, onRefresh, onToast }) => {
   const activeBooks = books.filter(b => b.is_active !== false);
@@ -980,10 +1084,8 @@ const AdminVitrine = ({ books, onRefresh, onToast }) => {
   const save = async () => {
     setSaving(true);
     try {
-      // Limpiar vitrine_order de todos los libros que estaban en vitrina
       const prevVitrine = books.filter(b => b.vitrine_order != null);
       await Promise.all(prevVitrine.map(b => window.updatePLBook(b.id, { vitrine_order: null })));
-      // Asignar nuevos
       await Promise.all(slots.map((b, i) => b ? window.updatePLBook(b.id, { vitrine_order: i+1 }) : Promise.resolve()));
       onRefresh();
       onToast("Vitrina guardada");
@@ -1021,40 +1123,39 @@ const AdminVitrine = ({ books, onRefresh, onToast }) => {
       )}
 
       <div className="grid grid-cols-5 gap-4 mb-6">
-        {slots.map((book, i) => {
-          const pal = book?.cover?.palette || "coal";
-          const short = (book?.cover?.short || "").replace(/\\n/g,"\n");
-          return (
-            <div key={i} className="bg-white border border-[#E0D5C0] p-4">
-              <div className="text-[10px] tracking-[0.2em] uppercase text-gray-400 mb-3 font-medium">Slot {i+1}{i===2?" (centro)":""}</div>
-              <div className="flex justify-center mb-4">
-                <div style={{ width:72, height:108, background: book ? (VITRINE_PAL_BG[pal]||"#1c1c1c") : "#f3f4f6", position:"relative", flexShrink:0 }}>
-                  {book ? (
-                    <>
-                      <div style={{ position:"absolute", inset:8, border:"1px solid rgba(201,162,74,0.4)" }} />
-                      <div style={{ position:"absolute", inset:0, display:"flex", alignItems:"center", justifyContent:"center", padding:"0 6px", textAlign:"center" }}>
-                        <span style={{ fontFamily:"'EB Garamond',Georgia,serif", fontSize:10, lineHeight:1.3, color:VITRINE_PAL_TXT[pal] }}>{short||book.title}</span>
-                      </div>
-                    </>
-                  ) : (
-                    <div style={{ position:"absolute", inset:0, display:"flex", alignItems:"center", justifyContent:"center" }}>
-                      <span style={{ fontSize:22, color:"#d1d5db" }}>+</span>
-                    </div>
-                  )}
-                </div>
-              </div>
-              <AdminCustomSelect
-                value={book?.id ? String(book.id) : ""}
-                onChange={v => setSlot(i, v)}
-                placeholder="— Vacío —"
-                options={[
-                  { value:"", label:"— Vacío —" },
-                  ...activeBooks.map(b => ({ value:String(b.id), label:b.title }))
-                ]}
-              />
+        {slots.map((book, i) => (
+          <div key={i} className="bg-white border border-[#E0D5C0] p-4 flex flex-col gap-3">
+            <div className="text-[10px] tracking-[0.2em] uppercase text-gray-400 font-medium">
+              Slot {i+1}{i===2?" (centro)":""}
             </div>
-          );
-        })}
+
+            {/* Cover preview */}
+            <div className="flex justify-center">
+              {book ? (
+                <AdminBookThumb book={book} width={72} height={108} />
+              ) : (
+                <div style={{ width:72, height:108, background:"#f3f4f6", display:"flex", alignItems:"center", justifyContent:"center", border:"1px dashed #d1d5db" }}>
+                  <span style={{ fontSize:22, color:"#d1d5db" }}>+</span>
+                </div>
+              )}
+            </div>
+
+            {/* Book info */}
+            {book && (
+              <div className="text-center">
+                <div className="text-[11px] font-medium text-gray-800 leading-snug line-clamp-2">{book.title}</div>
+                <div className="text-[10px] text-gray-400 italic mt-0.5">{book.author}</div>
+              </div>
+            )}
+
+            {/* Picker */}
+            <VitrineBookPicker
+              books={activeBooks}
+              value={book?.id ? String(book.id) : ""}
+              onChange={v => setSlot(i, v)}
+            />
+          </div>
+        ))}
       </div>
       <p className="text-[12px] text-gray-400">Los libros de la vitrina aparecen en el hero de la página de inicio. Al pasar el cursor se muestra el título completo y un botón para consultar.</p>
     </div>
