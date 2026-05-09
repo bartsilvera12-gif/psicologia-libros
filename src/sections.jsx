@@ -392,7 +392,10 @@ const HeroVitrine = () => {
   return (
     <div className="relative h-[160px] sm:h-[200px] lg:h-[220px] flex items-end justify-center">
       {VIT_SLOTS.map((slot, i) => (
-        <VitrineBook key={i} book={vitrine[i]} fb={VITRINE_FALLBACK[i]} slot={slot} isCenter={!!slot.center} />
+        /* Hide outermost books (i=0 and i=4) on mobile — show only 3 */
+        <div key={i} className={i === 0 || i === 4 ? "hidden sm:contents" : "contents"}>
+          <VitrineBook book={vitrine[i]} fb={VITRINE_FALLBACK[i]} slot={slot} isCenter={!!slot.center} />
+        </div>
       ))}
     </div>
   );
@@ -895,13 +898,14 @@ const FeaturedHeroSlider = ({ books }) => {
               {books.map((b) => (
                 <div
                   key={b.id}
-                  className="grid shrink-0 grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-16"
+                  className="grid shrink-0 grid-cols-1 items-center gap-6 sm:gap-10 lg:grid-cols-2 lg:gap-16"
                   style={{ width: `${n > 0 ? 100 / n : 100}%` }}
                 >
-                  <div className="order-2 flex justify-center lg:order-1 lg:justify-end">
+                  {/* Cover — first on mobile, left on desktop */}
+                  <div className="order-1 flex justify-center lg:order-1 lg:justify-end">
                     <a
                       href={`libro.html?id=${b.id}`}
-                      className="group/el-cover block w-full max-w-[280px] lg:max-w-[300px]"
+                      className="group/el-cover block w-full max-w-[160px] sm:max-w-[240px] lg:max-w-[300px]"
                       style={{ perspective: "880px" }}
                     >
                       <div
@@ -912,19 +916,20 @@ const FeaturedHeroSlider = ({ books }) => {
                       </div>
                     </a>
                   </div>
-                  <div className="order-1 px-1 text-center lg:order-2 lg:text-left">
-                    <p className="text-[11px] font-medium uppercase tracking-[0.28em] text-pl-ivory/75 sm:text-xs">
+                  {/* Text — second on mobile, right on desktop */}
+                  <div className="order-2 px-1 text-center lg:order-2 lg:text-left">
+                    <p className="text-[10px] sm:text-[11px] font-medium uppercase tracking-[0.22em] sm:tracking-[0.28em] text-pl-ivory/75 line-clamp-1">
                       {(b.author || "").toUpperCase()}
                     </p>
-                    <h3 className="mt-3 font-sans text-[clamp(28px,5.2vw,54px)] font-bold leading-[1.06] tracking-tight text-pl-ivory">
+                    <h3 className="mt-2 sm:mt-3 font-sans text-[20px] sm:text-[28px] lg:text-[clamp(32px,5.2vw,54px)] font-bold leading-[1.1] tracking-tight text-pl-ivory">
                       {b.title}
                     </h3>
-                    <p className="mt-5 font-display text-[clamp(22px,3.6vw,36px)] font-semibold tabular-nums tracking-tight text-pl-gold">
+                    <p className="mt-3 sm:mt-5 font-display text-[20px] sm:text-[clamp(22px,3.6vw,36px)] font-semibold tabular-nums tracking-tight text-pl-gold">
                       {typeof window.formatPrecioGs === "function" ? window.formatPrecioGs(b.price) : b.price}
                     </p>
                     <a
                       href={`libro.html?id=${b.id}`}
-                      className="mt-8 inline-flex items-center gap-2 rounded-full border border-pl-coal/10 bg-pl-white px-8 py-3.5 text-[14px] font-semibold tracking-wide text-pl-coal shadow-md shadow-pl-coal/5 transition-colors hover:border-pl-gold/40 hover:bg-pl-ivory"
+                      className="mt-5 sm:mt-8 inline-flex items-center gap-2 rounded-full border border-pl-coal/10 bg-pl-white px-6 sm:px-8 py-3 sm:py-3.5 text-[13px] sm:text-[14px] font-semibold tracking-wide text-pl-coal shadow-md shadow-pl-coal/5 transition-colors hover:border-pl-gold/40 hover:bg-pl-ivory"
                     >
                       Ver libro
                       <span className="inline-flex text-pl-red" aria-hidden>
@@ -973,8 +978,15 @@ const CatalogPreviewCarousel = () => {
     () => BOOKS.filter((b) => !b.featured && b.is_active !== false),
     []
   );
+  /* 1 book per slide on mobile (<640px), 4 on sm+ */
+  const [perSlide, setPerSlide] = React.useState(() => window.innerWidth < 640 ? 1 : 4);
+  React.useEffect(() => {
+    const onResize = () => setPerSlide(window.innerWidth < 640 ? 1 : 4);
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
   if (!catalog.length) return null;
-  const perSlide = 4;
   return (
     <BooksSlideCarousel
       eyebrow=""
