@@ -464,7 +464,7 @@ const HeroVitrine = () => {
 
 // === Hero ===
 const Hero = () => (
-  <section id="inicio" className="hero-texture relative sm:min-h-screen flex items-center overflow-hidden">
+  <section id="inicio" className="hero-texture relative lg:min-h-screen flex items-center overflow-hidden">
     {/* ── Fondo decorativo ── */}
     <div className="absolute inset-0 pointer-events-none select-none overflow-hidden">
       {/* Blobs de color */}
