@@ -29,7 +29,7 @@ const CartAddToast = () => {
       setKey(k => k + 1);
       setShow(true);
       clearTimeout(hideTimer.current);
-      hideTimer.current = setTimeout(() => setShow(false), 3400);
+      hideTimer.current = setTimeout(() => setShow(false), 1800);
     };
     window.addEventListener("pl-cart-added", onAdded);
     return () => {
@@ -71,7 +71,7 @@ const CartAddToast = () => {
       <div className="h-[2px] bg-pl-coal/6">
         <div
           className="h-full bg-pl-gold"
-          style={{ animation: "toastProgress 3.4s linear both" }}
+          style={{ animation: "toastProgress 1.8s linear both" }}
         />
       </div>
     </div>
