@@ -1,7 +1,5 @@
 /* ─── Panel de Administración — Psicología Libros ─── */
 
-const ADMIN_USER = "admin";
-const ADMIN_PASS = "psicologia2025";
 const SESSION_KEY = "pl_admin_session";
 
 /* ── Utilidades ─────────────────────────────────── */
@@ -205,18 +203,29 @@ const AdminLogin = ({ onLogin }) => {
   const [err,     setErr]     = React.useState("");
   const [loading, setLoading] = React.useState(false);
 
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault();
+    if (!user.trim() || !pass.trim()) { setErr("Completá usuario y contraseña"); return; }
     setLoading(true);
-    setTimeout(() => {
-      if (user === ADMIN_USER && pass === ADMIN_PASS) {
+    setErr("");
+    try {
+      const res = await fetch(
+        `${window.PL_SUPABASE_URL}/rest/v1/adminusers?username=eq.${encodeURIComponent(user.trim())}&password=eq.${encodeURIComponent(pass.trim())}&is_active=eq.true&select=id,username&limit=1`,
+        { headers: window.plHeaders(true) }
+      );
+      if (!res.ok) throw new Error("Error de conexión");
+      const rows = await res.json();
+      if (rows.length > 0) {
         localStorage.setItem(SESSION_KEY, "1");
         onLogin();
       } else {
         setErr("Usuario o contraseña incorrectos");
         setLoading(false);
       }
-    }, 400);
+    } catch (err) {
+      setErr("No se pudo conectar. Intentá de nuevo.");
+      setLoading(false);
+    }
   };
 
   const clearErr = () => setErr("");
