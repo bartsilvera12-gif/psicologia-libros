@@ -4,12 +4,17 @@ const PL_SUPABASE_URL = "https://api.neura.com.py";
 const PL_ANON_KEY     = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlzcyI6InN1cGFiYXNlIiwiaWF0IjoxNzc0MTAxNDYxLCJleHAiOjE5MzE3ODE0NjF9.7_wAph8IolPMXtgfpezSwS5XR62IdD__qhqCywLDp3Q";
 const PL_SERVICE_KEY  = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoic2VydmljZV9yb2xlIiwiaXNzIjoic3VwYWJhc2UiLCJpYXQiOjE3NzQxMDE0NjEsImV4cCI6MTkzMTc4MTQ2MX0.ZalpuMsNyVApzFSu3mOFjXUqnxqV9fVyhp3OQQGlAFI";
 
+const PL_SCHEMA = "libreriapsicologia";
+
 /* ── Headers ─────────────────────────────────────────────── */
 const plHeaders = (admin = false) => ({
-  "Content-Type":  "application/json",
-  "apikey":        admin ? PL_SERVICE_KEY : PL_ANON_KEY,
-  "Authorization": "Bearer " + (admin ? PL_SERVICE_KEY : PL_ANON_KEY),
-  "Prefer":        "return=representation"
+  "Content-Type":    "application/json",
+  "apikey":          admin ? PL_SERVICE_KEY : PL_ANON_KEY,
+  "Authorization":   "Bearer " + (admin ? PL_SERVICE_KEY : PL_ANON_KEY),
+  "Prefer":          "return=representation",
+  // Schema profile — GET uses Accept-Profile, mutations use Content-Profile
+  "Accept-Profile":  PL_SCHEMA,
+  "Content-Profile": PL_SCHEMA,
 });
 
 /* ── Helpers REST ────────────────────────────────────────── */
