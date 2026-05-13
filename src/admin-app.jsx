@@ -17,6 +17,7 @@ const IcoLogout    = () => <svg width="16" height="16" fill="none" viewBox="0 0 
 const IcoX         = () => <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>;
 const IcoRefresh   = () => <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"/></svg>;
 const IcoStar      = () => <svg width="13" height="13" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>;
+const IcoCart      = () => <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.6"><path strokeLinecap="round" strokeLinejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"/></svg>;
 const IcoEye       = () => <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8"><path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.964-7.178Z"/><path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/></svg>;
 const IcoSearch    = () => <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"/></svg>;
 
@@ -308,6 +309,8 @@ const AdminDashboard = ({ books, categories }) => {
   const inactivos  = total - activos;
   const destacados = books.filter(b => b.featured).length;
   const conPrecio  = books.filter(b => b.price && b.price !== "Consultar precio").length;
+  const vendidosTotal = books.reduce((s, b) => s + (b.sold_count || 0), 0);
+  const librosConVentas = books.filter(b => (b.sold_count || 0) > 0).length;
 
   const catStats = categories.map(cat => {
     const count = books.filter(b => b.category === cat.id && b.is_active !== false).length;
@@ -318,6 +321,11 @@ const AdminDashboard = ({ books, categories }) => {
 
   const recientes = [...books].sort((a, b) => (b.id > a.id ? 1 : -1)).slice(0, 8);
 
+  const topVendidos = [...books]
+    .filter(b => (b.sold_count || 0) > 0)
+    .sort((a, b) => (b.sold_count || 0) - (a.sold_count || 0))
+    .slice(0, 5);
+
   return (
     <div className="fade-in">
       <div className="mb-6">
@@ -326,11 +334,14 @@ const AdminDashboard = ({ books, categories }) => {
       </div>
 
       {/* KPIs */}
-      <div className="grid grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-2 xl:grid-cols-4 gap-4 mb-4">
         <StatCard label="Libros activos"   value={fmt(activos)}           sub={inactivos > 0 ? `${inactivos} inactivos` : "Todos activos"} color="gold"  icon={<IcoBooks />}  />
         <StatCard label="Categorías"       value={fmt(categories.length)} sub={`${catStats.filter(c=>c.count===0).length} vacías`}         color="coal"  icon={<IcoCats />}   />
         <StatCard label="Destacados"       value={fmt(destacados)}        sub="en carrusel"                                                color="red"   icon={<IcoStar />}   />
         <StatCard label="Con precio"       value={fmt(conPrecio)}         sub={`${total - conPrecio} a consultar`}                         color="green" icon={<IcoBooks />}  />
+      </div>
+      <div className="grid grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
+        <StatCard label="Libros vendidos"  value={fmt(vendidosTotal)}     sub={`${librosConVentas} título${librosConVentas===1?"":"s"} con ventas`} color="coal" icon={<IcoCart />} />
       </div>
 
       <div className="grid lg:grid-cols-2 gap-6 mb-6">
@@ -371,6 +382,33 @@ const AdminDashboard = ({ books, categories }) => {
             ))}
           </div>
         </div>
+      </div>
+
+      {/* Top más vendidos */}
+      <div className="bg-white border border-[#E0D5C0] p-6 mb-6">
+        <div className="text-[11px] tracking-[0.2em] uppercase text-gray-400 mb-5 font-medium">Top 5 más vendidos</div>
+        {topVendidos.length === 0 ? (
+          <div className="text-[13px] text-gray-400 py-4">
+            Aún no hay ventas registradas. Marcá ventas desde la pestaña <span className="text-pl-coal font-medium">Libros</span> con el botón <IcoCart /> al lado de cada título.
+          </div>
+        ) : (
+          <div className="space-y-2">
+            {topVendidos.map((b, i) => (
+              <div key={b.id} className="flex items-center gap-3 py-2 border-b border-[#EDE4D0] last:border-0">
+                <span className="text-[11px] tracking-[0.18em] uppercase text-pl-gold-dk font-medium w-6 shrink-0">#{i+1}</span>
+                <AdminBookThumb book={b} width={28} height={36} />
+                <div className="flex-1 min-w-0">
+                  <div className="text-[12px] text-pl-coal font-medium truncate">{b.title}</div>
+                  <div className="text-[11px] text-gray-400 truncate">{catName(b.category)}</div>
+                </div>
+                <div className="text-right shrink-0">
+                  <div className="font-sans tabular-nums text-pl-coal font-semibold text-[15px] leading-none">{fmt(b.sold_count || 0)}</div>
+                  <div className="text-[10px] tracking-[0.15em] uppercase text-gray-400 mt-1">vendidos</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Resumen de estado */}
@@ -615,6 +653,21 @@ const AdminBooks = ({ books, categories, onRefresh, onToast }) => {
     setConfirm(null);
   };
 
+  const markSold = async (b) => {
+    const next = (b.sold_count || 0) + 1;
+    try {
+      await window.updatePLBook(b.id, { sold_count: next });
+      onRefresh();
+      onToast(`+1 vendido — "${b.title}" (${next})`);
+    } catch (e) {
+      if (/sold_count/i.test(e.message || "")) {
+        onToast("Falta correr la migración SQL: ALTER TABLE pl_books ADD COLUMN sold_count integer DEFAULT 0", "err");
+      } else {
+        onToast(e.message || "No se pudo registrar la venta", "err");
+      }
+    }
+  };
+
   const catName = (id) => categories.find(c=>c.id===id)?.name || id;
 
   return (
@@ -657,6 +710,7 @@ const AdminBooks = ({ books, categories, onRefresh, onToast }) => {
               <th className="text-left px-4 py-3 text-[10px] tracking-[0.18em] uppercase text-gray-400 font-medium">Categoría</th>
               <th className="text-left px-4 py-3 text-[10px] tracking-[0.18em] uppercase text-gray-400 font-medium">Estado</th>
               <th className="text-left px-4 py-3 text-[10px] tracking-[0.18em] uppercase text-gray-400 font-medium">Precio</th>
+              <th className="text-center px-4 py-3 text-[10px] tracking-[0.18em] uppercase text-gray-400 font-medium w-20">Vendidos</th>
               <th className="text-left px-4 py-3 text-[10px] tracking-[0.18em] uppercase text-gray-400 font-medium w-24">Acciones</th>
             </tr>
           </thead>
@@ -686,6 +740,14 @@ const AdminBooks = ({ books, categories, onRefresh, onToast }) => {
                   </span>
                 </td>
                 <td className="px-4 py-3 text-gray-600 text-[12px] font-display tabular-nums">{typeof window.formatPrecioGs === "function" ? window.formatPrecioGs(b.price) : b.price}</td>
+                <td className="px-4 py-3 text-center">
+                  <button onClick={()=>markSold(b)}
+                          className="inline-flex items-center gap-1.5 px-2 py-1 border border-transparent text-pl-coal hover:border-pl-gold hover:text-pl-gold-dk transition-colors"
+                          title="Registrar 1 venta">
+                    <IcoCart />
+                    <span className="font-sans tabular-nums text-[13px] font-medium">{fmt(b.sold_count || 0)}</span>
+                  </button>
+                </td>
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-1">
                     <button onClick={()=>setModal(b)} className="p-1.5 text-gray-400 hover:text-pl-coal transition-colors" title="Editar"><IcoEdit /></button>
@@ -695,7 +757,7 @@ const AdminBooks = ({ books, categories, onRefresh, onToast }) => {
               </tr>
             ))}
             {slice.length === 0 && (
-              <tr><td colSpan={6} className="px-4 py-12 text-center text-gray-400 text-[13px]">Sin resultados</td></tr>
+              <tr><td colSpan={7} className="px-4 py-12 text-center text-gray-400 text-[13px]">Sin resultados</td></tr>
             )}
           </tbody>
         </table>
