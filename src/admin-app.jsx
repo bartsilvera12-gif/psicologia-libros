@@ -1187,7 +1187,23 @@ const AdminVitrine = ({ books, onRefresh, onToast }) => {
 /* ── DESTACADOS ─────────────────────────────────── */
 const AdminDestacados = ({ books, onRefresh, onToast }) => {
   const [saving, setSaving] = React.useState(null);
+  const [search, setSearch] = React.useState("");
+  const [catF,   setCatF]   = React.useState("");
+  const [onlyFeatured, setOnlyFeatured] = React.useState(false);
+
   const featured = books.filter(b => b.featured && b.is_active !== false);
+
+  const categories = window.CATEGORIES || [];
+  const filtered = React.useMemo(() => {
+    const q = search.trim().toLowerCase();
+    return books.filter(b => {
+      if (b.is_active === false) return false;
+      if (onlyFeatured && !b.featured) return false;
+      if (catF && b.category !== catF) return false;
+      if (!q) return true;
+      return [b.title, b.author].some(s => (s || "").toLowerCase().includes(q));
+    });
+  }, [books, search, catF, onlyFeatured]);
 
   const toggle = async (book) => {
     setSaving(book.id);
@@ -1227,6 +1243,36 @@ const AdminDestacados = ({ books, onRefresh, onToast }) => {
         </div>
       )}
 
+      {/* Filtros */}
+      <div className="flex items-center gap-3 mb-4 flex-wrap">
+        <div className="flex items-center gap-2 bg-white border border-[#E0D5C0] px-3 py-2">
+          <IcoSearch />
+          <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Buscar título, autor…"
+                 className="text-[13px] outline-none w-[220px]" />
+        </div>
+        <AdminCustomSelect
+          value={catF}
+          onChange={setCatF}
+          placeholder="Todas las categorías"
+          options={[
+            { value:"", label:"Todas las categorías" },
+            ...categories.map(c => ({ value:c.id, label:c.name }))
+          ]}
+          className="w-[220px]"
+        />
+        <button
+          onClick={() => setOnlyFeatured(v => !v)}
+          className={`inline-flex items-center gap-1.5 px-3 py-2 border text-[12px] transition-colors
+            ${onlyFeatured
+              ? "border-pl-gold bg-pl-gold/10 text-pl-gold-dk"
+              : "border-[#E0D5C0] bg-white text-gray-500 hover:border-pl-gold hover:text-pl-gold-dk"}`}
+          title="Mostrar solo libros destacados"
+        >
+          <IcoStar /> Solo destacados
+        </button>
+        <span className="text-[12px] text-gray-400"><span className="font-sans tabular-nums font-medium text-pl-coal/80">{filtered.length}</span> resultado{filtered.length!==1?"s":""}</span>
+      </div>
+
       <div className="bg-white border border-[#E0D5C0] overflow-x-auto">
         <table className="w-full text-[13px]">
           <thead>
@@ -1239,7 +1285,7 @@ const AdminDestacados = ({ books, onRefresh, onToast }) => {
             </tr>
           </thead>
           <tbody>
-            {books.filter(b => b.is_active !== false).map(b => (
+            {filtered.map(b => (
               <tr key={b.id} className="table-row border-b border-[#EDE4D0] last:border-0">
                 <td className="px-4 py-2.5">
                   <AdminBookThumb book={b} width={24} height={36} />
@@ -1260,6 +1306,9 @@ const AdminDestacados = ({ books, onRefresh, onToast }) => {
                 </td>
               </tr>
             ))}
+            {filtered.length === 0 && (
+              <tr><td colSpan={5} className="px-4 py-12 text-center text-gray-400 text-[13px]">Sin resultados</td></tr>
+            )}
           </tbody>
         </table>
       </div>
