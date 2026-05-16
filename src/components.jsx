@@ -164,14 +164,13 @@ const BookCard = ({ book }) => {
           >
             + Carrito
           </button>
-          <a
-            href={waLink(msg)}
-            target="_blank"
-            rel="noreferrer"
+          <button
+            type="button"
+            onClick={() => window.waOpen?.(msg)}
             className="inline-flex items-center justify-center gap-1 sm:gap-1.5 px-1.5 sm:px-3 py-2 sm:py-2.5 bg-pl-red text-white text-[9px] sm:text-[11px] tracking-wide hover:bg-pl-red-dk transition-colors"
           >
             <IconWhatsapp size={11} /> Consultar
-          </a>
+          </button>
         </div>
       </div>
     </article>

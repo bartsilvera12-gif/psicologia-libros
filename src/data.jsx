@@ -2,12 +2,15 @@
 // Los datos reales vienen de pl_books / pl_categories / pl_faqs en Supabase.
 
 // === Configurable contact ===
-const WHATSAPP_NUMBER = "595981234567"; // configurable
-const WA_BASE = `https://wa.me/${WHATSAPP_NUMBER}`;
-const waLink = (msg) => `${WA_BASE}?text=${encodeURIComponent(msg)}`;
+const WA_PRIMARY   = "595983946410";
+const WA_SECONDARY = "595986773619";
+const WHATSAPP_NUMBER = WA_PRIMARY; // alias para compatibilidad
+const waLink = (msg) => `https://wa.me/${WA_PRIMARY}?text=${encodeURIComponent(msg)}`;
+// Abre el selector de dos números
+const waOpen = (msg) => window.dispatchEvent(new CustomEvent("pl-wa-open", { detail: { msg } }));
 
 const CONTACT = {
-  whatsapp: WHATSAPP_NUMBER,
+  whatsapp: WA_PRIMARY,
   email: "contacto@psicologialibros.com",
   instagram: "https://instagram.com/psicologialibrosyuncafe",
   facebook: "https://facebook.com/PsicologiaLibrosYUnCafe",
@@ -233,6 +236,6 @@ const NAV = [
 ];
 
 Object.assign(window, {
-  WHATSAPP_NUMBER, waLink, CONTACT,
+  WA_PRIMARY, WA_SECONDARY, WHATSAPP_NUMBER, waLink, waOpen, CONTACT,
   CATEGORIES, catName, BOOKS, BENEFITS, FAQS, NAV,
 });

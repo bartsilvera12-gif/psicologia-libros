@@ -1,3 +1,93 @@
+// === Modal selector de WhatsApp (evento `pl-wa-open`) ===
+const WaChooserModal = () => {
+  const [state, setState] = React.useState({ open: false, msg: "" });
+
+  React.useEffect(() => {
+    const handler = (e) => setState({ open: true, msg: e.detail?.msg || "" });
+    window.addEventListener("pl-wa-open", handler);
+    return () => window.removeEventListener("pl-wa-open", handler);
+  }, []);
+
+  const close = () => setState(s => ({ ...s, open: false }));
+
+  if (!state.open) return null;
+
+  const go = (number) => {
+    window.open(`https://wa.me/${number}?text=${encodeURIComponent(state.msg)}`, "_blank", "noreferrer");
+    close();
+  };
+
+  return ReactDOM.createPortal(
+    <div
+      className="fixed inset-0 z-[300] flex items-center justify-center p-4"
+      style={{ background: "rgba(17,17,17,0.55)", backdropFilter: "blur(4px)" }}
+      onClick={close}
+    >
+      <div
+        className="bg-pl-white w-full max-w-[340px] shadow-card-hv border border-pl-coal/10 overflow-hidden"
+        style={{ animation: "fadeSlideIn 0.28s cubic-bezier(0.2,0.8,0.2,1) both" }}
+        onClick={e => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div className="px-6 pt-6 pb-4 border-b border-pl-coal/8 flex items-start justify-between gap-4">
+          <div>
+            <div className="eyebrow mb-1">Contacto</div>
+            <div className="font-display text-pl-coal text-[22px] leading-tight">¿Con quién querés hablar?</div>
+          </div>
+          <button onClick={close} className="shrink-0 w-8 h-8 flex items-center justify-center text-pl-gray hover:text-pl-coal transition-colors mt-0.5">
+            <IconClose size={18} />
+          </button>
+        </div>
+
+        {/* Options */}
+        <div className="p-4 space-y-2.5">
+          <button
+            onClick={() => go(window.WA_PRIMARY)}
+            className="w-full flex items-center gap-4 px-5 py-4 bg-pl-coal text-pl-ivory hover:bg-black transition-colors group"
+          >
+            <div className="shrink-0 w-9 h-9 border border-pl-ivory/20 flex items-center justify-center">
+              <IconWhatsapp size={18} />
+            </div>
+            <div className="text-left min-w-0">
+              <div className="text-[10px] tracking-[0.2em] uppercase text-pl-gold mb-0.5">Principal</div>
+              <div className="text-[14px] font-medium tracking-wide">+595 983 946 410</div>
+            </div>
+          </button>
+
+          <button
+            onClick={() => go(window.WA_SECONDARY)}
+            className="w-full flex items-center gap-4 px-5 py-4 border border-pl-coal/15 text-pl-coal hover:border-pl-gold hover:bg-pl-gold/5 transition-colors group"
+          >
+            <div className="shrink-0 w-9 h-9 border border-pl-coal/20 flex items-center justify-center text-pl-coal group-hover:border-pl-gold transition-colors">
+              <IconWhatsapp size={18} />
+            </div>
+            <div className="text-left min-w-0">
+              <div className="text-[10px] tracking-[0.2em] uppercase text-pl-gold-dk mb-0.5">Secundario</div>
+              <div className="text-[14px] font-medium tracking-wide">+595 986 773 619</div>
+            </div>
+          </button>
+        </div>
+
+        <div className="px-6 pb-5 text-center">
+          <button onClick={close} className="text-[11px] tracking-wide text-pl-gray hover:text-pl-coal transition-colors uppercase">
+            Cancelar
+          </button>
+        </div>
+      </div>
+    </div>,
+    document.body
+  );
+};
+
+// Auto-mount modal una sola vez
+(function mountWaChooser() {
+  if (document.getElementById("pl-wa-chooser-root")) return;
+  const div = document.createElement("div");
+  div.id = "pl-wa-chooser-root";
+  document.body.appendChild(div);
+  ReactDOM.createRoot(div).render(<WaChooserModal />);
+})();
+
 // === Toast al agregar al carrito (evento `pl-cart-added` desde cart.jsx) ===
 const CartAddToast = () => {
   const [show, setShow]     = React.useState(false);
@@ -237,12 +327,13 @@ const Header = ({ active, homePath = "" }) => {
                 </span>
               )}
             </a>
-            <a href={waLink("Hola, quiero consultar el catálogo de Psicología Libros.")}
-               target="_blank" rel="noreferrer"
+            <button
+               type="button"
+               onClick={() => waOpen("Hola, quiero consultar el catálogo de Psicología Libros.")}
                className="hidden sm:inline-flex items-center gap-2 px-5 py-3 bg-pl-red text-white text-[13px] hover:bg-pl-red-dk transition-colors">
               <IconWhatsapp size={16} />
               <span>Consultar</span>
-            </a>
+            </button>
             <button className="lg:hidden w-10 h-10 border border-pl-coal/15 text-pl-coal flex items-center justify-center"
                     aria-label={open ? "Cerrar menú" : "Abrir menú"}
                     onClick={() => setOpen(o => !o)}>
@@ -291,11 +382,12 @@ const Header = ({ active, homePath = "" }) => {
                   {n.label}
                 </a>
               ))}
-              <a href={waLink("Hola, quiero consultar el catálogo de Psicología Libros.")}
-                 target="_blank" rel="noreferrer"
+              <button
+                 type="button"
+                 onClick={() => waOpen("Hola, quiero consultar el catálogo de Psicología Libros.")}
                  className="mt-3 inline-flex items-center justify-center gap-2 px-5 py-3 bg-pl-red text-white text-[13px]">
                 <IconWhatsapp size={16} /> Consultar por WhatsApp
-              </a>
+              </button>
             </nav>
           </div>
         )}
@@ -525,11 +617,11 @@ const Hero = () => (
                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 sm:px-8 sm:py-4 bg-pl-coal text-pl-ivory text-[13px] sm:text-[14px] tracking-wide hover:bg-black transition-colors">
               Ver catálogo <IconArrow size={15} />
             </a>
-            <a href={waLink("Hola, quiero consultar el catálogo de Psicología Libros.")}
-               target="_blank" rel="noreferrer"
+            <button type="button"
+               onClick={() => waOpen("Hola, quiero consultar el catálogo de Psicología Libros.")}
                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 sm:px-8 sm:py-4 bg-pl-red text-white text-[13px] sm:text-[14px] tracking-wide hover:bg-pl-red-dk transition-colors">
               <IconWhatsapp size={16} /> WhatsApp
-            </a>
+            </button>
           </div>
         </div>
 
@@ -1223,11 +1315,11 @@ const CatalogBySections = ({ filter, setFilter }) => {
               <button onClick={clear} className="px-5 py-3 border border-pl-coal/20 text-[13px] hover:border-pl-coal transition-colors">
                 Limpiar filtros
               </button>
-              <a href={waLink("Hola, estoy buscando un libro y no aparece en el catálogo.")}
-                 target="_blank" rel="noreferrer"
+              <button type="button"
+                 onClick={() => waOpen("Hola, estoy buscando un libro y no aparece en el catálogo.")}
                  className="px-5 py-3 bg-pl-red text-white text-[13px] inline-flex items-center gap-2 hover:bg-pl-red-dk">
                 <IconWhatsapp size={14} /> Consultar
-              </a>
+              </button>
             </div>
           </div>
         )}
@@ -1307,10 +1399,11 @@ const FAQSection = () => {
           <p className="mt-5 text-pl-gray text-[15px] leading-relaxed">
             Resolvé las dudas más comunes. Si tu pregunta no está aquí, escribinos por WhatsApp.
           </p>
-          <a href={waLink("Hola, tengo una consulta para Psicología Libros.")} target="_blank" rel="noreferrer"
+          <button type="button"
+             onClick={() => waOpen("Hola, tengo una consulta para Psicología Libros.")}
              className="mt-7 inline-flex items-center gap-2 text-[13px] text-pl-red hover:text-pl-red-dk">
             <IconWhatsapp size={15} /> Hacer una consulta
-          </a>
+          </button>
         </div>
         <div className="lg:col-span-8">
           {FAQS.map((f, i) => (
@@ -1339,10 +1432,11 @@ const Contact = () => (
           Escribinos y te ayudamos a encontrar el material adecuado para tu interés, estudio o formación.
         </p>
         <div className="mt-10 flex flex-wrap items-center gap-4">
-          <a href={waLink("Hola, quiero consultar el catálogo de Psicología Libros.")} target="_blank" rel="noreferrer"
+          <button type="button"
+             onClick={() => waOpen("Hola, quiero consultar el catálogo de Psicología Libros.")}
              className="inline-flex items-center gap-3 px-8 py-5 bg-pl-red text-white text-[15px] tracking-wide hover:bg-pl-red-dk transition-colors">
             <IconWhatsapp size={20} /> Consultar por WhatsApp
-          </a>
+          </button>
         </div>
         <div className="mt-12 grid sm:grid-cols-3 gap-8 max-w-2xl">
           <a href={CONTACT.instagram} target="_blank" rel="noreferrer" className="flex items-start gap-3 group">
@@ -1389,10 +1483,11 @@ const Contact = () => (
               </li>
             ))}
           </ul>
-          <a href={waLink("Hola, quiero consultar el catálogo de Psicología Libros.")} target="_blank" rel="noreferrer"
+          <button type="button"
+             onClick={() => waOpen("Hola, quiero consultar el catálogo de Psicología Libros.")}
              className="mt-7 w-full inline-flex items-center justify-center gap-2 px-5 py-4 bg-pl-coal text-pl-ivory text-[13px] hover:bg-black transition-colors">
             <IconWhatsapp size={16} /> Iniciar conversación
-          </a>
+          </button>
         </div>
       </aside>
     </div>
@@ -1457,7 +1552,7 @@ const Footer = () => (
         <div className="md:col-span-4">
           <div className="text-[11px] tracking-[0.22em] uppercase text-pl-gold mb-5">Contacto</div>
           <ul className="space-y-3 text-[14px]">
-            <li><a href={waLink("Hola, quiero consultar el catálogo.")} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 hover:text-pl-gold"><IconWhatsapp size={15} /> WhatsApp</a></li>
+            <li><button type="button" onClick={() => waOpen("Hola, quiero consultar el catálogo.")} className="inline-flex items-center gap-2 hover:text-pl-gold transition-colors"><IconWhatsapp size={15} /> WhatsApp</button></li>
             <li><a href={CONTACT.instagram} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 hover:text-pl-gold"><IconInstagram size={15} /> Instagram</a></li>
             <li><a href={CONTACT.facebook} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 hover:text-pl-gold"><IconFacebook size={15} /> Facebook</a></li>
             <li><a href={`mailto:${CONTACT.email}`} className="inline-flex items-center gap-2 hover:text-pl-gold"><IconMail size={15} /> {CONTACT.email}</a></li>
