@@ -32,7 +32,7 @@ const WaChooserModal = () => {
         <div className="px-6 pt-6 pb-4 border-b border-pl-coal/8 flex items-start justify-between gap-4">
           <div>
             <div className="eyebrow mb-1">Contacto</div>
-            <div className="font-display text-pl-coal text-[22px] leading-tight">¿Con quién querés hablar?</div>
+            <div className="font-display text-pl-coal text-[22px] leading-tight">Seleccione un número de contacto</div>
           </div>
           <button onClick={close} className="shrink-0 w-8 h-8 flex items-center justify-center text-pl-gray hover:text-pl-coal transition-colors mt-0.5">
             <IconClose size={18} />
