@@ -4,3 +4,4 @@ ALTER TABLE pl_books ADD COLUMN IF NOT EXISTS soporte text;
 ALTER TABLE pl_books ADD COLUMN IF NOT EXISTS paginas text;
 ALTER TABLE pl_books ADD COLUMN IF NOT EXISTS idioma text;
 ALTER TABLE pl_books ADD COLUMN IF NOT EXISTS tema text;
+ALTER TABLE pl_books ADD COLUMN IF NOT EXISTS sold_count integer DEFAULT 0;

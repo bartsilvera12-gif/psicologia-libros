@@ -78,6 +78,7 @@ const mapBook = (row) => {
     },
     featured:      row.featured      || false,
     vitrine_order: row.vitrine_order  ?? null,
+    sold_count:    row.sold_count    ?? 0,
     is_active:     row.is_active !== false,
     editorial:     row.editorial || "",
     soporte:       row.soporte   || "",
