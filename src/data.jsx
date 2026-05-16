@@ -11,7 +11,7 @@ const waOpen = (msg) => window.dispatchEvent(new CustomEvent("pl-wa-open", { det
 
 const CONTACT = {
   whatsapp: WA_PRIMARY,
-  email: "contacto@psicologialibros.com",
+  email: "psicologialibrosyuncafe@gmail.com",
   instagram: "https://instagram.com/psicologialibrosyuncafe",
   facebook: "https://facebook.com/PsicologiaLibrosYUnCafe",
   city: "Asunción, Paraguay",
