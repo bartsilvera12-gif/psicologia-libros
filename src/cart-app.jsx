@@ -146,7 +146,8 @@ const CartPage = () => {
       lines, books,
       customer: { name: name.trim(), phone: phone.trim(), address: address.trim(), payment },
     });
-    window.dispatchEvent(new CustomEvent("pl-wa-open", { detail: { msg: body } }));
+    const href = typeof window.waLink === "function" ? window.waLink(body) : "#";
+    window.open(href, "_blank", "noreferrer");
   };
 
   return (

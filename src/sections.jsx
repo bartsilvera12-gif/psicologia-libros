@@ -1,91 +1,12 @@
-// === Modal selector de WhatsApp (evento `pl-wa-open`) ===
-const WaChooserModal = () => {
-  const [state, setState] = React.useState({ open: false, msg: "" });
-
-  React.useEffect(() => {
-    const handler = (e) => setState({ open: true, msg: e.detail?.msg || "" });
-    window.addEventListener("pl-wa-open", handler);
-    return () => window.removeEventListener("pl-wa-open", handler);
-  }, []);
-
-  const close = () => setState(s => ({ ...s, open: false }));
-
-  if (!state.open) return null;
-
-  const go = (number) => {
-    window.open(`https://wa.me/${number}?text=${encodeURIComponent(state.msg)}`, "_blank", "noreferrer");
-    close();
-  };
-
-  return ReactDOM.createPortal(
-    <div
-      className="fixed inset-0 z-[300] flex items-center justify-center p-4"
-      style={{ background: "rgba(17,17,17,0.55)", backdropFilter: "blur(4px)" }}
-      onClick={close}
-    >
-      <div
-        className="bg-pl-white w-full max-w-[340px] shadow-card-hv border border-pl-coal/10 overflow-hidden"
-        style={{ animation: "fadeSlideIn 0.28s cubic-bezier(0.2,0.8,0.2,1) both" }}
-        onClick={e => e.stopPropagation()}
-      >
-        {/* Header */}
-        <div className="px-6 pt-6 pb-4 border-b border-pl-coal/8 flex items-start justify-between gap-4">
-          <div>
-            <div className="eyebrow mb-1">Contacto</div>
-            <div className="font-display text-pl-coal text-[22px] leading-tight">Seleccione un número de contacto</div>
-          </div>
-          <button onClick={close} className="shrink-0 w-8 h-8 flex items-center justify-center text-pl-gray hover:text-pl-coal transition-colors mt-0.5">
-            <IconClose size={18} />
-          </button>
-        </div>
-
-        {/* Options */}
-        <div className="p-4 space-y-2.5">
-          <button
-            onClick={() => go(window.WA_PRIMARY)}
-            className="w-full flex items-center gap-4 px-5 py-4 bg-pl-coal text-pl-ivory hover:bg-black transition-colors group"
-          >
-            <div className="shrink-0 w-9 h-9 border border-pl-ivory/20 flex items-center justify-center">
-              <IconWhatsapp size={18} />
-            </div>
-            <div className="text-left min-w-0">
-              <div className="text-[10px] tracking-[0.2em] uppercase text-pl-gold mb-0.5">Principal</div>
-              <div className="text-[14px] font-medium tracking-wide">+595 983 946 410</div>
-            </div>
-          </button>
-
-          <button
-            onClick={() => go(window.WA_SECONDARY)}
-            className="w-full flex items-center gap-4 px-5 py-4 border border-pl-coal/15 text-pl-coal hover:border-pl-gold hover:bg-pl-gold/5 transition-colors group"
-          >
-            <div className="shrink-0 w-9 h-9 border border-pl-coal/20 flex items-center justify-center text-pl-coal group-hover:border-pl-gold transition-colors">
-              <IconWhatsapp size={18} />
-            </div>
-            <div className="text-left min-w-0">
-              <div className="text-[10px] tracking-[0.2em] uppercase text-pl-gold-dk mb-0.5">Secundario</div>
-              <div className="text-[14px] font-medium tracking-wide">+595 986 773 619</div>
-            </div>
-          </button>
-        </div>
-
-        <div className="px-6 pb-5 text-center">
-          <button onClick={close} className="text-[11px] tracking-wide text-pl-gray hover:text-pl-coal transition-colors uppercase">
-            Cancelar
-          </button>
-        </div>
-      </div>
-    </div>,
-    document.body
-  );
-};
-
-// Auto-mount modal una sola vez
-(function mountWaChooser() {
-  if (document.getElementById("pl-wa-chooser-root")) return;
-  const div = document.createElement("div");
-  div.id = "pl-wa-chooser-root";
-  document.body.appendChild(div);
-  ReactDOM.createRoot(div).render(<WaChooserModal />);
+// Abre WhatsApp con el número único configurado en data.jsx
+(function bindWaOpen() {
+  window.addEventListener("pl-wa-open", (e) => {
+    const msg = e.detail?.msg || "";
+    const href = typeof window.waLink === "function"
+      ? window.waLink(msg)
+      : `https://wa.me/${window.WA_PRIMARY}?text=${encodeURIComponent(msg)}`;
+    window.open(href, "_blank", "noreferrer");
+  });
 })();
 
 // === Toast al agregar al carrito (evento `pl-cart-added` desde cart.jsx) ===

@@ -2,12 +2,11 @@
 // Los datos reales vienen de pl_books / pl_categories / pl_faqs en Supabase.
 
 // === Configurable contact ===
-const WA_PRIMARY   = "595983946410";
-const WA_SECONDARY = "595986773619";
+const WA_PRIMARY   = "595986773619";
+const WA_SECONDARY = WA_PRIMARY;
 const WHATSAPP_NUMBER = WA_PRIMARY; // alias para compatibilidad
 const waLink = (msg) => `https://wa.me/${WA_PRIMARY}?text=${encodeURIComponent(msg)}`;
-// Abre el selector de dos números
-const waOpen = (msg) => window.dispatchEvent(new CustomEvent("pl-wa-open", { detail: { msg } }));
+const waOpen = (msg) => window.open(waLink(msg), "_blank", "noreferrer");
 
 const CONTACT = {
   whatsapp: WA_PRIMARY,
